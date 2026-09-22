@@ -5,15 +5,16 @@
 
 @section('content')
 
-<section class="band">
+<section class="bande">
     <div class="wrap" style="max-width:840px">
         <x-section-head
+            class="monte"
             niveau="1"
             eyebrow="Informations légales"
             titre="Mentions légales &amp; confidentialité"
             lede="Les informations que tout site d'élevage doit publier. Les champs marqués « à compléter » attendent les numéros officiels." />
 
-        <div class="stack" style="gap:26px">
+        <div class="pile monte" style="gap:clamp(20px,2.6vw,28px)">
 
             <x-record titre="Éditeur du site">
                 <table>

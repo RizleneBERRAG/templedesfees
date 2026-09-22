@@ -16,25 +16,26 @@
 
 @section('content')
 
-<section class="band">
+<section class="bande">
     <div class="wrap">
         <x-section-head
+            class="monte"
             niveau="1"
             eyebrow="Contact"
             titre="Écrivez-nous, ou appelez"
             lede="Un appel vaut souvent mieux qu'un long formulaire — nous décrochons en soirée et le week-end. Si vous préférez écrire, tout est ci-dessous : réponse sous 48 heures." />
 
-        <div class="two off" style="align-items:start">
+        <div class="duo-texte decale" style="align-items:start">
 
             {{-- ---------------- formulaire ---------------- --}}
             <div id="formulaire">
 
                 @if(session('succes'))
-                    <p class="flash">{{ session('succes') }}</p>
+                    <p class="retour">{{ session('succes') }}</p>
                 @endif
 
                 @if($errors->any())
-                    <div class="flash err">
+                    <div class="retour erreur">
                         Votre message n'a pas pu être envoyé :
                         <ul>
                             @foreach($errors->all() as $erreur)
@@ -44,7 +45,7 @@
                     </div>
                 @endif
 
-                <form class="demo form-dark" method="POST" action="{{ route('contact.store') }}">
+                <form class="demo " method="POST" action="{{ route('contact.store') }}">
                     @csrf
 
                     {{-- Piege a robots : invisible pour un humain. --}}
@@ -53,7 +54,7 @@
                         <input type="text" id="c-site" name="site" tabindex="-1" autocomplete="off">
                     </div>
 
-                    <fieldset class="field full" style="border:0;padding:0;margin:0">
+                    <fieldset class="champ plein" style="border:0;padding:0;margin:0">
                         <legend style="padding:0;margin-bottom:11px"
                                 class="mono" >Votre demande</legend>
                         <div class="objets">
@@ -67,26 +68,26 @@
                         </div>
                     </fieldset>
 
-                    <div class="field">
+                    <div class="champ">
                         <label for="c-prenom">Prénom</label>
                         <input id="c-prenom" name="prenom" type="text" autocomplete="given-name"
                                value="{{ old('prenom') }}" required>
                     </div>
-                    <div class="field">
+                    <div class="champ">
                         <label for="c-nom">Nom</label>
                         <input id="c-nom" name="nom" type="text" autocomplete="family-name" value="{{ old('nom') }}">
                     </div>
-                    <div class="field">
+                    <div class="champ">
                         <label for="c-email">Email</label>
                         <input id="c-email" name="email" type="email" autocomplete="email"
                                value="{{ old('email') }}" required>
                     </div>
-                    <div class="field">
+                    <div class="champ">
                         <label for="c-tel">Téléphone</label>
                         <input id="c-tel" name="telephone" type="tel" autocomplete="tel" value="{{ old('telephone') }}">
                     </div>
 
-                    <div class="field full">
+                    <div class="champ plein">
                         <label for="c-message">Votre message</label>
                         <textarea id="c-message" name="message" required
                                   placeholder="Dites-nous ce qui vous amène : un chaton en particulier, une visite, une question sur la race…">{{ old('message') }}</textarea>
@@ -107,7 +108,7 @@
             </div>
 
             {{-- ---------------- coordonnées ---------------- --}}
-            <div class="stack" style="gap:20px">
+            <div class="pile" style="gap:20px">
                 <x-record titre="Nous joindre directement">
                     <table>
                         <tr><th>Téléphone</th><td><a href="tel:{{ $telRaw }}" style="color:var(--bronze-lt);text-decoration:none">{{ $tel }}</a></td></tr>
@@ -127,10 +128,10 @@
 
                 <div class="btnrow">
                     <a class="btn" href="tel:{{ $telRaw }}">Appeler l'élevage</a>
-                    <a class="btn ghost" href="{{ route('adoption.create') }}">Demander une visite</a>
+                    <a class="btn creux" href="{{ route('adoption.create') }}">Demander une visite</a>
                 </div>
 
-                <figure class="figure" style="margin:0">
+                <figure class="vue" style="margin:0">
                     <img src="{{ asset('images/cats/ambiance.webp') }}"
                          alt="Maine Coon de la chatterie Chatterie du Temple des Fées" loading="lazy">
                     <figcaption>Fin de journée à la maison</figcaption>
@@ -151,7 +152,7 @@
       donnees structurees aux avis collectes par le site lui-meme, et un
       AggregateRating auto-declare se paie d'une penalite plutot que d'etoiles.
 --}}
-<section class="band paper tight" id="avis">
+<section class="bande creuse serree" id="avis">
     <div class="wrap">
         <x-section-head
             eyebrow="Ils sont passés par là"
@@ -159,9 +160,9 @@
             lede="Témoignages de familles adoptantes, publiés avec leur accord. Prénom seul — aucun nom de famille n'est publié sur ce site." />
 
         @if($avis->isNotEmpty())
-            <div class="cells">
+            <div class="cellules">
                 @foreach($avis as $a)
-                    <div class="cell-b">
+                    <div class="cellule">
                         <span class="n">{{ $a->etoiles() }}</span>
                         <p>{{ $a->texte }}</p>
                         <span class="n" style="margin-top:auto">{{ $a->prenom }}@if($a->publie_le) · {{ $a->publie_le->translatedFormat('F Y') }}@endif</span>
@@ -171,11 +172,11 @@
         @endif
 
         @if(session('succes_avis'))
-            <p class="flash" style="margin-top:26px">{{ session('succes_avis') }}</p>
+            <p class="retour" style="margin-top:26px">{{ session('succes_avis') }}</p>
         @endif
 
         @if($errors->avis->any())
-            <div class="flash err" style="margin-top:26px">
+            <div class="retour erreur" style="margin-top:26px">
                 Votre avis n'a pas pu être envoyé :
                 <ul>
                     @foreach($errors->avis->all() as $erreur)
@@ -188,7 +189,7 @@
         <details class="depot" @if(session('succes_avis') || $errors->avis->any()) open @endif>
             <summary>Vous avez adopté chez nous ? Laissez votre avis</summary>
 
-            <form class="demo" method="POST" action="{{ route('reviews.store') }}">
+            <form class="demande" method="POST" action="{{ route('reviews.store') }}">
                 @csrf
 
                 {{-- Piege a robots : invisible pour un humain. --}}
@@ -197,13 +198,13 @@
                     <input type="text" id="a-site" name="site" tabindex="-1" autocomplete="off">
                 </div>
 
-                <div class="field">
+                <div class="champ">
                     <label for="a-prenom">Prénom</label>
                     <input id="a-prenom" name="prenom" type="text" autocomplete="given-name"
                            value="{{ old('prenom') }}" maxlength="80" required>
                 </div>
 
-                <div class="field">
+                <div class="champ">
                     <label for="a-note">Note</label>
                     <select id="a-note" name="note" required>
                         @foreach([5 => '★★★★★', 4 => '★★★★☆', 3 => '★★★☆☆', 2 => '★★☆☆☆', 1 => '★☆☆☆☆'] as $v => $libelle)
@@ -212,14 +213,14 @@
                     </select>
                 </div>
 
-                <div class="field full" style="grid-column:1/-1">
+                <div class="champ plein" style="grid-column:1/-1">
                     <label for="a-email">Email <span style="text-transform:none;letter-spacing:0">— facultatif, jamais publié</span></label>
                     <input id="a-email" name="email" type="email" autocomplete="email"
                            value="{{ old('email') }}" maxlength="150"
                            placeholder="Pour vous recontacter si nous avons une question">
                 </div>
 
-                <div class="field full" style="grid-column:1/-1">
+                <div class="champ plein" style="grid-column:1/-1">
                     <label for="a-texte">Votre avis</label>
                     <textarea id="a-texte" name="texte" maxlength="1500" required
                               placeholder="Votre expérience avec l'élevage : la préparation, la visite, l'arrivée du chaton chez vous.">{{ old('texte') }}</textarea>
@@ -243,7 +244,7 @@
 
         @if($avisGoogle = \App\Models\Setting::get('contact.avis_google'))
             <p style="margin-top:24px">
-                <a class="tlink" href="{{ $avisGoogle }}" target="_blank" rel="noopener noreferrer">
+                <a class="lien" href="{{ $avisGoogle }}" target="_blank" rel="noopener noreferrer">
                     Voir tous les avis sur Google
                 </a>
             </p>
@@ -252,17 +253,17 @@
 </section>
 
 {{-- ---------------- carte ---------------- --}}
-<section class="band ink2 tight">
+<section class="bande creuse serree">
     <div class="wrap">
         <x-section-head
             eyebrow="Venir jusqu'à nous"
             titre="À vingt minutes de Lyon"
             lede="L'élevage est à Lapeyrouse-Mornay, en Isère. L'adresse exacte vous est communiquée lors de la prise de rendez-vous — la carte situe la zone et les principaux accès." />
 
-        <div class="mapwrap">
+        <div class="cadre-carte">
             <div id="carte" data-carte='@json($points)' role="application"
                  aria-label="Carte de situation de l'élevage à Lapeyrouse-Mornay"></div>
-            <div class="mapcard">
+            <div class="carte-fiche">
                 <h4>Temps de trajet</h4>
                 <dl>
                     @foreach($points['reperes'] as $repere)
@@ -270,18 +271,18 @@
                         <dd>{{ $repere['detail'] }}</dd>
                     @endforeach
                 </dl>
-                <p class="small" style="font-size:.78rem">
+                <p class="petit" style="font-size:.78rem">
                     Nous pouvons venir vous chercher à la gare de La Verpillière.
                 </p>
                 {{-- Visent la commune, pas l'adresse exacte : celle-ci n'est donnée
                      qu'au rendez-vous, un itinéraire porte-à-porte la publierait. --}}
                 <h4 style="margin-top:24px">Itinéraire</h4>
                 <div class="btnrow" style="margin-top:10px">
-                    <a class="btn ghost" href="{{ $itineraire['google'] }}"
+                    <a class="btn creux" href="{{ $itineraire['google'] }}"
                        target="_blank" rel="noopener noreferrer"
                        aria-label="Itinéraire vers {{ $itineraire['commune'] }} sur Google Maps (nouvelle fenêtre)"
                        style="flex:1;justify-content:center;padding:11px 12px;font-size:.8rem">Google Maps</a>
-                    <a class="btn ghost" href="{{ $itineraire['waze'] }}"
+                    <a class="btn creux" href="{{ $itineraire['waze'] }}"
                        target="_blank" rel="noopener noreferrer"
                        aria-label="Itinéraire vers {{ $itineraire['commune'] }} sur Waze (nouvelle fenêtre)"
                        style="flex:1;justify-content:center;padding:11px 12px;font-size:.8rem">Waze</a>
@@ -289,7 +290,7 @@
             </div>
         </div>
 
-        <p class="small" style="margin-top:16px">
+        <p class="petit" style="margin-top:16px">
             Carte &copy; OpenStreetMap et CARTO. Aucun traceur publicitaire n'est chargé sur cette page :
             les liens d'itinéraire ouvrent Google Maps ou Waze dans un nouvel onglet, rien n'est chargé depuis eux ici.
         </p>

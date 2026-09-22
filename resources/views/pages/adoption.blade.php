@@ -5,40 +5,41 @@
 
 @section('content')
 
-<section class="band">
+<section class="bande">
     <div class="wrap">
         <x-section-head
+            class="monte"
             niveau="1"
             eyebrow="Adopter"
             titre="Le parcours d'adoption"
             lede="Quatre étapes, aucune surprise. La demande ne vous engage à rien : elle ouvre la discussion." />
 
-        <div class="cells">
-            <div class="cell-b"><span class="n">ÉTAPE 01</span><h3>Vous nous écrivez</h3><p>Le formulaire plus bas, ou un appel. Parlez-nous de votre foyer, de vos autres animaux, de votre rythme de vie. Réponse sous 48 heures.</p></div>
-            <div class="cell-b"><span class="n">ÉTAPE 02</span><h3>Vous venez les voir</h3><p>Visite sur rendez-vous à Lapeyrouse-Mornay. Vous rencontrez la mère, la fratrie complète, et vous voyez l'endroit où ils grandissent.</p></div>
-            <div class="cell-b"><span class="n">ÉTAPE 03</span><h3>Réservation et contrat</h3><p>Contrat de cession signé, acompte, puis des nouvelles régulières en photo et en vidéo jusqu'au départ.</p></div>
-            <div class="cell-b"><span class="n">ÉTAPE 04</span><h3>Le grand jour</h3><p>À {{ \App\Models\Litter::SEMAINES_AVANT_CESSION }} semaines minimum : pedigree LOOF, carnet de santé, certificat vétérinaire, puce ICAD, contrat et kit d'alimentation.</p></div>
+        <div class="cellules">
+            <div class="cellule"><span class="n">ÉTAPE 01</span><h3>Vous nous écrivez</h3><p>Le formulaire plus bas, ou un appel. Parlez-nous de votre foyer, de vos autres animaux, de votre rythme de vie. Réponse sous 48 heures.</p></div>
+            <div class="cellule"><span class="n">ÉTAPE 02</span><h3>Vous venez les voir</h3><p>Visite sur rendez-vous à Lapeyrouse-Mornay. Vous rencontrez la mère, la fratrie complète, et vous voyez l'endroit où ils grandissent.</p></div>
+            <div class="cellule"><span class="n">ÉTAPE 03</span><h3>Réservation et contrat</h3><p>Contrat de cession signé, acompte, puis des nouvelles régulières en photo et en vidéo jusqu'au départ.</p></div>
+            <div class="cellule"><span class="n">ÉTAPE 04</span><h3>Le grand jour</h3><p>À {{ \App\Models\Litter::SEMAINES_AVANT_CESSION }} semaines minimum : pedigree LOOF, carnet de santé, certificat vétérinaire, puce ICAD, contrat et kit d'alimentation.</p></div>
         </div>
     </div>
 </section>
 
-<section class="band paper" id="couverture">
+<section class="bande" id="couverture">
     <div class="wrap">
         <x-section-head
             eyebrow="La question du tarif"
             titre="Ce que couvre l'adoption"
             lede="Il faut le dire clairement, parce que c'est la question qui fâche : ce que vous réglez ne paie pas le chat. Voici, ligne par ligne, ce qu'il y a derrière un chaton qui arrive chez vous." />
 
-        <div class="ledger">
+        <div class="releve">
             @foreach(config('chatterie.couverture') as $ligne)
-                <div class="row">
+                <div class="ligne">
                     <span class="mk">{{ $ligne['numero'] }}</span>
                     <span class="ttl">{{ $ligne['titre'] }}<small>{{ $ligne['detail'] }}</small></span>
-                    <span class="who">{{ $ligne['quand'] }}</span>
+                    <span class="quand">{{ $ligne['quand'] }}</span>
                 </div>
             @endforeach
             <div class="foot">
-                <p class="quote">« Derrière chaque chaton, il y a plusieurs mois de présence et de travail. »</p>
+                <p class="citation-texte">« Derrière chaque chaton, il y a plusieurs mois de présence et de travail. »</p>
                 <p class="lede">
                     C'est cette prise en charge globale qui représente un coût — bien davantage que le
                     chat lui-même. Si le budget est ce qui vous retient, parlez-nous-en : on trouve
@@ -53,7 +54,7 @@
               legende="Douze semaines ensemble avant le grand départ"
               hauteur="42vh" />
 
-<section class="band">
+<section class="bande">
     <div class="wrap">
         <x-section-head
             eyebrow="Demande de pré-réservation"
@@ -79,7 +80,7 @@
                 </div>
             @endif
 
-            <form class="demo" method="POST" action="{{ route('adoption.store') }}">
+            <form class="demande" method="POST" action="{{ route('adoption.store') }}">
                 @csrf
 
                 {{-- Piege a robots : invisible pour un humain, rempli par les bots. --}}
@@ -88,18 +89,18 @@
                     <input type="text" id="f-site" name="site" tabindex="-1" autocomplete="off">
                 </div>
 
-                <div class="field"><label for="f-prenom">Prénom</label>
+                <div class="champ"><label for="f-prenom">Prénom</label>
                     <input id="f-prenom" name="prenom" type="text" autocomplete="given-name" value="{{ old('prenom') }}" required></div>
-                <div class="field"><label for="f-nom">Nom</label>
+                <div class="champ"><label for="f-nom">Nom</label>
                     <input id="f-nom" name="nom" type="text" autocomplete="family-name" value="{{ old('nom') }}"></div>
-                <div class="field"><label for="f-email">Email</label>
+                <div class="champ"><label for="f-email">Email</label>
                     <input id="f-email" name="email" type="email" autocomplete="email" value="{{ old('email') }}" required></div>
-                <div class="field"><label for="f-tel">Téléphone</label>
+                <div class="champ"><label for="f-tel">Téléphone</label>
                     <input id="f-tel" name="telephone" type="tel" autocomplete="tel" value="{{ old('telephone') }}"></div>
-                <div class="field"><label for="f-cp">Code postal</label>
+                <div class="champ"><label for="f-cp">Code postal</label>
                     <input id="f-cp" name="code_postal" type="text" inputmode="numeric" autocomplete="postal-code" value="{{ old('code_postal') }}"></div>
 
-                <div class="field"><label for="f-chaton">Chaton souhaité</label>
+                <div class="champ"><label for="f-chaton">Chaton souhaité</label>
                     <select id="f-chaton" name="kitten_id">
                         <option value="">Sans préférence</option>
                         @foreach($disponibles as $chaton)
@@ -111,28 +112,28 @@
                     </select>
                 </div>
 
-                <div class="field"><label for="f-logement">Votre logement</label>
+                <div class="champ"><label for="f-logement">Votre logement</label>
                     <select id="f-logement" name="logement">
                         @foreach(['Appartement', 'Maison avec jardin', 'Maison sans jardin'] as $choix)
                             <option @selected(old('logement') === $choix)>{{ $choix }}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="field"><label for="f-animaux">Autres animaux</label>
+                <div class="champ"><label for="f-animaux">Autres animaux</label>
                     <select id="f-animaux" name="autres_animaux">
                         @foreach(['Aucun', 'Un chat', 'Plusieurs chats', 'Un chien', 'Chien(s) et chat(s)'] as $choix)
                             <option @selected(old('autres_animaux') === $choix)>{{ $choix }}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="field"><label for="f-presence">Présence à la maison</label>
+                <div class="champ"><label for="f-presence">Présence à la maison</label>
                     <select id="f-presence" name="presence">
                         @foreach(['Quelqu\'un est là la journée', 'Absent la journée en semaine', 'Télétravail partiel'] as $choix)
                             <option @selected(old('presence') === $choix)>{{ $choix }}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="field"><label for="f-exp">Expérience avec les chats</label>
+                <div class="champ"><label for="f-exp">Expérience avec les chats</label>
                     <select id="f-exp" name="experience">
                         @foreach(['Premier chat', 'J\'ai déjà eu des chats', 'J\'ai déjà eu un Maine Coon'] as $choix)
                             <option @selected(old('experience') === $choix)>{{ $choix }}</option>
@@ -140,7 +141,7 @@
                     </select>
                 </div>
 
-                <div class="field full"><label for="f-msg">Votre message</label>
+                <div class="champ plein"><label for="f-msg">Votre message</label>
                     <textarea id="f-msg" name="message" placeholder="Parlez-nous de votre rythme de vie, de ce que vous attendez d'un Maine Coon, de vos questions…">{{ old('message') }}</textarea></div>
 
                 <label class="consent" for="f-rgpd">

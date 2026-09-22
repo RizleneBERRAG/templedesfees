@@ -735,3 +735,52 @@ a.case:hover{border-color:var(--or-ombre);background:var(--emeraude)}
 .vignette:hover{opacity:.85;border-color:var(--or-ombre)}
 .vignette[aria-current="true"]{opacity:1;border-color:var(--or)}
 @media (pointer:coarse){.vignette{width:clamp(60px,12vw,74px)}}
+
+
+/* ── colonne latérale (questions, contact) ───────────────────────── */
+.duo-texte.colonne-aside{grid-template-columns:minmax(0,1fr) 300px;gap:clamp(30px,4vw,58px)}
+@media(max-width:1040px){.duo-texte.colonne-aside{grid-template-columns:1fr}}
+.aparte{border:1px solid var(--filet-2);background:var(--nuit-2);padding:26px;
+  display:flex;flex-direction:column;gap:15px;align-self:start}
+@media(min-width:1040px){.aparte{position:sticky;top:104px}}
+.aparte h4{margin:0;font-family:var(--pierre);font-size:10px;font-weight:500;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--or-mat)}
+.aparte p{font-size:14.5px;line-height:1.7;color:var(--ivoire-3)}
+.aparte .btn{justify-content:center}
+
+
+/* ── objet de la demande : des pastilles plutôt qu'une liste déroulante ── */
+.objets{display:flex;flex-wrap:wrap;gap:9px}
+.objets label{position:relative;cursor:pointer}
+.objets input{position:absolute;opacity:0;width:0;height:0}
+.objets span{display:inline-block;padding:11px 18px;border:1px solid var(--filet);
+  font-family:var(--pierre);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ivoire-3);transition:.25s}
+.objets label:hover span{color:var(--ivoire);border-color:var(--or-ombre)}
+.objets input:checked + span{background:var(--or);border-color:var(--or);color:#14100A}
+.objets input:focus-visible + span{outline:2px solid var(--or-clair);outline-offset:3px}
+@media (pointer:coarse){.objets span{min-height:44px;display:inline-flex;align-items:center}}
+
+/* ── rangée d'icônes sociales ────────────────────────────────────── */
+.socials{display:flex;align-items:center;gap:11px;flex-wrap:wrap}
+.social{display:inline-grid;place-items:center;line-height:0;color:var(--or);
+  transition:transform .35s var(--ease)}
+.social:hover{transform:translateY(-1px)}
+.social-mark{position:relative;width:40px;height:40px;display:grid;place-items:center;
+  border-radius:50%;border:1px solid var(--or-ombre);color:inherit;
+  transition:color .35s,border-color .35s,box-shadow .35s}
+.social-mark svg{position:relative;z-index:1;width:19px;height:19px;display:block}
+.social:hover .social-mark,.social:focus-visible .social-mark{
+  border-color:var(--or);color:var(--or-clair);
+  box-shadow:0 0 0 3px rgba(217,178,106,.12),0 0 20px rgba(217,178,106,.3)}
+.social--instagram:hover .social-mark{border-color:#EE2A7B;color:#FFF1F7;
+  box-shadow:0 0 0 3px rgba(238,42,123,.12),0 0 20px rgba(238,42,123,.32)}
+@media (pointer:coarse){.social-mark{width:44px;height:44px}}
+
+/* ── citation au fil d'une page ──────────────────────────────────── */
+.citation-texte{font-family:var(--titre);font-style:italic;
+  font-size:clamp(1.5rem,3vw,2.3rem);line-height:1.26;color:var(--ivoire);max-width:24ch}
+
+/* ── pied du relevé ──────────────────────────────────────────────── */
+.releve .foot{padding:24px;background:var(--nuit-3);display:flex;flex-direction:column;gap:11px;
+  border-top:1px solid var(--filet-2)}

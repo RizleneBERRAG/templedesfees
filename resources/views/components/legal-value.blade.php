@@ -4,7 +4,7 @@
 @php($valeur = \App\Models\Setting::get($cle, $defaut))
 
 @if(filled($valeur))
-    <span class="v">{{ $valeur }}</span>
+    <span>{{ $valeur }}</span>
 @else
-    <span class="v todo">À compléter</span>
+    <span class="verdict attente">À compléter</span>
 @endif

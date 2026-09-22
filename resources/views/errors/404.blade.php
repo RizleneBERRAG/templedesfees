@@ -19,35 +19,36 @@
 
 @section('content')
 
-<section class="band">
+<section class="bande">
     <div class="wrap" style="max-width:760px">
         <x-section-head
+            class="monte"
             niveau="1"
             eyebrow="Erreur 404"
             titre="Cette page n’existe pas"
             lede="Le lien est peut-être ancien, ou l’adresse comporte une erreur. Voici par où reprendre." />
 
         @if($suggestion)
-            <p class="flash" style="margin-bottom:30px">
+            <p class="retour" style="margin-bottom:30px">
                 Vous cherchiez sans doute
                 <a href="{{ route($suggestion) }}">cette page</a> — l’adresse a changé depuis l’ancien site.
             </p>
         @endif
 
-        <div class="cells">
-            <a class="cell-b" href="{{ route('kittens.index') }}" style="text-decoration:none">
+        <div class="cellules monte">
+            <a class="cellule" href="{{ route('kittens.index') }}" style="text-decoration:none">
                 <span class="n">Nos chatons</span>
                 <p>La portée en cours, les fiches détaillées et les disponibilités.</p>
             </a>
-            <a class="cell-b" href="{{ route('cats.index') }}" style="text-decoration:none">
+            <a class="cellule" href="{{ route('cats.index') }}" style="text-decoration:none">
                 <span class="n">L’élevage</span>
                 <p>Les reproducteurs, leurs pedigrees et leurs dépistages.</p>
             </a>
-            <a class="cell-b" href="{{ route('adoption.create') }}" style="text-decoration:none">
+            <a class="cellule" href="{{ route('adoption.create') }}" style="text-decoration:none">
                 <span class="n">Adopter</span>
                 <p>Le parcours en quatre étapes et la demande de pré-réservation.</p>
             </a>
-            <a class="cell-b" href="{{ route('contact') }}" style="text-decoration:none">
+            <a class="cellule" href="{{ route('contact') }}" style="text-decoration:none">
                 <span class="n">Nous joindre</span>
                 <p>Par téléphone, par email, ou en venant nous voir sur rendez-vous.</p>
             </a>

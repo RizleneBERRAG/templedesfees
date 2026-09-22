@@ -30,41 +30,42 @@
 
 @section('content')
 
-<section class="band paper">
+<section class="bande">
     <div class="wrap">
         <x-section-head
+            class="monte"
             niveau="1"
             eyebrow="Questions fréquentes"
             titre="Ce qu'on nous demande le plus"
             lede="Les réponses complètes, y compris celles qui pourraient vous faire renoncer. On préfère que vous renonciez avant qu'après." />
 
-        <div class="faqwrap">
+        <div class="duo-texte haut colonne-aside monte">
             <div>
-                <div class="faq">
+                <div class="questions">
                     @foreach($faqs as $faq)
                         <details @if($loop->first) open @endif>
                             <summary>{{ $faq->question }}</summary>
-                            <div class="ans">{!! $faq->reponse !!}</div>
+                            <div class="reponse">{!! $faq->reponse !!}</div>
                         </details>
                     @endforeach
                 </div>
                 <div class="btnrow" style="margin-top:40px">
                     <a class="btn" href="{{ route('adoption.create') }}">Poser une autre question</a>
-                    <a class="btn ghost" href="tel:+33624488936">{{ \App\Models\Setting::get('contact.telephone') }}</a>
+                    <a class="btn creux" href="tel:+33677354587">{{ \App\Models\Setting::get('contact.telephone') }}</a>
                 </div>
             </div>
-            <aside class="aside">
-                <x-rosettes />
+            <aside class="aparte">
+                <x-fleuron taille="petit" style="color:var(--or-mat)" />
                 <h4>Votre question n'y est pas ?</h4>
                 <p>Appelez-nous. On répond plus volontiers au téléphone qu'en trois lignes, surtout quand il s'agit de savoir si un Maine Coon est fait pour vous.</p>
-                <a class="btn" href="tel:+33624488936" style="justify-content:center">{{ \App\Models\Setting::get('contact.telephone') }}</a>
-                <a class="tlink" href="{{ route('adoption.create') }}">Demander une visite</a>
+                <a class="btn" href="tel:+33677354587" style="justify-content:center">{{ \App\Models\Setting::get('contact.telephone') }}</a>
+                <a class="lien" href="{{ route('adoption.create') }}">Demander une visite</a>
             </aside>
         </div>
     </div>
 </section>
 
-<div class="band tight" style="padding-block:clamp(22px,3vw,36px)">
+<div class="bande serree">
     <x-photo-strip titre="L'élevage en images" />
 </div>
 

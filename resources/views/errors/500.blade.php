@@ -11,9 +11,10 @@
 
 {{-- Aucun détail technique ici : un message d'erreur ne doit rien révéler
      du fonctionnement interne à un visiteur. Les détails vont dans les logs. --}}
-<section class="band">
+<section class="bande">
     <div class="wrap" style="max-width:700px">
         <x-section-head
+            class="monte"
             niveau="1"
             eyebrow="Erreur"
             titre="Quelque chose s’est mal passé"
@@ -21,7 +22,7 @@
 
         <div class="btnrow" style="margin-top:8px">
             <a class="btn" href="{{ route('home') }}">Retour à l’accueil</a>
-            <a class="btn ghost" href="{{ route('contact') }}">Nous joindre</a>
+            <a class="btn creux" href="{{ route('contact') }}">Nous joindre</a>
         </div>
     </div>
 </section>
