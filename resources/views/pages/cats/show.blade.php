@@ -4,6 +4,14 @@
 @section('description', \Illuminate\Support\Str::limit(strip_tags($chat->description), 150))
 @section('og_image', asset($chat->photo_principale))
 
+@push('schema')
+    <x-fil-ariane :etapes="[
+        ['nom' => 'Accueil',   'url' => route('home')],
+        ['nom' => 'Nos chats', 'url' => route('cats.index')],
+        ['nom' => $chat->nom,  'url' => route('cats.show', $chat)],
+    ]" />
+@endpush
+
 @section('content')
 
 <section class="bande">

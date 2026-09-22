@@ -3,6 +3,13 @@
 @section('title', "Le Maine Coon — origines, morphologie, caractère et santé")
 @section('description', "Tout sur le Maine Coon avant d'en accueillir un : origines, lecture de la morphologie, robe, caractère réel, besoins quotidiens, dépistages de la race et préparation de l'arrivée.")
 
+@push('schema')
+    <x-fil-ariane :etapes="[
+        ['nom' => 'Accueil',       'url' => route('home')],
+        ['nom' => 'Le Maine Coon', 'url' => route('breed')],
+    ]" />
+@endpush
+
 @section('content')
 
 <section class="bande">

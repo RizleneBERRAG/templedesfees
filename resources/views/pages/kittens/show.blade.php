@@ -4,6 +4,14 @@
 @section('description', \Illuminate\Support\Str::limit(strip_tags($chaton->description), 150))
 @section('og_image', asset($chaton->photo_principale))
 
+@push('schema')
+    <x-fil-ariane :etapes="[
+        ['nom' => 'Accueil',     'url' => route('home')],
+        ['nom' => 'Nos chatons', 'url' => route('kittens.index')],
+        ['nom' => $chaton->nom,  'url' => route('kittens.show', $chaton)],
+    ]" />
+@endpush
+
 @section('content')
 
 <section class="bande">
