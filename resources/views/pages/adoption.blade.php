@@ -26,6 +26,7 @@
 <section class="bande" id="couverture">
     <div class="wrap">
         <x-section-head
+            class="monte"
             eyebrow="La question du tarif"
             titre="Ce que couvre l'adoption"
             lede="Il faut le dire clairement, parce que c'est la question qui fâche : ce que vous réglez ne paie pas le chat. Voici, ligne par ligne, ce qu'il y a derrière un chaton qui arrive chez vous." />
@@ -50,13 +51,14 @@
     </div>
 </section>
 
-<x-photo-band image="images/cats/chatons-pile.webp"
+<x-photo-band image="images/cats/chatons-4.webp"
               legende="Douze semaines ensemble avant le grand départ"
               hauteur="42vh" />
 
 <section class="bande">
     <div class="wrap">
         <x-section-head
+            class="monte"
             eyebrow="Demande de pré-réservation"
             titre="Parlez-nous de votre foyer"
             lede="Plus vous nous en dites, plus nous pourrons vous orienter vers le chaton qui vous correspond vraiment. Réponse sous 48 heures." />

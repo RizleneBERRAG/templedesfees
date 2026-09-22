@@ -31,8 +31,8 @@ class ContactController extends Controller
      */
     private static function itineraires(): array
     {
-        $commune = trim(Setting::get('elevage.ville', "L'Isle d'Abeau").' '
-            .Setting::get('elevage.code_postal', '38080').' France');
+        $commune = trim(Setting::get('elevage.ville', 'Lapeyrouse-Mornay').' '
+            .Setting::get('elevage.code_postal', '26210').' France');
 
         return [
             'commune' => $commune,

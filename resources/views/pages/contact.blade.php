@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', "Contact — venir voir les chatons")
-@section('description', "Écrivez-nous ou appelez l'élevage Chatterie du Temple des Fées à Lapeyrouse-Mornay (38), à 20 minutes de Lyon. Visites sur rendez-vous, réponse sous 48 heures.")
+@section('description', "Écrivez-nous ou appelez la Chatterie du Temple des Fées à Lapeyrouse-Mornay (26), dans la Drôme des collines. Visites sur rendez-vous, réponse sous 48 heures.")
 
 @push('scripts')
     @vite('resources/js/map.js')
@@ -132,7 +132,7 @@
                 </div>
 
                 <figure class="vue" style="margin:0">
-                    <img src="{{ asset('images/cats/ambiance.webp') }}"
+                    <img src="{{ asset('images/cats/maison-3.webp') }}"
                          alt="Maine Coon de la chatterie Chatterie du Temple des Fées" loading="lazy">
                     <figcaption>Fin de journée à la maison</figcaption>
                 </figure>
@@ -155,6 +155,7 @@
 <section class="bande creuse serree" id="avis">
     <div class="wrap">
         <x-section-head
+            class="monte"
             eyebrow="Ils sont passés par là"
             titre="Ce que disent les familles"
             lede="Témoignages de familles adoptantes, publiés avec leur accord. Prénom seul — aucun nom de famille n'est publié sur ce site." />
@@ -256,9 +257,10 @@
 <section class="bande creuse serree">
     <div class="wrap">
         <x-section-head
+            class="monte"
             eyebrow="Venir jusqu'à nous"
-            titre="À vingt minutes de Lyon"
-            lede="L'élevage est à Lapeyrouse-Mornay, en Isère. L'adresse exacte vous est communiquée lors de la prise de rendez-vous — la carte situe la zone et les principaux accès." />
+            titre="Dans la Drôme des collines"
+            lede="L'élevage est à Lapeyrouse-Mornay, tout au nord de la Drôme, à dix minutes de Saint-Rambert-d'Albon et à une heure de Lyon comme de Saint-Étienne. L'adresse exacte vous est communiquée à la prise de rendez-vous." />
 
         <div class="cadre-carte">
             <div id="carte" data-carte='@json($points)' role="application"
