@@ -23,19 +23,28 @@
             titre="Le Maine Coon"
             lede="Le plus grand chat domestique, et l'un des plus doux. Ce qu'il faut savoir avant d'en accueillir un — y compris ce qui pourrait vous faire changer d'avis." />
 
-        {{-- Un sommaire plutôt qu'un fil d'Ariane : la page est longue, et
-             chacun n'y cherche pas la même chose. --}}
-        <nav class="sommaire" aria-label="Sommaire de la page">
-            <a href="#origines">Origines</a>
-            <a href="#morphologie">Le lire</a>
-            <a href="#robe">La robe</a>
-            <a href="#caractere">Le caractère</a>
-            <a href="#besoins">Ses besoins</a>
-            <a href="#sante">Sa santé</a>
-            <a href="#arrivee">Son arrivée</a>
-        </nav>
     </div>
 </section>
+
+{{-- Un sommaire plutôt qu'un fil d'Ariane : la page est longue, et chacun n'y
+     cherche pas la même chose.
+
+     Il est posé ICI, hors de la section précédente, et c'est essentiel : un
+     élément collant ne colle que dans les limites de son parent. Enfermé dans
+     la première section, il se décrochait au bout de quelques centaines de
+     pixels. En frère des sections, son parent est la page entière — il suit
+     donc jusqu'en bas. --}}
+<nav class="sommaire" aria-label="Sommaire de la page">
+    <div class="wrap sommaire-in">
+        <a href="#origines">Origines</a>
+        <a href="#morphologie">Le lire</a>
+        <a href="#robe">La robe</a>
+        <a href="#caractere">Le caractère</a>
+        <a href="#besoins">Ses besoins</a>
+        <a href="#sante">Sa santé</a>
+        <a href="#arrivee">Son arrivée</a>
+    </div>
+</nav>
 
 {{-- ═══ origines ═══ --}}
 <section class="bande creuse" id="origines">

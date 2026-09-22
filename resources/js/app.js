@@ -419,7 +419,8 @@ if (sommaire) {
             sections.forEach(({ lien }) => lien.removeAttribute('aria-current'));
             courante.lien.setAttribute('aria-current', 'true');
 
-            if (sommaire.scrollWidth > sommaire.clientWidth) {
+            const rail = sommaire.querySelector('.sommaire-in') ?? sommaire;
+            if (rail.scrollWidth > rail.clientWidth) {
                 courante.lien.scrollIntoView({
                     inline: 'center', block: 'nearest',
                     behavior: reduit() ? 'auto' : 'smooth',
