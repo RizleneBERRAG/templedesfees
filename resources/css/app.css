@@ -32,7 +32,11 @@
   --filet-2:rgba(217,178,106,.12);
   --filet-3:rgba(245,240,230,.09);
 
-  --maxw:1240px; --large:1440px;
+  /* La mesure de page respire avec l'ecran au lieu de se figer : sur un grand
+     moniteur, un bloc de 1240 px centre dans 2560 fait ilot. Les colonnes de
+     texte, elles, gardent leur propre mesure en ch — elargir la page
+     n'allonge jamais une ligne au-dela du lisible. */
+  --maxw:clamp(1040px,84vw,1560px); --large:clamp(1180px,92vw,1800px);
   --titre:"Cormorant Garamond",Georgia,"Times New Roman",serif;
   --pierre:"Cinzel",Georgia,serif;
   --corps:"Jost",system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -1020,9 +1024,19 @@ footer > *{position:relative}
 /* Deux colonnes de hauteur comparable : la photo d'un côté, les six traits de
    l'autre. La liste remplit la colonne, là où un paragraphe seul laissait
    quatre cents pixels de vide sous lui. */
-.lecteur{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);
-  gap:clamp(24px,3.4vw,52px);align-items:start;max-width:1040px;margin-inline:auto}
-@media(max-width:860px){.lecteur{grid-template-columns:1fr}}
+/* Le lecteur occupe toute la mesure de la page et suit sa largeur : la colonne
+   de la photo vaut 38 % du bloc, bornee pour ne jamais devenir minuscule ni
+   ecraser la liste. Aucune largeur figee — le bloc grandit et retrecit avec
+   l'ecran, comme le reste du site.
+
+   Le format 7/10 de la photo, lui, ne bouge pas : les reperes sont poses en
+   pourcentage du CADRE, et un cadre d'un autre format recadrerait l'image
+   sous eux. C'est la seule contrainte du bloc, et elle est structurelle. */
+.lecteur{display:grid;grid-template-columns:clamp(260px,38%,470px) minmax(0,1fr);
+  gap:clamp(22px,3vw,48px);align-items:start}
+@media(max-width:860px){
+  .lecteur{grid-template-columns:1fr;max-width:min(430px,100%);margin-inline:auto}
+}
 
 .lecture{position:relative;overflow:hidden;border:1px solid var(--filet);
   background:var(--nuit-3);width:100%;aspect-ratio:7/10;margin:0}
@@ -1037,12 +1051,12 @@ footer > *{position:relative}
 .traits li{border-bottom:1px solid var(--filet-2)}
 .traits li:last-child{border-bottom:0}
 
-.traits button{display:flex;flex-direction:column;gap:4px;width:100%;text-align:left;
-  padding:15px 34px 15px 0;position:relative;background:none;border:0;cursor:pointer}
+.traits button{display:flex;flex-direction:column;gap:3px;width:100%;text-align:left;
+  padding:13px 30px 13px 0;position:relative;background:none;border:0;cursor:pointer}
 .traits button .k{font-family:var(--pierre);font-size:9px;letter-spacing:.2em;
   text-transform:uppercase;color:var(--or-mat);transition:color .3s}
-.traits button b{font-family:var(--titre);font-size:clamp(1.3rem,2.1vw,1.7rem);
-  font-weight:400;line-height:1.14;color:var(--ivoire-2);transition:color .3s}
+.traits button b{font-family:var(--titre);font-size:clamp(1.18rem,1.7vw,1.44rem);
+  font-weight:400;line-height:1.16;color:var(--ivoire-2);transition:color .3s}
 
 /* Le chevron dit que la ligne s'ouvre. Il pivote quand elle est ouverte. */
 .traits button::after{content:"";position:absolute;right:8px;top:50%;width:9px;height:9px;
@@ -1065,7 +1079,7 @@ footer > *{position:relative}
 .traits .repli{display:grid;grid-template-rows:0fr;opacity:0;
   transition:grid-template-rows .4s var(--ease),opacity .3s,padding-bottom .4s}
 .traits .repli > p{min-height:0;overflow:hidden;
-  font-size:15px;line-height:1.72;color:var(--ivoire-3);max-width:58ch}
+  font-size:14.5px;line-height:1.7;color:var(--ivoire-3);max-width:54ch;padding-right:30px}
 .traits li:has(> button[aria-current="true"]) .repli{grid-template-rows:1fr;opacity:1;padding-bottom:17px}
 
 /* Sans :has(), rien ne se replie : les six textes restent visibles. La page
