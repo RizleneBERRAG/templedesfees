@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Enums\CatRole;
 use App\Enums\HealthTestType;
+use App\Models\Article;
 use App\Models\Cat;
 use App\Models\Faq;
 use App\Models\HealthTest;
@@ -83,6 +84,30 @@ class ElevageSeeder extends Seeder
         $this->porteeArchivee($chats);
         $this->galerie();
         $this->questions();
+        $this->articles();
+    }
+
+    /**
+     * Les articles de demarrage.
+     *
+     * Le site en ligne affiche « Aucun article disponible actuellement » : une
+     * rubrique vide fait plus de mal que pas de rubrique. Ces trois-la sont
+     * ecrits pour tenir tout seuls — ils repondent a des questions que les
+     * familles posent vraiment — et servent de modele a l'eleveuse.
+     */
+    private function articles(): void
+    {
+        foreach (require database_path('seeders/data/articles.php') as $a) {
+            Article::updateOrCreate(['slug' => $a['slug']], [
+                'titre'            => $a['titre'],
+                'categorie'        => $a['categorie'],
+                'chapeau'          => $a['chapeau'],
+                'corps'            => $a['corps'],
+                'photo_principale' => 'images/cats/'.$a['photo'].'.webp',
+                'date_publication' => now()->subDays($a['jours'])->startOfDay(),
+                'est_publie'       => true,
+            ]);
+        }
     }
 
     private function reglages(): void

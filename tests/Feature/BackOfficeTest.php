@@ -41,6 +41,8 @@ class BackOfficeTest extends TestCase
             'reproducteurs'     => ['/admin/cats'],
             'photos'            => ['/admin/photos'],
             'nouvelle photo'    => ['/admin/photos/create'],
+            'articles'          => ['/admin/articles'],
+            'nouvel article'    => ['/admin/articles/create'],
             'avis'              => ['/admin/reviews'],
             'demandes'          => ['/admin/adoption-requests'],
             'messages'          => ['/admin/contact-messages'],

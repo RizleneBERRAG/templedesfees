@@ -201,6 +201,10 @@ return [
      * que les liens deja partages, les signets et les resultats de recherche
      * existants ne tombent dans le vide le jour de la bascule.
      *
+     * /articles n'y figure pas non plus, mais pour la raison inverse : la
+     * rubrique existe desormais pour de vrai, au meme chemin. Leurs liens
+     * deja partages tombent directement sur la bonne page.
+     *
      * /sign-in n'y figure volontairement pas : la page de connexion du site
      * actuel est indexable et liee depuis le menu et le pied de page, ce qui
      * n'a aucune raison d'etre. Elle disparait, sans redirection.
@@ -213,7 +217,6 @@ return [
         'infos/nutrition'   => 'breed',
         'infos/health'      => 'breed',
         'infos/preparation' => 'breed',
-        'articles'          => 'home',
         'about'             => 'home',
         'legal'             => 'legal',
         'legal/mentions'    => 'legal',

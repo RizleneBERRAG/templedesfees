@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdoptionController;
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CatController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\KittenController;
@@ -18,6 +19,9 @@ Route::get('/elevage',                 [CatController::class, 'index'])->name('c
 Route::get('/elevage/{cat}',           [CatController::class, 'show'])->name('cats.show');
 
 Route::get('/le-maine-coon',               [PageController::class, 'breed'])->name('breed');
+
+Route::get('/articles',                [ArticleController::class, 'index'])->name('articles.index');
+Route::get('/articles/{article}',      [ArticleController::class, 'show'])->name('articles.show');
 Route::get('/galerie',                 [PageController::class, 'gallery'])->name('gallery');
 Route::get('/questions',               [PageController::class, 'faq'])->name('faq');
 Route::get('/contact',                 [ContactController::class, 'show'])->name('contact');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use App\Models\Cat;
 use App\Models\Kitten;
 use Illuminate\Http\Response;
@@ -21,6 +22,7 @@ class SitemapController extends Controller
         'kittens.index'   => ['0.9', 'weekly'],
         'cats.index'      => ['0.8', 'monthly'],
         'breed'           => ['0.7', 'yearly'],
+        'articles.index'  => ['0.7', 'weekly'],
         'gallery'         => ['0.6', 'monthly'],
         'adoption.create' => ['0.8', 'yearly'],
         'faq'             => ['0.7', 'yearly'],
@@ -54,6 +56,17 @@ class SitemapController extends Controller
                 'lastmod' => $chaton->updated_at?->toAtomString(),
                 'priority' => '0.8',
                 'changefreq' => 'weekly',
+            ];
+        }
+
+        // Un article programme pour plus tard renvoie un 404 : il reste hors
+        // du sitemap tant que sa date n'est pas atteinte. Cf. Article::publies().
+        foreach (Article::publies()->get() as $article) {
+            $urls[] = [
+                'loc' => route('articles.show', $article),
+                'lastmod' => $article->updated_at?->toAtomString(),
+                'priority' => '0.6',
+                'changefreq' => 'yearly',
             ];
         }
 

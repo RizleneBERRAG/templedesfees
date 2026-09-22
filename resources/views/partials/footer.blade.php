@@ -24,6 +24,7 @@
                 <ul>
                     <li><a href="{{ route('kittens.index') }}">Chatons disponibles</a></li>
                     <li><a href="{{ route('cats.index') }}">Nos reproducteurs</a></li>
+                    <li><a href="{{ route('articles.index') }}">Articles</a></li>
                     <li><a href="{{ route('gallery') }}">Galerie</a></li>
                     <li><a href="{{ route('breed') }}">Le Maine Coon</a></li>
                 </ul>
