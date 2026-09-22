@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le sous-menu — trois propositions</title>
+<link rel="stylesheet" href="/fonts/fonts.css">
+<link rel="stylesheet" href="/build/assets/app-CGi5_e7O.css">
+<style>
+.choix{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));
+  gap:1px;background:var(--filet-2);border:1px solid var(--filet-2);margin-top:clamp(30px,4vw,50px)}
+.choix a{background:var(--nuit-2);padding:clamp(24px,3vw,38px);display:flex;flex-direction:column;
+  gap:12px;transition:background .4s}
+.choix a:hover{background:var(--nuit-3)}
+.choix .l{font-family:var(--pierre);font-size:clamp(2.4rem,5vw,3.4rem);line-height:1;
+  background:var(--dorure);-webkit-background-clip:text;background-clip:text;color:transparent}
+.choix h2{font-size:clamp(1.25rem,1.9vw,1.55rem);color:var(--ivoire)}
+.choix p{font-size:14.5px;line-height:1.72;color:var(--ivoire-3)}
+.choix em{color:var(--or-clair);font-style:normal}
+</style>
+</head>
+<body>
+<div id="grain" aria-hidden="true"></div>
+
+<section class="bande">
+  <div class="wrap">
+    <div class="chapitre">
+      <span class="rubrique">Le sous-menu de section</span>
+      <h1>Trois façons de suivre la page</h1>
+      <p class="lede">Même page, même contenu, trois traitements du sommaire. Ouvrez-en une, faites défiler jusqu’en bas, puis rétrécissez la fenêtre pour voir le comportement en petit écran. Dites-moi la lettre.</p>
+    </div>
+
+    <div class="choix">
+      <a href="a.html">
+        <span class="l">A</span>
+        <h2>Le rail dans la marge</h2>
+        <p>Le sommaire sort du flux et se tient <em>dans la marge gauche</em>, en colonne, à mi-hauteur. Un tiret d’or s’allonge sur la section en cours. Rien ne barre la page, rien ne passe dessous. Sous 1200 px la marge disparaît : il redevient une fine barre collée sous le bandeau.</p>
+      </a>
+      <a href="b.html">
+        <span class="l">B</span>
+        <h2>La pastille flottante</h2>
+        <p>Une petite pastille <em>en bas à droite</em> qui n’affiche que la section en cours. On clique, la liste se déplie vers le haut ; on choisit, elle se referme. Encombrement minimal, identique sur téléphone et sur grand écran.</p>
+      </a>
+      <a href="c.html">
+        <span class="l">C</span>
+        <h2>Fondu dans le bandeau</h2>
+        <p>Pas de seconde barre du tout : le sommaire s’installe <em>dans le bandeau du site</em>, sur une deuxième ligne qui se déplie quand on quitte l’introduction et se replie quand on remonte. Une seule barre à l’écran.</p>
+      </a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

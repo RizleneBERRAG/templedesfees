@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A — La planche d’atlas</title>
+<link rel="stylesheet" href="/fonts/fonts.css">
+<link rel="stylesheet" href="/build/assets/app-CGi5_e7O.css">
+<style>
+/* ── A : la planche d'atlas ───────────────────────────────────────────
+   La photo au centre, trois traits de chaque côté. Chaque trait tend un
+   filet d'or vers l'intérieur, comme les légendes d'une planche d'anatomie.
+   Les deux colonnes latérales portent le même nombre de lignes : aucune ne
+   peut finir avant l'autre. */
+
+.atlas{display:grid;grid-template-columns:minmax(0,1fr) clamp(280px,32%,420px) minmax(0,1fr);
+  gap:clamp(18px,2.4vw,40px);align-items:center}
+
+.atlas .colonne{display:flex;flex-direction:column;gap:clamp(14px,2vw,26px)}
+
+.atlas .trait{display:flex;flex-direction:column;gap:5px;padding:14px 0;cursor:pointer;
+  background:none;border:0;position:relative;text-align:right}
+.atlas .colonne.droite .trait{text-align:left}
+.atlas .trait .k{font-family:var(--pierre);font-size:9px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--or-mat);transition:color .3s}
+.atlas .trait b{font-family:var(--titre);font-size:clamp(1.15rem,1.6vw,1.4rem);font-weight:400;
+  line-height:1.16;color:var(--ivoire-2);transition:color .3s}
+.atlas .trait p{font-size:13.5px;line-height:1.66;color:var(--ivoire-dim);
+  max-height:0;overflow:hidden;opacity:0;transition:max-height .45s var(--ease),opacity .3s}
+
+/* Le filet qui part vers la photo. */
+.atlas .trait::after{content:"";position:absolute;top:24px;width:clamp(16px,2vw,34px);height:1px;
+  background:linear-gradient(90deg,var(--or-ombre),transparent);right:-1px;
+  transform:scaleX(.4);transform-origin:100% 50%;transition:transform .4s var(--ease),background .3s}
+.atlas .colonne.droite .trait::after{left:-1px;right:auto;transform-origin:0 50%;
+  background:linear-gradient(90deg,transparent,var(--or-ombre))}
+
+.atlas .trait[aria-current="true"] .k{color:var(--or)}
+.atlas .trait[aria-current="true"] b{color:var(--or-clair)}
+.atlas .trait[aria-current="true"] p{max-height:16em;opacity:1;margin-top:4px}
+.atlas .trait[aria-current="true"]::after{transform:scaleX(1);
+  background:linear-gradient(90deg,var(--or),transparent)}
+.atlas .colonne.droite .trait[aria-current="true"]::after{
+  background:linear-gradient(90deg,transparent,var(--or))}
+.atlas .trait:hover b{color:var(--ivoire)}
+
+@media(max-width:900px){
+  .atlas{grid-template-columns:1fr}
+  .atlas .photo-centre{order:-1;max-width:400px;margin-inline:auto}
+  .atlas .trait,.atlas .colonne.droite .trait{text-align:left}
+  .atlas .trait::after{display:none}
+  .atlas .colonne{gap:0}
+  .atlas .trait{border-bottom:1px solid var(--filet-2)}
+}
+</style>
+</head>
+<body>
+<div id="grain" aria-hidden="true"></div>
+
+<section class="bande">
+  <div class="wrap">
+    <div class="chapitre">
+      <span class="numero">Proposition A</span>
+      <h2>Lire un Maine Coon</h2>
+      <p class="lede">Six points qu’un juge regarde, et à quoi chacun sert vraiment.</p>
+    </div>
+
+    <div class="atlas" id="lecture" data-points='[]'>
+      <div class="colonne gauche">
+        <button class="trait" type="button" data-point="0" aria-current="true">
+          <span class="k">Oreilles</span><b>Lynx tips</b>
+          <p>Les touffes qui prolongent la pointe de l’oreille. Elles brisent le vent et protègent le conduit du froid.</p>
+        </button>
+        <button class="trait" type="button" data-point="1">
+          <span class="k">Tête</span><b>Museau carré</b>
+          <p>Le museau se coupe net, en angle droit vu de profil, avec un menton ferme aligné sous le nez.</p>
+        </button>
+        <button class="trait" type="button" data-point="2">
+          <span class="k">Poil</span><b>Collerette</b>
+          <p>La fraise de poils longs autour du cou, très marquée en hiver. Elle protège la gorge.</p>
+        </button>
+      </div>
+
+      <div class="photo-centre">
+        <div class="lecture">
+          <img src="/images/cats/tika.webp" alt="Tika, Maine Coon red, vue de profil" width="1200" height="1714">
+          <button class="repere" type="button" style="left:62%;top:9%"  data-point="0" aria-pressed="true"><span class="onde"></span></button>
+          <button class="repere" type="button" style="left:57%;top:30%" data-point="1"><span class="onde"></span></button>
+          <button class="repere" type="button" style="left:55%;top:41%" data-point="2"><span class="onde"></span></button>
+          <button class="repere" type="button" style="left:25%;top:55%" data-point="3"><span class="onde"></span></button>
+          <button class="repere" type="button" style="left:28%;top:83%" data-point="4"><span class="onde"></span></button>
+          <button class="repere" type="button" style="left:44%;top:68%" data-point="5"><span class="onde"></span></button>
+          <figcaption>Tika, red · repères du standard</figcaption>
+        </div>
+      </div>
+
+      <div class="colonne droite">
+        <button class="trait" type="button" data-point="3">
+          <span class="k">Fourrure</span><b>Poil mi-long hydrofuge</b>
+          <p>Court sur les épaules, long sur les flancs et la culotte. L’épaule reste libre pour marcher.</p>
+        </button>
+        <button class="trait" type="button" data-point="4">
+          <span class="k">Queue</span><b>Queue en panache</b>
+          <p>Elle doit atteindre au moins l’épaule quand on la rabat. Le chat s’en couvre pour dormir.</p>
+        </button>
+        <button class="trait" type="button" data-point="5">
+          <span class="k">Ossature</span><b>Corps rectangulaire</b>
+          <p>Poitrine large, ossature lourde, corps plus long que haut. Six à neuf kilos pour un mâle.</p>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+const bloc = document.getElementById('lecture');
+const montrer = (i) => {
+  bloc.querySelectorAll('.repere').forEach(r => r.setAttribute('aria-pressed', String(+r.dataset.point === i)));
+  bloc.querySelectorAll('.trait').forEach(t => {
+    if (+t.dataset.point === i) t.setAttribute('aria-current', 'true');
+    else t.removeAttribute('aria-current');
+  });
+};
+const depuis = (e) => { const b = e.target.closest('[data-point]'); if (b) montrer(+b.dataset.point); };
+bloc.addEventListener('click', depuis);
+bloc.addEventListener('mouseover', depuis);
+</script>
+</body>
+</html>

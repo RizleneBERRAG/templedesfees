@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>B — Les six gros plans</title>
+<link rel="stylesheet" href="/fonts/fonts.css">
+<link rel="stylesheet" href="/build/assets/app-CGi5_e7O.css">
+<style>
+/* ── B : les six gros plans ───────────────────────────────────────────
+   Pas de photo unique ni de repères à caler : six vignettes, chacune un
+   vrai gros plan découpé sur la zone concernée. Une grille auto-fit, donc
+   fluide par construction — trois colonnes sur grand écran, deux sur
+   tablette, une sur téléphone, sans aucune valeur figée. */
+
+.planches{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));
+  gap:1px;background:var(--filet-2);border:1px solid var(--filet-2)}
+
+.planche{background:var(--nuit-2);display:flex;flex-direction:column;
+  transition:background .4s}
+.planche:hover{background:var(--nuit-3)}
+
+.planche .gros-plan{position:relative;aspect-ratio:1;overflow:hidden;background:var(--nuit-3)}
+.planche .gros-plan img{width:100%;height:100%;object-fit:cover;
+  filter:saturate(.94);transition:transform 1s var(--ease),filter .5s}
+.planche:hover .gros-plan img{transform:scale(1.05);filter:none}
+
+/* Le numéro de planche, gravé dans le coin. */
+.planche .n{position:absolute;left:14px;top:12px;z-index:2;
+  font-family:var(--pierre);font-size:10px;letter-spacing:.2em;color:var(--or-clair);
+  background:rgba(8,11,10,.66);border:1px solid var(--filet);padding:5px 9px;
+  backdrop-filter:blur(6px)}
+
+.planche .bd{padding:clamp(18px,2.2vw,24px);display:flex;flex-direction:column;gap:9px}
+.planche .k{font-family:var(--pierre);font-size:9px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--or-mat)}
+.planche h3{font-size:clamp(1.2rem,1.7vw,1.45rem);color:var(--ivoire)}
+.planche p{font-size:14.5px;line-height:1.7;color:var(--ivoire-3)}
+</style>
+</head>
+<body>
+<div id="grain" aria-hidden="true"></div>
+
+<section class="bande">
+  <div class="wrap">
+    <div class="chapitre">
+      <span class="numero">Proposition B</span>
+      <h2>Lire un Maine Coon</h2>
+      <p class="lede">Six points qu’un juge regarde, et à quoi chacun sert vraiment. Chaque vignette est un gros plan réel sur nos chats.</p>
+    </div>
+
+    <div class="planches">
+      <article class="planche">
+        <div class="gros-plan">
+          <span class="n">I</span>
+          <img src="details/trait-0.webp" alt="Touffes d’oreille d’un Maine Coon" loading="lazy" width="560" height="560">
+        </div>
+        <div class="bd">
+          <span class="k">Oreilles</span>
+          <h3>Lynx tips</h3>
+          <p>Les touffes de poils qui prolongent la pointe de l’oreille. Elles brisent le vent et protègent le conduit du froid. Grandes oreilles larges à la base, plantées haut : l’un des traits les plus recherchés du standard.</p>
+        </div>
+      </article>
+
+      <article class="planche">
+        <div class="gros-plan">
+          <span class="n">II</span>
+          <img src="details/trait-1.webp" alt="Museau carré d’un Maine Coon" loading="lazy" width="560" height="560">
+        </div>
+        <div class="bd">
+          <span class="k">Tête</span>
+          <h3>Museau carré</h3>
+          <p>Le museau se coupe net, en angle droit vu de profil, avec un menton ferme aligné sous le nez. C’est ce qui lui donne son air sérieux, et c’est un point que les juges regardent en premier.</p>
+        </div>
+      </article>
+
+      <article class="planche">
+        <div class="gros-plan">
+          <span class="n">III</span>
+          <img src="details/trait-2.webp" alt="Collerette d’un Maine Coon" loading="lazy" width="560" height="560">
+        </div>
+        <div class="bd">
+          <span class="k">Poil</span>
+          <h3>Collerette</h3>
+          <p>La fraise de poils longs autour du cou, très marquée en hiver, plus discrète après la mue. Elle protège la gorge — la zone la plus exposée quand le chat dort en boule dans la neige.</p>
+        </div>
+      </article>
+
+      <article class="planche">
+        <div class="gros-plan">
+          <span class="n">IV</span>
+          <img src="details/trait-3.webp" alt="Poil mi-long d’un Maine Coon" loading="lazy" width="560" height="560">
+        </div>
+        <div class="bd">
+          <span class="k">Fourrure</span>
+          <h3>Poil mi-long hydrofuge</h3>
+          <p>Court sur les épaules, long sur les flancs et la culotte. Cette répartition n’est pas un hasard : elle laisse l’épaule libre pour marcher et couvre ce qui touche le sol. Le poil repousse l’eau.</p>
+        </div>
+      </article>
+
+      <article class="planche">
+        <div class="gros-plan">
+          <span class="n">V</span>
+          <img src="details/trait-4.webp" alt="Queue en panache d’un Maine Coon" loading="lazy" width="560" height="560">
+        </div>
+        <div class="bd">
+          <span class="k">Queue</span>
+          <h3>Queue en panache</h3>
+          <p>Longue — elle doit atteindre au moins l’épaule quand on la rabat — et très fournie. Le chat s’en couvre le museau et les coussinets pour dormir. C’est une couverture, pas un ornement.</p>
+        </div>
+      </article>
+
+      <article class="planche">
+        <div class="gros-plan">
+          <span class="n">VI</span>
+          <img src="details/trait-5.webp" alt="Ossature d’un Maine Coon" loading="lazy" width="560" height="560">
+        </div>
+        <div class="bd">
+          <span class="k">Ossature</span>
+          <h3>Corps rectangulaire</h3>
+          <p>Poitrine large, ossature lourde, corps plus long que haut. Un mâle adulte pèse entre six et neuf kilos, et met trois à quatre ans à finir de se construire — deux fois plus qu’un chat de gouttière.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+</body>
+</html>

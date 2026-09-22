@@ -821,7 +821,9 @@ a.case:hover{border-color:var(--or-ombre);background:var(--emeraude)}
 @media(prefers-reduced-motion:reduce){#grain{opacity:.32}}
 
 /* Tout ce qui doit rester au-dessus du grain. */
-.bandeau,footer,.hero,.bande,.vivant,.bande-photo,#lb,.barre-chaton{position:relative;z-index:2}
+footer,.hero,.bande,.vivant,.bande-photo,#lb,.barre-chaton{position:relative;z-index:2}
+/* Le bandeau garde son position:sticky declare plus haut : on ne lui donne
+   ici que son etage. Le remettre en relative le decollerait du haut. */
 .bandeau{z-index:60}
 #lb{z-index:90}
 

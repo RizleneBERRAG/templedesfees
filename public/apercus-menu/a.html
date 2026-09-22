@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A — Le rail dans la marge</title>
+<link rel="stylesheet" href="/fonts/fonts.css">
+<link rel="stylesheet" href="/build/assets/app-CGi5_e7O.css">
+<style>
+/* A — Le rail dans la marge.
+   Le sommaire quitte le flux de la page : il se tient dans la gouttiere de
+   gauche, en colonne, hors de la mesure de texte. Rien ne barre la page,
+   rien ne passe dessous.
+
+   Point important : il n'est PAS cale sur le bord de la fenetre mais sur le
+   bord reel de la colonne de texte, recalcule en CSS a partir des memes
+   valeurs que le reste du site (--maxw et le padding-inline de .wrap).
+   Sa largeur maximale est cette gouttiere : il ne peut donc jamais, a aucune
+   largeur d'ecran, mordre sur le contenu.
+
+   Sous 1280 px la gouttiere devient trop etroite pour une etiquette : le
+   rail redevient une fine barre horizontale collee sous le bandeau. */
+
+.rail-sommaire{
+  --pad-wrap:clamp(20px,4vw,60px);
+  --gouttiere:calc(50vw - var(--maxw)/2 + var(--pad-wrap));
+  --jeu:clamp(8px,1vw,18px);
+  position:fixed;right:calc(50% + var(--maxw)/2 - var(--pad-wrap) + var(--jeu));
+  top:50%;transform:translateY(-50%);z-index:35;
+  max-width:calc(var(--gouttiere) - var(--jeu) - 12px);
+  display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+
+.rail-sommaire a{display:flex;align-items:center;justify-content:flex-end;gap:10px;
+  padding:7px 0;max-width:100%;
+  font-family:var(--pierre);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ivoire-dim);transition:color .3s}
+.rail-sommaire a span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* Le tiret d'or, pose du cote du texte : il pointe vers la colonne. */
+.rail-sommaire a::after{content:"";flex:none;width:14px;height:1px;background:var(--or-ombre);
+  transition:width .35s cubic-bezier(.2,.7,.25,1),background .3s}
+.rail-sommaire a:hover{color:var(--ivoire)}
+.rail-sommaire a:hover::after{width:22px}
+.rail-sommaire a[aria-current="true"]{color:var(--or-clair)}
+.rail-sommaire a[aria-current="true"]::after{width:34px;background:var(--dorure)}
+
+@media(max-width:1279px){
+  .rail-sommaire{position:sticky;top:calc(var(--h-bandeau,74px) - 1px);right:auto;transform:none;
+    max-width:none;flex-direction:row;align-items:center;gap:clamp(4px,1.6vw,18px);
+    justify-content:center;overflow-x:auto;
+    background:rgba(8,11,10,.97);border-bottom:1px solid rgba(217,178,106,.3);
+    box-shadow:0 12px 30px rgba(0,0,0,.5);padding:11px clamp(16px,4vw,40px);scrollbar-width:none}
+  .rail-sommaire::-webkit-scrollbar{display:none}
+  .rail-sommaire a{padding:4px 0;white-space:nowrap}
+  .rail-sommaire a::after{display:none}
+  .rail-sommaire a[aria-current="true"] span{
+    background:var(--dorure);-webkit-background-clip:text;background-clip:text;color:transparent}
+}
+</style>
+</head>
+<body>
+<div id="grain" aria-hidden="true"></div>
+
+<header class="bandeau" id="bandeau">
+  <a class="marque" href="/"><b class="or">Temple des Fées</b><small>Maine Coon · Drôme</small></a>
+  <div class="barre-droite">
+    <nav id="menu" aria-label="Navigation principale">
+      <a href="/chatons">Nos chatons</a><a href="/elevage">Nos chats</a>
+      <a href="/le-maine-coon" aria-current="page">Le Maine Coon</a>
+      <a href="/adopter">Adopter</a><a href="/articles">Articles</a>
+      <a href="/galerie">Galerie</a><a href="/contact">Contact</a>
+    </nav>
+    <button class="cle" id="cle" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+  </div>
+  <span id="jauge" aria-hidden="true"></span>
+</header>
+
+<nav class="rail-sommaire" id="sous-menu" data-rail aria-label="Sommaire de la page"><a href="#origines"><span>Origines</span></a><a href="#morphologie"><span>Le lire</span></a><a href="#robe"><span>La robe</span></a><a href="#caractere"><span>Le caractère</span></a><a href="#besoins"><span>Ses besoins</span></a><a href="#sante"><span>Sa santé</span></a><a href="#arrivee"><span>Son arrivée</span></a></nav>
+
+<section class="bande">
+  <div class="wrap">
+    <div class="frise" style="margin-bottom:clamp(30px,4vw,50px)">
+      <svg width="150" height="30" viewBox="0 0 150 30" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" style="color:var(--or)">
+        <path d="M75 6c-6 5-6 13 0 18 6-5 6-13 0-18Z"/><circle cx="75" cy="15" r="2.4" fill="currentColor" stroke="none"/>
+        <path d="M63 15c-8 0-12-7-20 0 8 7 12 0 20 0Z"/><path d="M87 15c8 0 12-7 20 0-8 7-12 0-20 0Z"/>
+        <path d="M35 15H6M144 15h-29"/><circle cx="39" cy="15" r="1.8"/><circle cx="111" cy="15" r="1.8"/>
+      </svg>
+    </div>
+    <div class="chapitre"><span class="rubrique">Proposition A</span><h1>Le Maine Coon</h1>
+      <p class="lede">Le plus grand chat domestique, et l’un des plus doux. Ce qu’il faut savoir avant d’en accueillir un.</p></div>
+  </div>
+</section>
+<section class="bande" id="origines">
+  <div class="wrap">
+    <div class="duo-texte inverse">
+      <figure class="vue haute"><img src="/images/cats/karrington.webp" alt="" loading="lazy"><figcaption>Collerette d’hiver</figcaption></figure>
+      <div class="pile">
+        <span class="rubrique">Chapitre premier</span>
+        <h2>Une race née dans<br>les hivers du Maine</h2>
+        <p class="lede lettrine">Le Maine Coon est l’une des plus anciennes races naturelles d’Amérique du Nord. Personne ne l’a dessiné : il s’est formé tout seul dans le Nord-Est des États-Unis, où seuls tenaient les chats à fourrure dense, à grandes pattes et à ossature lourde.</p>
+        <p class="lede">C’est la clé pour le comprendre : <em>rien chez lui n’est décoratif</em>. La collerette protège la gorge, les touffes entre les coussinets font raquette sur la neige, la queue en panache sert de couverture.</p>
+        <p class="lede">Son succès en expositions félines a ensuite fixé le standard moderne, et sa réputation de géant doux a fait le reste.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bande creuse" id="morphologie">
+  <div class="wrap">
+    <div class="chapitre"><span class="numero">Chapitre second</span><h2>Lire un Maine Coon</h2>
+      <p class="lede">Six points qu’un juge regarde, et à quoi chacun sert vraiment.</p></div>
+    <div class="duo-texte">
+      <figure class="vue haute" style="max-width:380px;margin-inline:auto"><img src="/images/cats/tika.webp" alt="" loading="lazy"></figure>
+      <div class="pile">
+        <h3>Lynx tips</h3><p class="lede">Les touffes qui prolongent la pointe de l’oreille. Elles brisent le vent et protègent le conduit du froid.</p>
+        <h3>Museau carré</h3><p class="lede">Le museau se coupe net, en angle droit vu de profil, avec un menton ferme aligné sous le nez.</p>
+        <h3>Collerette</h3><p class="lede">La fraise de poils longs autour du cou, très marquée en hiver. Elle protège la gorge.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bande" id="robe">
+  <div class="wrap">
+    <div class="chapitre"><span class="numero">Chapitre troisième</span><h2>La robe</h2>
+      <p class="lede">Le standard admet une palette très large. Voici le vocabulaire qu’on emploie sur les fiches.</p></div>
+    <div class="retable">
+      <figure class="portrait" style="width:min(250px,84vw);margin:0"><div class="arche petite"><i><u><img src="/images/cats/delenn.webp" alt="" loading="lazy"></u></i></div>
+        <figcaption style="display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center"><b style="font-family:var(--pierre);font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--or-clair)">Black smoke</b><small style="font-family:var(--titre);font-style:italic;font-size:16px;color:var(--ivoire-3)">Sous-poil clair, pointe noire</small></figcaption></figure>
+      <figure class="portrait" style="width:min(250px,84vw);margin:0"><div class="arche petite"><i><u><img src="/images/cats/boonie.webp" alt="" loading="lazy"></u></i></div>
+        <figcaption style="display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center"><b style="font-family:var(--pierre);font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--or-clair)">Silver tortie</b><small style="font-family:var(--titre);font-style:italic;font-size:16px;color:var(--ivoire-3)">Écaille sur fond silver</small></figcaption></figure>
+      <figure class="portrait" style="width:min(250px,84vw);margin:0"><div class="arche petite"><i><u><img src="/images/cats/alaska.webp" alt="" loading="lazy"></u></i></div>
+        <figcaption style="display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center"><b style="font-family:var(--pierre);font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--or-clair)">Blanche</b><small style="font-family:var(--titre);font-style:italic;font-size:16px;color:var(--ivoire-3)">Test d’audition demandé</small></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="bande creuse" id="caractere">
+  <div class="wrap">
+    <div class="chapitre"><span class="numero">Chapitre quatrième</span><h2>Ce n’est pas un chat d’appartement témoin</h2>
+      <p class="lede">Le Maine Coon est doux, mais il est partout, et il est grand.</p></div>
+    <div class="cellules">
+      <div class="cellule"><h3>Il suit</h3><p>Il vous accompagne de pièce en pièce sans rien demander.</p></div>
+      <div class="cellule"><h3>Il trille</h3><p>Il miaule peu, mais il trille beaucoup, avec une petite voix qui surprend chez un chat de sept kilos.</p></div>
+      <div class="cellule"><h3>Il grandit longtemps</h3><p>Trois à quatre ans pour finir de se construire, contre un an chez un chat ordinaire.</p></div>
+      <div class="cellule"><h3>Il occupe la place</h3><p>Un mâle adulte pèse six à neuf kilos et mesure près d’un mètre queue comprise.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="bande" id="besoins">
+  <div class="wrap">
+    <div class="chapitre"><span class="numero">Chapitre cinquième</span><h2>Ses besoins au quotidien</h2></div>
+    <div class="duo-texte">
+      <div class="pile">
+        <h3>Le poil</h3><p class="lede">Brossage deux à trois fois par semaine, davantage en période de mue. C’est ce qui évite les nœuds sous les aisselles et la culotte.</p>
+        <h3>L’alimentation</h3><p class="lede">Des protéines animales identifiées et un apport ajusté à l’activité. Croquettes et pâtée mélangées restent le meilleur compromis.</p>
+      </div>
+      <div class="faits">
+        <div class="fait"><b>6–9</b><span>kilos, mâle adulte</span></div>
+        <div class="fait"><b>3–4</b><span>ans de croissance</span></div>
+        <div class="fait"><b>2–3</b><span>brossages par semaine</span></div>
+        <div class="fait"><b>12–16</b><span>ans d’espérance de vie</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bande creuse" id="sante">
+  <div class="wrap">
+    <div class="chapitre"><span class="numero">Chapitre sixième</span><h2>Les dépistages de la race</h2>
+      <p class="lede">Quatre maladies héréditaires se dépistent chez le Maine Coon. Nous publions les résultats de chaque reproducteur, datés.</p></div>
+    <div class="cellules">
+      <div class="cellule"><span class="n">La principale</span><h3>HCM</h3><p>Elle se dépiste de deux façons qui ne se remplacent pas : le test génétique MyBPC3 et l’échocardiographie.</p></div>
+      <div class="cellule"><span class="n">Test ADN</span><h3>SMA</h3><p>Affection héréditaire neuromusculaire. Un test unique suffit pour la vie.</p></div>
+      <div class="cellule"><span class="n">Test ADN</span><h3>PK-Def</h3><p>Provoque une anémie. Deux porteurs ne sont jamais accouplés ensemble.</p></div>
+      <div class="cellule"><span class="n">Radiographie</span><h3>Dysplasie</h3><p>Plus fréquente chez les grandes races. Radiographie cotée, sur un animal qui a fini de grandir.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="bande" id="arrivee">
+  <div class="wrap">
+    <div class="chapitre"><span class="numero">Chapitre septième</span><h2>Préparer son arrivée</h2></div>
+    <ol class="chrono" style="max-width:720px;margin-inline:auto">
+      <li class="faite"><span class="pt"></span><span><span class="quand">Avant</span><span class="quoi">Deux gamelles larges et stables, un bac spacieux, un arbre à chat solide, un transporteur rigide.</span></span></li>
+      <li class="faite"><span class="pt"></span><span><span class="quand">La pièce d’accueil</span><span class="quoi">Commencez par une seule pièce calme, avec tout à portée. On élargit ensuite progressivement.</span></span></li>
+      <li class="encours"><span class="pt"></span><span><span class="quand">Jour J</span><span class="quoi">Gardez d’abord la même alimentation qu’ici, puis transition sur sept à dix jours.</span></span></li>
+      <li><span class="pt"></span><span><span class="quand">Les premières semaines</span><span class="quoi">Surveillez l’appétit, la boisson et la litière — les trois signaux qui parlent en premier.</span></span></li>
+    </ol>
+  </div>
+</section>
+
+<script>
+const bandeau = document.getElementById('bandeau');
+const poser = () => document.documentElement.style.setProperty('--h-bandeau', bandeau.offsetHeight + 'px');
+poser(); addEventListener('resize', poser);
+
+const menu = document.getElementById('sous-menu');
+const liens = [...menu.querySelectorAll('a[href^="#"]')];
+const cibles = liens.map(a => ({ lien: a, el: document.getElementById(a.getAttribute('href').slice(1)) })).filter(s => s.el);
+let attente = false, dernier = null;
+const placer = () => {
+  attente = false;
+  const ligne = bandeau.offsetHeight + 90;
+  let courant = cibles[0];
+  for (const s of cibles) if (s.el.getBoundingClientRect().top <= ligne) courant = s;
+  if (innerHeight + scrollY >= document.body.scrollHeight - 4) courant = cibles[cibles.length - 1];
+  if (courant === dernier) return;
+  dernier = courant;
+  cibles.forEach(o => o.lien.removeAttribute('aria-current'));
+  courant.lien.setAttribute('aria-current', 'true');
+  const etiquette = document.getElementById('etiquette');
+  if (etiquette) etiquette.textContent = courant.lien.textContent.trim();
+  const rail = menu.hasAttribute('data-rail') ? menu : menu.querySelector('[data-rail]');
+  if (rail && rail.scrollWidth > rail.clientWidth) {
+    courant.lien.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+  }
+};
+addEventListener('scroll', () => { if (!attente) { attente = true; requestAnimationFrame(placer); } }, { passive: true });
+addEventListener('resize', placer);
+placer();
+</script>
+
+</body>
+</html>
