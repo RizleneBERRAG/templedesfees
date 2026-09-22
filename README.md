@@ -36,8 +36,18 @@ php artisan migrate --seed
 Le site est accessible sur **http://127.0.0.1:8000** (`php artisan serve`)
 ou sur `http://localhost/templedesfees/public` via Apache.
 
-Compte de départ du back-office : `letempledesfees@outlook.fr` / `templedesfees`
-— à changer à la première connexion.
+Le seed crée le compte du back-office et **tire un mot de passe au hasard**,
+affiché une seule fois à la fin. Pour en choisir un, le poser dans `.env`
+avant de lancer le seed :
+
+```
+BACK_OFFICE_EMAIL=letempledesfees@outlook.fr
+BACK_OFFICE_MOT_DE_PASSE=...
+```
+
+Il n'y a volontairement pas de mot de passe par défaut écrit dans le dépôt :
+celui-ci part sur GitHub pour l'aperçu, et un mot de passe publié n'en est
+plus un.
 
 ## Attention : deux PHP sur cette machine
 
