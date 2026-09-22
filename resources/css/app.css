@@ -1,0 +1,479 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Temple des Fées — charte « Sanctuaire »
+
+   Le site est écrit comme un récit : chaque section est un chapitre
+   numéroté, annoncé par une frise. Trois matières seulement — la nuit
+   d'émeraude, la dorure, et l'ivoire du texte.
+
+   Règle de la dorure : l'or n'est JAMAIS un aplat. C'est un dégradé à
+   trois tons (clair en haut, plein au milieu, ombré en bas), appliqué
+   soit au remplissage d'un texte, soit à un filet. Un jaune plat casse
+   immédiatement l'illusion.
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root{
+  /* la nuit */
+  --nuit:#080B0A; --nuit-2:#0A0F0D; --nuit-3:#0C1A16;
+  --emeraude:#14302A; --emeraude-2:#1B3F36; --emeraude-3:#24564A;
+
+  /* la dorure */
+  --or-pale:#FBF3DD; --or-clair:#F6E7BF; --or:#D9B26A; --or-mat:#A8813F; --or-ombre:#6B4F22;
+  --dorure:linear-gradient(180deg,#FBF3DD 0%,#E5C88C 44%,#B48F48 100%);
+  --dorure-filet:linear-gradient(180deg,rgba(217,178,106,.55),rgba(217,178,106,.14));
+
+  /* l'encre */
+  --ivoire:#F5F0E6; --ivoire-2:#CFC7B5; --ivoire-3:#A9A18F; --ivoire-dim:#8C8471;
+
+  /* les verdicts */
+  --sain:#A9C79A; --sain-2:#7FA06F; --attente:#E0BB78; --alerte:#C9755A;
+
+  /* les filets */
+  --filet:rgba(217,178,106,.22);
+  --filet-2:rgba(217,178,106,.12);
+  --filet-3:rgba(245,240,230,.09);
+
+  --maxw:1240px; --large:1440px;
+  --titre:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+  --pierre:"Cinzel",Georgia,serif;
+  --corps:"Jost",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --ease:cubic-bezier(.2,.7,.25,1);
+}
+
+/* ── base ────────────────────────────────────────────────────────── */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--nuit);color:var(--ivoire);
+  font-family:var(--corps);font-size:17px;font-weight:300;line-height:1.72;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--or-clair);outline-offset:3px}
+::selection{background:var(--or);color:#14100A}
+h1,h2,h3,h4{margin:0;font-family:var(--titre);font-weight:300;line-height:1.04;text-wrap:balance}
+h1{font-size:clamp(3rem,8vw,7rem);letter-spacing:-.015em}
+h2{font-size:clamp(2.2rem,4.8vw,3.9rem);letter-spacing:-.008em}
+h3{font-size:clamp(1.6rem,2.8vw,2.3rem)}
+p{margin:0}
+em{font-style:italic}
+
+/* Le titre principal d'une page intérieure est un h1 pour le référencement,
+   mais il garde l'échelle d'un h2 : la hiérarchie visuelle ne dépend pas du
+   niveau de balise. Le h1 pleine taille reste celui de l'accueil. */
+.chapitre h1{font-size:clamp(2.2rem,4.8vw,3.9rem);letter-spacing:-.008em}
+
+/* ── la dorure ───────────────────────────────────────────────────── */
+.or{background:var(--dorure);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* Repli : si background-clip:text n'est pas compris, le texte serait
+   invisible. La requête ci-dessous ne s'applique QUE là où il l'est. */
+@supports not ((-webkit-background-clip:text) or (background-clip:text)){
+  .or{background:none;color:var(--or-clair)}
+}
+
+/* ── mise en page ────────────────────────────────────────────────── */
+.wrap{width:100%;max-width:var(--maxw);margin-inline:auto;padding-inline:clamp(20px,4vw,60px)}
+.wrap.large{max-width:var(--large)}
+.bande{position:relative;padding-block:clamp(56px,8vw,104px)}
+.bande.serree{padding-block:clamp(38px,5vw,66px)}
+.bande.creuse{background:linear-gradient(180deg,var(--nuit-3),#0A1512);
+  border-block:1px solid var(--filet)}
+.bande.foret{background:radial-gradient(120% 80% at 50% 0%,var(--emeraude) 0%,var(--nuit-3) 46%,var(--nuit) 82%)}
+
+/* ── rubrique et frises ──────────────────────────────────────────── */
+.rubrique{display:block;font-size:10.5px;font-weight:400;letter-spacing:.42em;
+  text-transform:uppercase;color:var(--or-mat)}
+
+.frise{display:flex;align-items:center;justify-content:center;gap:clamp(10px,2vw,22px)}
+.frise::before,.frise::after{content:"";height:1px;flex:1;max-width:340px;
+  background:linear-gradient(90deg,transparent,rgba(217,178,106,.5))}
+.frise::after{background:linear-gradient(90deg,rgba(217,178,106,.5),transparent)}
+.frise svg{flex:none;color:var(--or)}
+
+/* ── titre de chapitre ───────────────────────────────────────────── */
+/* Le numéro en chiffres romains est le fil du récit : il dit au visiteur
+   où il en est dans l'histoire, sans sommaire ni fil d'Ariane. */
+.chapitre{display:flex;flex-direction:column;align-items:center;gap:15px;
+  text-align:center;margin-bottom:clamp(34px,5vw,54px)}
+.chapitre .numero{font-family:var(--pierre);font-size:12px;font-weight:500;
+  letter-spacing:.34em;text-transform:uppercase;color:var(--or-mat)}
+.chapitre .lede{margin-top:6px}
+.chapitre.gauche{align-items:flex-start;text-align:left}
+
+.lede{max-width:62ch;font-size:clamp(15.5px,1.4vw,17.5px);line-height:1.82;color:var(--ivoire-2)}
+.menu-texte,.petit{font-size:14px;color:var(--ivoire-dim)}
+
+/* ── boutons ─────────────────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:10px;padding:16px 34px;
+  font-family:var(--pierre);font-size:12px;font-weight:600;letter-spacing:.15em;
+  text-transform:uppercase;border:1px solid var(--or);
+  background:linear-gradient(180deg,#E8CE95,#C79F56);color:#14100A;
+  box-shadow:0 10px 40px rgba(217,178,106,.2);
+  transition:transform .35s var(--ease),box-shadow .35s,filter .35s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 16px 52px rgba(217,178,106,.34);filter:brightness(1.05)}
+.btn.creux{background:rgba(20,48,42,.42);border-color:rgba(217,178,106,.4);
+  color:var(--or-clair);box-shadow:none}
+.btn.creux:hover{background:rgba(20,48,42,.72);border-color:var(--or)}
+.btnrow{display:flex;gap:14px;flex-wrap:wrap}
+
+.lien{display:inline-flex;align-items:center;gap:8px;font-family:var(--pierre);
+  font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--or);
+  border-bottom:1px solid var(--or-ombre);padding-bottom:4px;
+  transition:color .3s,border-color .3s}
+.lien:hover{color:var(--or-clair);border-bottom-color:var(--or)}
+
+/* ── pastilles de statut ─────────────────────────────────────────── */
+.pastille{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;
+  font-family:var(--pierre);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+  border:1px solid currentColor;white-space:nowrap;background:rgba(8,11,10,.5)}
+.pastille::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;
+  box-shadow:0 0 10px currentColor}
+.pastille.dispo{color:var(--sain)}
+.pastille.reserve{color:var(--or)}
+.pastille.adopte{color:#96907F}
+.pastille.adopte::before{box-shadow:none}
+
+/* ── bandeau ─────────────────────────────────────────────────────── */
+.bandeau{position:sticky;top:0;z-index:60;display:flex;align-items:center;
+  justify-content:space-between;gap:24px;padding:16px clamp(20px,4vw,60px);
+  background:rgba(10,15,13,.84);backdrop-filter:blur(16px) saturate(140%);
+  -webkit-backdrop-filter:blur(16px) saturate(140%);
+  border-bottom:1px solid var(--filet-2);transition:border-color .4s,background .4s}
+.bandeau.accroche{border-bottom-color:var(--filet);background:rgba(10,15,13,.95)}
+
+.marque{display:flex;flex-direction:column;gap:4px;flex:none}
+.marque b{font-family:var(--pierre);font-size:clamp(16px,1.8vw,21px);font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;line-height:1}
+.marque small{font-size:8.5px;letter-spacing:.34em;text-transform:uppercase;color:var(--ivoire-dim)}
+
+.barre-droite{display:flex;align-items:center;gap:clamp(16px,2.4vw,32px)}
+.bandeau nav{display:flex;gap:clamp(14px,1.9vw,26px);align-items:center}
+.bandeau nav a{font-family:var(--pierre);font-size:11px;letter-spacing:.15em;
+  text-transform:uppercase;color:#C4BCA8;position:relative;padding-block:6px;
+  white-space:nowrap;transition:color .3s}
+.bandeau nav a:hover{color:var(--or-clair)}
+.bandeau nav a[aria-current="page"]{color:var(--or)}
+.bandeau nav a[aria-current="page"]::after{content:"";position:absolute;left:0;right:0;bottom:0;
+  height:1px;background:var(--or)}
+
+.bandeau .tel{font-family:var(--corps);font-size:13.5px;letter-spacing:.05em;
+  color:var(--ivoire);white-space:nowrap;flex:none}
+.bandeau .tel:hover{color:var(--or-clair)}
+.menu-tel{display:none}
+
+.cle{display:none;padding:11px 16px;border:1px solid var(--filet);
+  font-family:var(--pierre);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--or-clair)}
+
+/* Le menu deplie. Le seuil est haut (1180 px) : sept rubriques en capitales
+   espacees demandent de la place, et les tasser les rend illisibles bien
+   avant qu'elles ne debordent. */
+@media(max-width:1180px){
+  .bandeau nav{position:fixed;inset:0 0 auto 0;padding:92px 28px 40px;background:var(--nuit);
+    flex-direction:column;align-items:flex-start;gap:2px;border-bottom:1px solid var(--filet);
+    z-index:-1}
+  .bandeau nav[hidden]{display:none}
+  .bandeau nav a{font-family:var(--titre);font-size:1.9rem;letter-spacing:0;text-transform:none;
+    color:var(--ivoire);padding-block:9px}
+  .bandeau nav a[aria-current="page"]::after{display:none}
+  .menu-tel{display:block;margin-top:14px;font-family:var(--corps)!important;font-size:1.1rem!important;
+    color:var(--or-clair)!important}
+  .bandeau .tel{display:none}
+  .cle{display:inline-flex}
+}
+
+/* jauge de lecture, sur le bord bas du bandeau */
+#jauge{display:none}
+@supports (animation-timeline:scroll()){
+  @media(prefers-reduced-motion:no-preference){
+    #jauge{display:block;position:absolute;left:0;right:0;bottom:-1px;height:1.5px;
+      background:var(--dorure);transform-origin:0 50%;scale:0 1;pointer-events:none;
+      animation:jauge linear both;animation-timeline:scroll(root block)}
+    @keyframes jauge{to{scale:1 1}}
+  }
+}
+
+/* ── l'arche ─────────────────────────────────────────────────────── */
+/* Trois filets successifs, comme la gorge d'un portail. La forme est
+   obtenue par border-radius elliptique : elle se déforme avec le cadre,
+   là où un clip-path figerait la courbe. */
+.arche{position:relative;padding:9px;border:1px solid rgba(217,178,106,.55);
+  border-radius:50% 50% 4px 4px / 35% 35% 4px 4px;
+  background:linear-gradient(180deg,rgba(217,178,106,.14),rgba(217,178,106,.02) 60%)}
+.arche > i{display:block;width:100%;height:100%;padding:5px;
+  border:1px solid rgba(242,223,174,.38);
+  border-radius:50% 50% 3px 3px / 35% 35% 3px 3px}
+.arche > i > u{display:block;width:100%;height:100%;overflow:hidden;background:var(--nuit-3);
+  border-radius:50% 50% 2px 2px / 35% 35% 2px 2px;box-shadow:0 40px 120px rgba(0,0,0,.7)}
+.arche img{width:100%;height:100%;object-fit:cover}
+.arche.petite{padding:7px}
+.arche.petite > i{padding:0;border-radius:50% 50% 2px 2px / 36% 36% 2px 2px}
+.arche.petite > i > u{border-radius:50% 50% 2px 2px / 36% 36% 2px 2px;box-shadow:none}
+
+/* ── hero ────────────────────────────────────────────────────────── */
+/* Le titre etait pose a meme la photo : l'or se noyait dans la fourrure et
+   le chat disparaissait sous le texte. Les deux sont maintenant cote a cote
+   — l'arche garde sa taille, le texte revient sur le fond sombre ou il est
+   parfaitement lisible. Sous 900 px on empile, l'arche passe devant. */
+.hero{position:relative;overflow:hidden;
+  padding:clamp(40px,6vw,74px) clamp(20px,4vw,60px) clamp(46px,6vw,80px);
+  background:radial-gradient(120% 78% at 50% 24%,var(--emeraude) 0%,var(--nuit-3) 44%,var(--nuit) 80%)}
+.hero .halo{position:absolute;width:min(900px,140vw);aspect-ratio:1;top:-10%;left:50%;
+  transform:translateX(-50%);border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(217,178,106,.20) 0%,rgba(169,139,201,.09) 38%,rgba(8,11,10,0) 68%)}
+
+.hero .frise{position:relative;z-index:2;margin-bottom:clamp(30px,4vw,52px)}
+
+.hero .duo{position:relative;z-index:2;display:grid;
+  grid-template-columns:auto minmax(0,1fr);gap:clamp(30px,5vw,76px);align-items:center;
+  max-width:var(--maxw);margin-inline:auto}
+.hero .arche{height:clamp(380px,60vh,620px);aspect-ratio:7/10;width:auto}
+
+.hero .texte{display:flex;flex-direction:column;align-items:flex-start;gap:20px}
+.hero h1{text-align:left}
+.hero .lede{text-align:left}
+
+@media(max-width:900px){
+  .hero .duo{grid-template-columns:1fr;justify-items:center;gap:clamp(26px,5vw,40px)}
+  .hero .arche{height:clamp(320px,48vh,460px)}
+  .hero .texte{align-items:center}
+  .hero h1,.hero .lede{text-align:center}
+  .hero .btnrow{justify-content:center}
+}
+
+.hero .signature{margin-top:clamp(26px,4vw,44px);text-align:center;
+  font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,230,.4);
+  line-height:1.9;position:relative;z-index:2}
+
+/* ── bandeau vivant ──────────────────────────────────────────────── */
+.vivant{background:var(--nuit-2);border-block:1px solid var(--filet);position:relative;z-index:2}
+.vivant .in{display:flex;align-items:center;gap:14px 26px;padding-block:17px;flex-wrap:wrap}
+.vivant .pouls{width:8px;height:8px;border-radius:50%;background:var(--sain);flex:none;
+  box-shadow:0 0 0 0 rgba(169,199,154,.6);animation:pouls 2.8s infinite}
+@keyframes pouls{70%{box-shadow:0 0 0 11px rgba(169,199,154,0)}100%{box-shadow:0 0 0 0 rgba(169,199,154,0)}}
+.vivant strong{font-weight:400;color:var(--ivoire)}
+.vivant .lien{margin-left:auto}
+
+/* ── retable : les portraits ─────────────────────────────────────── */
+/* Les cadres ne sont pas alignés : celui du milieu descend, comme le
+   panneau central d'un retable. Sous 900 px la règle tombe, sinon la
+   colonne du milieu creuse un trou. */
+.retable{display:flex;gap:clamp(18px,3vw,40px);align-items:flex-start;
+  justify-content:center;flex-wrap:wrap}
+.portrait{display:flex;flex-direction:column;align-items:center;gap:15px;
+  width:min(330px,86vw);transition:transform .5s var(--ease)}
+@media(min-width:900px){.portrait:nth-child(even){margin-top:46px}}
+.portrait:hover{transform:translateY(-6px)}
+.portrait .arche{width:100%;aspect-ratio:33/46;transition:border-color .4s}
+.portrait:hover .arche{border-color:rgba(242,223,174,.8)}
+.portrait img{transition:transform 1.1s var(--ease)}
+.portrait:hover img{transform:scale(1.05)}
+.portrait b{font-family:var(--pierre);font-size:19px;font-weight:500;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--or-clair);text-align:center}
+.portrait small{font-family:var(--titre);font-style:italic;font-size:17px;color:var(--ivoire-3)}
+
+/* ── grille de fiches ────────────────────────────────────────────── */
+.fiches{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:clamp(18px,2.6vw,30px)}
+.fiche{display:flex;flex-direction:column;gap:14px;
+  transition:transform .45s var(--ease)}
+.fiche:hover{transform:translateY(-5px)}
+.fiche .arche{width:100%;aspect-ratio:4/5;position:relative;transition:border-color .4s}
+.fiche:hover .arche{border-color:rgba(242,223,174,.75)}
+.fiche .pastille{position:absolute;left:50%;top:18px;transform:translateX(-50%);z-index:2;
+  backdrop-filter:blur(8px)}
+.fiche img{transition:transform .9s var(--ease)}
+.fiche:hover img{transform:scale(1.05)}
+.fiche.partie img{filter:saturate(.35) brightness(.8)}
+.fiche .bd{display:flex;flex-direction:column;gap:7px;align-items:center;text-align:center}
+.fiche .bd b{font-family:var(--pierre);font-size:17px;font-weight:500;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--or-clair)}
+.fiche .bd small{font-family:var(--titre);font-style:italic;font-size:16px;color:var(--ivoire-3)}
+
+/* ── le registre ─────────────────────────────────────────────────── */
+/* Les équerres d'angle sont quatre <span> plutôt qu'un cadre unique :
+   un border-image suffirait mais ne laisse pas régler chaque angle, et
+   le coin doit mordre d'un pixel sur le filet pour paraître posé dessus. */
+.registre{position:relative;border:1px solid rgba(217,178,106,.34);
+  background:rgba(8,11,10,.55);padding:clamp(24px,4vw,46px)}
+.registre > .eq{position:absolute;width:26px;height:26px;pointer-events:none}
+.registre > .eq:nth-of-type(1){left:-1px;top:-1px;border-left:2px solid var(--or);border-top:2px solid var(--or)}
+.registre > .eq:nth-of-type(2){right:-1px;top:-1px;border-right:2px solid var(--or);border-top:2px solid var(--or)}
+.registre > .eq:nth-of-type(3){left:-1px;bottom:-1px;border-left:2px solid var(--or);border-bottom:2px solid var(--or)}
+.registre > .eq:nth-of-type(4){right:-1px;bottom:-1px;border-right:2px solid var(--or);border-bottom:2px solid var(--or)}
+
+.registre .entete{display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+  flex-wrap:wrap;padding-bottom:15px;border-bottom:1px solid rgba(217,178,106,.28);margin-bottom:4px}
+.registre .entete b{font-family:var(--pierre);font-size:16px;font-weight:500;letter-spacing:.08em;
+  color:var(--or-clair)}
+.registre .entete span{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ivoire-dim)}
+
+.registre table{width:100%;border-collapse:collapse}
+.registre th{text-align:left;padding:14px 0;border-bottom:1px solid rgba(217,178,106,.13);
+  font-size:11.5px;font-weight:400;letter-spacing:.14em;text-transform:uppercase;
+  color:#9D9482;width:42%;vertical-align:top}
+.registre td{padding:14px 0;border-bottom:1px solid rgba(217,178,106,.13);color:var(--ivoire-2)}
+.registre tr:last-child th,.registre tr:last-child td{border-bottom:0}
+.verdict{display:block;font-family:var(--titre);font-size:21px;color:var(--sain)}
+.verdict.attente{color:var(--attente)}
+.verdict.alerte{color:var(--alerte)}
+.registre td small{display:block;margin-top:2px;font-size:12px;color:var(--ivoire-dim)}
+.registre .note{margin-top:20px;padding-top:16px;border-top:1px solid rgba(217,178,106,.13);
+  font-size:13.5px;line-height:1.7;color:var(--ivoire-dim)}
+
+/* Sous 620 px un tableau à deux colonnes figées ne peut plus rétrécir : il
+   pousse la page. On empile le libellé au-dessus de sa valeur. */
+@media(max-width:620px){
+  .registre table,.registre tbody,.registre tr,.registre th,.registre td{display:block;width:auto}
+  .registre tr{border-bottom:1px solid rgba(217,178,106,.13);padding-block:6px}
+  .registre tr:last-child{border-bottom:0}
+  .registre th{padding:10px 0 2px;border-bottom:0}
+  .registre td{padding:0 0 10px;border-bottom:0}
+}
+
+/* ── chronologie ─────────────────────────────────────────────────── */
+.chrono{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.chrono li{display:grid;grid-template-columns:15px 1fr;gap:18px;padding-bottom:24px;position:relative}
+.chrono li:last-child{padding-bottom:0}
+.chrono li:not(:last-child)::before{content:"";position:absolute;left:7px;top:18px;bottom:-1px;
+  width:1px;background:var(--filet)}
+.chrono .pt{width:14px;height:14px;border-radius:50%;border:1px solid var(--or-ombre);
+  background:var(--nuit);margin-top:4px}
+.chrono li.faite .pt{background:var(--or);border-color:var(--or)}
+.chrono li.encours .pt{background:var(--sain);border-color:var(--sain);
+  box-shadow:0 0 0 4px rgba(169,199,154,.16)}
+.chrono .quand{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ivoire-dim);margin-bottom:2px}
+.chrono .quoi{font-size:15.5px;color:var(--ivoire-2)}
+.chrono li.encours .quoi{color:var(--ivoire)}
+
+/* ── citation ────────────────────────────────────────────────────── */
+.citation{display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center}
+.citation p{max-width:25ch;font-family:var(--titre);font-style:italic;
+  font-size:clamp(1.9rem,4.2vw,3.3rem);line-height:1.22;color:#EDE6D6}
+.citation cite{font-style:normal;font-size:11px;letter-spacing:.34em;text-transform:uppercase;
+  color:var(--ivoire-dim)}
+
+/* ── mosaïque ────────────────────────────────────────────────────── */
+.mosaique{columns:3;column-gap:16px}
+@media(max-width:900px){.mosaique{columns:2}}
+@media(max-width:520px){.mosaique{columns:1}}
+.mosaique figure{margin:0 0 16px;break-inside:avoid;position:relative;overflow:hidden;
+  cursor:zoom-in;background:var(--nuit-3);border:1px solid var(--filet-2)}
+.mosaique img{width:100%;transition:transform .9s var(--ease)}
+.mosaique figure:hover img{transform:scale(1.04)}
+.mosaique figcaption{position:absolute;inset:auto 0 0 0;padding:28px 14px 12px;opacity:0;
+  background:linear-gradient(to top,rgba(8,11,10,.92),transparent);
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(245,240,230,.88);
+  transition:opacity .35s}
+.mosaique figure:hover figcaption{opacity:1}
+
+/* ── vue plein écran ─────────────────────────────────────────────── */
+#lb{position:fixed;inset:0;z-index:90;background:rgba(5,7,6,.97);display:flex;
+  align-items:center;justify-content:center;flex-direction:column;gap:18px;padding:28px 20px}
+#lb img{max-width:min(94vw,1060px);max-height:78vh;object-fit:contain;
+  border:1px solid var(--filet)}
+#lb .cap{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ivoire-dim);
+  text-align:center}
+#lb .x{position:absolute;top:calc(18px + env(safe-area-inset-top,0px));right:20px;
+  border:1px solid var(--filet);padding:10px 15px;font-family:var(--pierre);font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--ivoire)}
+#lb .nav{display:flex;gap:10px}
+#lb .nav button{border:1px solid var(--filet);padding:10px 19px;font-family:var(--pierre);
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ivoire);transition:.25s}
+#lb .nav button:hover{border-color:var(--or);color:var(--or-clair)}
+
+/* ── formulaires ─────────────────────────────────────────────────── */
+.champ{display:flex;flex-direction:column;gap:8px}
+.champ label{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ivoire-dim)}
+.champ input,.champ select,.champ textarea{font:inherit;font-size:16px;padding:14px 16px;
+  border:1px solid var(--filet);background:rgba(12,26,22,.7);color:var(--ivoire);
+  width:100%;transition:border-color .25s,background .25s}
+.champ textarea{min-height:140px;resize:vertical}
+.champ input::placeholder,.champ textarea::placeholder{color:#6F6759}
+.champ input:focus,.champ select:focus,.champ textarea:focus{
+  border-color:var(--or);background:rgba(20,48,42,.6);outline:none}
+fieldset{min-width:0;border:0;margin:0;padding:0}
+form.demande{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+form.demande .plein{grid-column:1/-1}
+@media(max-width:700px){form.demande{grid-template-columns:1fr}}
+.consent{display:flex;gap:13px;align-items:flex-start;grid-column:1/-1;
+  font-size:14px;line-height:1.65;color:var(--ivoire-dim)}
+.consent input{margin-top:4px;width:17px;height:17px;accent-color:var(--or);flex:none}
+.consent a{color:var(--or)}
+
+.retour{border:1px solid var(--filet);border-left:2px solid var(--sain);
+  background:rgba(169,199,154,.07);padding:18px 22px;font-size:15px;
+  color:var(--ivoire);margin-bottom:28px}
+.retour.erreur{border-left-color:var(--or);background:rgba(217,178,106,.07)}
+.retour ul{margin:9px 0 0;padding-left:19px;color:var(--ivoire-dim);font-size:14px}
+
+/* ── pied ────────────────────────────────────────────────────────── */
+footer{background:var(--nuit-2);border-top:1px solid var(--filet);
+  padding-block:clamp(44px,6vw,68px) 30px;position:relative;z-index:2}
+.fgrille{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:34px}
+@media(max-width:860px){.fgrille{grid-template-columns:1fr 1fr}}
+@media(max-width:540px){.fgrille{grid-template-columns:1fr}}
+footer h4{margin:0 0 16px;font-family:var(--pierre);font-size:10px;font-weight:500;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--or-mat)}
+footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px}
+footer a{font-size:14.5px;color:var(--ivoire-dim);transition:color .3s}
+footer a:hover{color:var(--or-clair)}
+.fbas{margin-top:44px;padding-top:22px;border-top:1px solid var(--filet-2);
+  display:flex;flex-wrap:wrap;gap:12px 26px;justify-content:space-between;
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ivoire-dim)}
+
+/* ── transitions de page ─────────────────────────────────────────── */
+/* Laravel sert une page complète à chaque clic. Cette règle demande au
+   navigateur de faire le raccord lui-même, sans une ligne de JavaScript.
+   Là où elle n'est pas comprise, la navigation reste celle d'avant. */
+@view-transition{navigation:auto}
+.bandeau{view-transition-name:bandeau}
+footer{view-transition-name:pied}
+::view-transition-group(bandeau),::view-transition-group(pied){animation-duration:.2s}
+::view-transition-old(root){animation:vt-sort .26s var(--ease) both}
+::view-transition-new(root){animation:vt-entre .44s var(--ease) both}
+@keyframes vt-sort{to{opacity:0;transform:translateY(-10px)}}
+@keyframes vt-entre{from{opacity:0;transform:translateY(16px)}}
+::view-transition-group(photo-fiche){animation-duration:.58s;animation-timing-function:var(--ease)}
+::view-transition-old(photo-fiche),::view-transition-new(photo-fiche){height:100%;object-fit:cover}
+
+/* ── mouvement ───────────────────────────────────────────────────── */
+.monte{opacity:0;transform:translateY(26px);
+  transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.monte.vu{opacity:1;transform:none}
+
+@media(prefers-reduced-motion:no-preference){
+  .hero .halo{animation:respire 9s ease-in-out infinite alternate}
+  @keyframes respire{from{transform:scale(.94);opacity:.82}to{transform:scale(1.06);opacity:1}}
+
+  /* la levée du titre, ligne par ligne derrière son masque */
+  .leve{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+  .leve > span{display:block;transform:translateY(104%);animation:levee .95s var(--ease) .08s both}
+  .leve:nth-of-type(2) > span{animation-delay:.2s}
+  @keyframes levee{to{transform:translateY(0)}}
+
+  .hero .rubrique,.hero .lede,.hero .btnrow{animation:parait .85s var(--ease) both}
+  .hero .rubrique{animation-delay:.04s}
+  .hero .lede{animation-delay:.42s}
+  .hero .btnrow{animation-delay:.54s}
+  @keyframes parait{from{opacity:0;transform:translateY(14px)}}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition-duration:.01ms!important}
+  .monte{opacity:1;transform:none}
+  ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}
+}
+
+/* ── confort tactile ─────────────────────────────────────────────── */
+/* En dessous de 44 px on rate sa cible et on tape le lien d'à côté. On
+   agrandit la ZONE sensible, pas le dessin. Ciblé sur pointer:coarse :
+   rien ne change pour qui utilise une souris. */
+@media (pointer:coarse){
+  footer ul{gap:0}
+  footer ul a{display:inline-block;padding-block:13px}
+  .lien{padding-block:12px}
+  .cle{min-height:44px}
+  .consent a{display:inline-block;padding-block:6px}
+  .registre td a{display:inline-block;padding-block:12px}
+}

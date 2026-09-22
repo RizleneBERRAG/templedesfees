@@ -1,0 +1,76 @@
+<?php
+
+namespace App\Filament\Resources\Reviews;
+
+use App\Filament\Resources\Reviews\Pages\CreateReview;
+use App\Filament\Resources\Reviews\Pages\EditReview;
+use App\Filament\Resources\Reviews\Pages\ListReviews;
+use App\Filament\Resources\Reviews\Schemas\ReviewForm;
+use App\Filament\Resources\Reviews\Tables\ReviewsTable;
+use App\Models\Review;
+use BackedEnum;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Table;
+
+class ReviewResource extends Resource
+{
+    protected static ?string $model = Review::class;
+
+    protected static ?string $modelLabel = 'avis';
+
+    protected static ?string $pluralModelLabel = 'avis';
+
+    protected static ?string $navigationLabel = 'Avis';
+
+    protected static ?int $navigationSort = 5;
+
+    protected static ?string $recordTitleAttribute = 'prenom';
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedStar;
+
+    /** Le nombre d'avis deposes par le site et pas encore relus. */
+    public static function getNavigationBadge(): ?string
+    {
+        $enAttente = Review::enAttente()->count();
+
+        return $enAttente > 0 ? (string) $enAttente : null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'warning';
+    }
+
+    public static function getNavigationBadgeTooltip(): ?string
+    {
+        return 'Avis déposés par le site, en attente de relecture';
+    }
+
+    public static function form(Schema $schema): Schema
+    {
+        return ReviewForm::configure($schema);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return ReviewsTable::configure($table);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => ListReviews::route('/'),
+            'create' => CreateReview::route('/create'),
+            'edit' => EditReview::route('/{record}/edit'),
+        ];
+    }
+}

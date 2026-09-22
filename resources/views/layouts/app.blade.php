@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+    <title>@yield('title', "Chatterie du Temple des Fées") — Élevage de Maine Coon dans la Drôme</title>
+    <meta name="description" content="@yield('description', "Chatterie familiale de Maine Coon à Lapeyrouse-Mornay (26), Drôme des collines. Chatons inscrits au LOOF, parents dépistés HCM, SMA et PK-Def, résultats publiés.")">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Chatterie du Temple des Fées">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:title" content="@yield('title', "Chatterie du Temple des Fées")">
+    <meta property="og:description" content="@yield('description', "Élevage familial de Maine Coon dans la Drôme. Parents dépistés, résultats publiés.")">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="@yield('og_image', asset('images/cats/hero-duo.webp'))">
+    <meta name="twitter:card" content="summary_large_image">
+
+    {{--
+        Polices auto-hebergees dans public/fonts. Aucun appel a
+        fonts.googleapis.com ni fonts.gstatic.com : la typographie tient sans
+        reseau tiers, et aucun visiteur n'est trace au passage. Les trois
+        fichiers precharges sont ceux du premier ecran ; crossorigin est
+        obligatoire meme en same-origin, une police etant toujours recuperee
+        en mode CORS.
+    --}}
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+          href="{{ asset('fonts/cormorant-garamond-normal-300-latin.woff2') }}">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+          href="{{ asset('fonts/cinzel-normal-400-600-latin.woff2') }}">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+          href="{{ asset('fonts/jost-normal-300-500-latin.woff2') }}">
+    <link rel="stylesheet" href="{{ asset('fonts/fonts.css') }}">
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('head')
+    @stack('schema')
+</head>
+<body>
+
+@include('partials.nav')
+
+<main id="app">
+    @yield('content')
+</main>
+
+@include('partials.footer')
+
+@stack('scripts')
+</body>
+</html>
