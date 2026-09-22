@@ -279,3 +279,83 @@ window.addEventListener('pagereveal', (e) => {
         e.viewTransition,
     );
 });
+
+
+/* ---------- lecture d'un Maine Coon ----------
+
+   Des repères posés sur une photo, et un panneau qui se remplit au survol
+   comme au clic. Le panneau part rempli côté serveur avec le premier repère :
+   sans JavaScript, la page reste lisible et complète, elle perd seulement
+   l'interaction. */
+
+const lecture = document.getElementById('lecture');
+const lectureInfo = document.getElementById('lecture-info');
+
+if (lecture && lectureInfo) {
+    const points = JSON.parse(lecture.dataset.points || '[]');
+
+    const afficher = (i) => {
+        const p = points[i];
+        if (!p) return;
+        lectureInfo.innerHTML = `<span class="k"></span><h3></h3><p></p>`;
+        lectureInfo.querySelector('.k').textContent = p.k;
+        lectureInfo.querySelector('h3').textContent = p.t;
+        lectureInfo.querySelector('p').textContent = p.d;
+        lecture.querySelectorAll('.repere').forEach((r) =>
+            r.setAttribute('aria-pressed', String(Number(r.dataset.point) === i)));
+    };
+
+    const depuis = (e) => {
+        const b = e.target.closest('[data-point]');
+        if (b) afficher(Number(b.dataset.point));
+    };
+
+    lecture.addEventListener('click', depuis);
+    lecture.addEventListener('mouseover', depuis);
+    lecture.addEventListener('focusin', depuis);
+}
+
+
+/* ---------- compteurs ----------
+
+   Un nombre qui monte quand il entre dans le champ. Le chiffre final est
+   déjà dans le HTML côté serveur : sans JavaScript, ou avec les animations
+   réduites, il s'affiche tel quel — on n'anime jamais au prix de la
+   lisibilité. */
+
+const compter = (el) => {
+    const cible = parseInt(el.dataset.compte, 10);
+    if (Number.isNaN(cible)) return;
+    if (reduit() || cible === 0) {
+        el.textContent = cible;
+        return;
+    }
+    const debut = performance.now();
+    const tick = (t) => {
+        const p = Math.min(1, (t - debut) / 900);
+        el.textContent = Math.round(cible * (1 - Math.pow(1 - p, 3)));
+        if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+};
+
+const chiffres = [...document.querySelectorAll('[data-compte]')];
+
+if (chiffres.length) {
+    if (reduit()) {
+        chiffres.forEach((el) => { el.textContent = el.dataset.compte; });
+    } else {
+        const ioc = new IntersectionObserver((entrees) => {
+            entrees.forEach((e) => {
+                if (!e.isIntersecting) return;
+                compter(e.target);
+                ioc.unobserve(e.target);
+            });
+        }, { rootMargin: '0px 0px -8% 0px' });
+
+        chiffres.forEach((el) => {
+            if (el.getBoundingClientRect().top < window.innerHeight * 1.02) compter(el);
+            else ioc.observe(el);
+        });
+    }
+}
