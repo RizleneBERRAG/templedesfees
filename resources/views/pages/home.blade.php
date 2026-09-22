@@ -26,7 +26,7 @@
     'name'     => \App\Models\Setting::get('elevage.nom', 'Chatterie du Temple des Fées'),
     'description' => "Élevage familial de Maine Coon à Lapeyrouse-Mornay, dans la Drôme des collines.",
     'url'      => route('home'),
-    'image'    => asset('images/cats/hero-duo.webp'),
+    'image'    => asset('images/cats/karrington.webp'),
     'telephone' => \App\Models\Setting::get('contact.telephone'),
     'email'     => \App\Models\Setting::get('contact.email'),
     'address'  => [
@@ -68,7 +68,7 @@
     <div class="duo">
         <div class="portail arche">
             <i><u>
-                <img src="{{ asset('images/cats/hero-duo.webp') }}"
+                <img src="{{ asset('images/cats/karrington.webp') }}"
                      alt="Maine Coon de la chatterie du Temple des Fées, installé à la maison"
                      width="1200" height="1599" fetchpriority="high">
             </u></i>

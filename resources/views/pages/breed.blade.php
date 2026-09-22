@@ -42,7 +42,7 @@
     <div class="wrap">
         <div class="duo-texte inverse monte">
             <figure class="vue haute">
-                <img src="{{ asset('images/cats/adultes-1.webp') }}"
+                <img src="{{ asset('images/cats/solanna.webp') }}"
                      alt="Maine Coon adulte, collerette d'hiver" loading="lazy">
                 <figcaption>Collerette d'hiver</figcaption>
             </figure>
@@ -84,7 +84,7 @@
         <div style="max-width:940px;margin-inline:auto" class="monte">
             <div class="lecture" id="lecture"
                  data-points="{{ json_encode(collect($points)->map(fn ($p) => ['k' => $p['categorie'], 't' => $p['titre'], 'd' => $p['texte']]), JSON_UNESCAPED_UNICODE) }}">
-                <img src="{{ asset('images/cats/hero-duo.webp') }}"
+                <img src="{{ asset('images/cats/karrington.webp') }}"
                      alt="Maine Coon de la chatterie, morphologie de la race" loading="lazy">
                 @foreach($points as $i => $p)
                     <button class="repere" type="button"
@@ -175,7 +175,7 @@
 </section>
 
 <figure class="bande-photo" style="--h:40vh">
-    <img src="{{ asset('images/cats/maison-1.webp') }}" alt="La maison de la chatterie en fin de journée" loading="lazy">
+    <img src="{{ asset('images/cats/delenn.webp') }}" alt="La maison de la chatterie en fin de journée" loading="lazy">
     <span class="voile" aria-hidden="true"></span>
     <figcaption>Tous nos chats vivent dans la maison — pas en box, pas en cage</figcaption>
 </figure>
@@ -307,7 +307,7 @@
             </ol>
 
             <figure class="vue haute">
-                <img src="{{ asset('images/cats/chatons-1.webp') }}"
+                <img src="{{ asset('images/cats/aneora.webp') }}"
                      alt="Chaton Maine Coon de la chatterie, première semaine" loading="lazy">
                 <figcaption>Les chatons naissent et grandissent dans le salon</figcaption>
             </figure>

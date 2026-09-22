@@ -57,7 +57,7 @@
 </section>
 
 <figure class="bande-photo" style="--h:42vh">
-    <img src="{{ asset('images/cats/maison-2.webp') }}"
+    <img src="{{ asset('images/cats/boonie.webp') }}"
          alt="Arbre à chat devant la fenêtre, à la chatterie" loading="lazy">
     <span class="voile" aria-hidden="true"></span>
     <figcaption>Une à deux portées par an, pas davantage</figcaption>

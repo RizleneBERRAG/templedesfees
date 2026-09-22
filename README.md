@@ -146,10 +146,21 @@ portent tous un `[TEXTE À ÉCRIRE]` bien visible.
 
 Par ordre de priorité :
 
-1. **Les vraies photos.** Les 40 emplacements sont occupés par des repères
-   générés qui portent le nom du fichier attendu (`karrington.webp`,
-   `chatons-3.webp`…). Trois seulement sont de vraies photos, récupérées sur le
-   site en ligne. Il suffit de déposer les fichiers aux mêmes noms.
+1. **Les photos de chatons et de la maison.** Les onze chats ont leur vraie
+   photo, reprise de leur fiche sur le site en ligne. Il manque les chatons
+   (5 emplacements : `chaton-1` à `chaton-4` et `portee-b`), occupés par des
+   repères qui portent le nom du fichier attendu.
+
+   **Ce que je n'ai volontairement pas repris du site en ligne**, et pourquoi :
+   - le **bandeau d'accueil** est un montage qui porte l'ancien logo doré, les
+     coordonnées de la chatterie et un nom incrustés dans l'image ;
+   - les **illustrations des pages d'information** (alimentation, santé, eau,
+     origines) sont des photos de banque d'images, et ce ne sont pas des
+     Maine Coon ;
+   - la photo « à propos » porte le filigrane **« © Julia Bénard |
+     arkuswork.com »** : c'est le tirage de contrôle d'une photographe
+     professionnelle, à ne pas republier sans sa licence. À signaler à
+     l'éleveuse, qui l'utilise peut-être sans le savoir.
 2. **Les textes de présentation des chats**, à écrire avec l'éleveuse. Ils
    portent tous un `[TEXTE À ÉCRIRE]` bien visible dans
    `database/seeders/data/content.php`.

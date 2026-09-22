@@ -127,7 +127,9 @@ class ElevageSeeder extends Seeder
                 'icad_numero'      => null,
                 'description'      => $d['texte'],
                 'photo_principale' => 'images/cats/'.$d['photo'].'.webp',
-                'photo_secondaire' => 'images/cats/'.$d['photo2'].'.webp',
+                // Un seul cliche par chat pour l'instant : la visionneuse le
+                // detecte et n'affiche pas de ruban de vignettes vide.
+                'photo_secondaire' => isset($d['photo2']) ? 'images/cats/'.$d['photo2'].'.webp' : null,
                 'ordre'            => $ordre++,
                 'est_publie'       => true,
             ]);

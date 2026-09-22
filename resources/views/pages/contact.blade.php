@@ -132,7 +132,7 @@
                 </div>
 
                 <figure class="vue" style="margin:0">
-                    <img src="{{ asset('images/cats/maison-3.webp') }}"
+                    <img src="{{ asset('images/cats/kora.webp') }}"
                          alt="Maine Coon de la chatterie Chatterie du Temple des Fées" loading="lazy">
                     <figcaption>Fin de journée à la maison</figcaption>
                 </figure>

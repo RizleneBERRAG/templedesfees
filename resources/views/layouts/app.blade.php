@@ -14,7 +14,7 @@
     <meta property="og:title" content="@yield('title', "Chatterie du Temple des Fées")">
     <meta property="og:description" content="@yield('description', "Élevage familial de Maine Coon dans la Drôme. Parents dépistés, résultats publiés.")">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:image" content="@yield('og_image', asset('images/cats/hero-duo.webp'))">
+    <meta property="og:image" content="@yield('og_image', asset('images/cats/karrington.webp'))">
     <meta name="twitter:card" content="summary_large_image">
 
     {{--

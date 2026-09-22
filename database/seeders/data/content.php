@@ -42,7 +42,6 @@ return [
             'naissance' => '2021',
             'robe' => 'Red',
             'photo' => 'karrington',
-            'photo2' => 'karrington-2',
             'texte' => 'Étalon red de la chatterie, né en octobre 2021. Ossature lourde, museau carré et collerette dense en hiver. [TEXTE À ÉCRIRE AVEC L\'ÉLEVEUSE : caractère, comportement avec les chatons, particularités.]',
             'tests' => 'complets',
         ],
@@ -54,7 +53,6 @@ return [
             'naissance' => '2021',
             'robe' => 'Bleu tortie',
             'photo' => 'solanna',
-            'photo2' => 'solanna-2',
             'texte' => 'La doyenne des reproductrices, née en avril 2021. Robe bleu tortie, écaille diluée aux nuances gris-crème. [TEXTE À ÉCRIRE AVEC L\'ÉLEVEUSE.]',
             'tests' => 'complets',
         ],
@@ -66,7 +64,6 @@ return [
             'naissance' => '2023',
             'robe' => 'Black tortie',
             'photo' => 'uriana',
-            'photo2' => 'uriana-2',
             'texte' => 'Née à la chatterie en mars 2023. Black tortie au masque partagé, très marquée. [TEXTE À ÉCRIRE AVEC L\'ÉLEVEUSE.]',
             'tests' => 'complets',
         ],
@@ -78,7 +75,6 @@ return [
             'naissance' => '2022',
             'robe' => 'Red',
             'photo' => 'tika',
-            'photo2' => 'tika-2',
             'texte' => 'Née à la chatterie en octobre 2022. Red franc, poil dense et queue en panache. [TEXTE À ÉCRIRE AVEC L\'ÉLEVEUSE.]',
             'tests' => 'complets',
         ],
@@ -90,7 +86,6 @@ return [
             'naissance' => '2023',
             'robe' => 'Black smoke',
             'photo' => 'delenn',
-            'photo2' => 'delenn-2',
             'texte' => 'Black smoke née en juillet 2023 : sous-poil clair, pointe noire, la robe change complètement selon la lumière. [TEXTE À ÉCRIRE AVEC L\'ÉLEVEUSE.]',
             'tests' => 'complets',
         ],
@@ -102,7 +97,6 @@ return [
             'naissance' => '2022',
             'robe' => 'Black tortie silver ticked tabby',
             'photo' => 'boonie',
-            'photo2' => 'boonie-2',
             'texte' => 'Née en avril 2022. Une robe rare : écaille noire sur fond silver, avec un poil tické qui donne un effet de sable mouvant. [TEXTE À ÉCRIRE AVEC L\'ÉLEVEUSE.]',
             'tests' => 'complets',
         ],
@@ -114,7 +108,6 @@ return [
             'naissance' => '2025',
             'robe' => 'Noir',
             'photo' => 'halunke',
-            'photo2' => 'halunke-2',
             'texte' => 'Jeune mâle noir né en février 2025, arrivé d\'un élevage allemand. Il finit de se construire : pas de mise à la reproduction avant que sa croissance soit terminée et son bilan complet. [TEXTE À ÉCRIRE AVEC L\'ÉLEVEUSE.]',
             'tests' => 'jeune',
         ],
@@ -126,7 +119,6 @@ return [
             'naissance' => '2025',
             'robe' => 'Red',
             'photo' => 'helios',
-            'photo2' => 'helios-2',
             'texte' => 'Jeune mâle red né en août 2025. Encore en croissance. [TEXTE À ÉCRIRE AVEC L\'ÉLEVEUSE.]',
             'tests' => 'jeune',
         ],
@@ -138,7 +130,6 @@ return [
             'naissance' => '2025',
             'robe' => 'Noir',
             'photo' => 'kora',
-            'photo2' => 'kora-2',
             'texte' => 'Jeune femelle noire née en mai 2025. Encore en croissance. [TEXTE À ÉCRIRE AVEC L\'ÉLEVEUSE.]',
             'tests' => 'jeune',
         ],
@@ -150,7 +141,6 @@ return [
             'naissance' => '2025',
             'robe' => 'Red silver ticked tabby',
             'photo' => 'aneora',
-            'photo2' => 'aneora-2',
             'texte' => 'Née à la chatterie en juin 2025. Red silver ticked tabby — le silver éclaircit la base du poil et fait ressortir le roux. [TEXTE À ÉCRIRE AVEC L\'ÉLEVEUSE.]',
             'tests' => 'jeune',
         ],
@@ -162,7 +152,6 @@ return [
             'naissance' => '2025',
             'robe' => 'Blanche',
             'photo' => 'alaska',
-            'photo2' => 'alaska-2',
             'texte' => 'Sœur de portée d\'A\'Neora, née en juin 2025. Robe entièrement blanche. [TEXTE À ÉCRIRE AVEC L\'ÉLEVEUSE : penser à préciser le test de surdité, souvent demandé sur les chats blancs.]',
             'tests' => 'jeune',
         ],
@@ -223,19 +212,30 @@ return [
      * La galerie. Les fichiers sont pour l'instant des reperes generes : ils
      * portent le nom de l'emplacement a remplir, pas une photo.
      */
+    /*
+     * La galerie.
+     *
+     * Uniquement les photos que l'eleveuse a elle-meme televersees sur son
+     * site : ce sont les seules dont l'origine soit certaine. Les visuels
+     * d'illustration de son site actuel sont des banques d'images, et sa
+     * photo de salon porte le filigrane d'une photographe professionnelle —
+     * ni les unes ni l'autre ne peuvent etre reprises sans licence.
+     *
+     * Les photos de chatons et de la maison manquent : elles viendront
+     * d'elle.
+     */
     'GALERIE' => [
-        ['f' => 'maison-1',  'c' => 'Le salon, en fin de journée',            'cat' => 'maison'],
-        ['f' => 'maison-2',  'c' => 'Arbre à chat devant la fenêtre',         'cat' => 'maison'],
-        ['f' => 'maison-3',  'c' => 'Le coin des naissances',                 'cat' => 'maison'],
-        ['f' => 'adultes-1', 'c' => 'Collerette d\'hiver',                    'cat' => 'adultes'],
-        ['f' => 'adultes-2', 'c' => 'Queue en panache',                       'cat' => 'adultes'],
-        ['f' => 'adultes-3', 'c' => 'Lynx tips à contre-jour',                'cat' => 'adultes'],
-        ['f' => 'adultes-4', 'c' => 'Sieste sur le plaid',                    'cat' => 'adultes'],
-        ['f' => 'chatons-1', 'c' => 'Première semaine',                       'cat' => 'chatons'],
-        ['f' => 'chatons-2', 'c' => 'Yeux ouverts',                           'cat' => 'chatons'],
-        ['f' => 'chatons-3', 'c' => 'Découverte de la pâtée',                 'cat' => 'chatons'],
-        ['f' => 'chatons-4', 'c' => 'La fratrie au repos',                    'cat' => 'chatons'],
-        ['f' => 'chatons-5', 'c' => 'Pesée du samedi',                        'cat' => 'chatons'],
+        ['f' => 'karrington', 'c' => 'Karrington, red', 'cat' => 'adultes'],
+        ['f' => 'solanna', 'c' => 'Solanna, bleu tortie', 'cat' => 'adultes'],
+        ['f' => 'uriana', 'c' => 'Uriana, black tortie', 'cat' => 'adultes'],
+        ['f' => 'tika', 'c' => 'Tika, red', 'cat' => 'adultes'],
+        ['f' => 'delenn', 'c' => 'Delenn, black smoke', 'cat' => 'adultes'],
+        ['f' => 'boonie', 'c' => 'Boonie, black tortie silver ticked tabby', 'cat' => 'adultes'],
+        ['f' => 'halunke', 'c' => 'Halunke, noir', 'cat' => 'adultes'],
+        ['f' => 'helios', 'c' => 'Helios, red', 'cat' => 'adultes'],
+        ['f' => 'kora', 'c' => 'Kora, noire', 'cat' => 'adultes'],
+        ['f' => 'aneora', 'c' => "A’Neora, red silver ticked tabby", 'cat' => 'adultes'],
+        ['f' => 'alaska', 'c' => 'Alaska, blanche', 'cat' => 'adultes'],
     ],
 
     /*

@@ -51,7 +51,7 @@
     </div>
 </section>
 
-<x-photo-band image="images/cats/chatons-4.webp"
+<x-photo-band image="images/cats/helios.webp"
               legende="Douze semaines ensemble avant le grand départ"
               hauteur="42vh" />
 
