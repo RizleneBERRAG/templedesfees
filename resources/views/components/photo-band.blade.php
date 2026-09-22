@@ -1,10 +1,12 @@
-@props(['image', 'legende' => null, 'hauteur' => '46vh'])
+@props(['image', 'legende' => null, 'hauteur' => '44vh'])
 
-{{-- Respiration entre deux sections : une photo pleine largeur, légèrement animée. --}}
-<section class="photoband" style="--band-h:{{ $hauteur }}">
-    <img src="{{ asset($image) }}" alt="{{ $legende ?? 'Bengal de la chatterie Chatterie du Temple des Fées' }}" loading="lazy">
-    <span class="photoband-scrim" aria-hidden="true"></span>
+{{-- Respiration entre deux sections : une photo pleine largeur, très lentement
+     agrandie. Le voile garde le texte lisible quelle que soit la photo. --}}
+<figure class="bande-photo" style="--h:{{ $hauteur }}">
+    <img src="{{ asset($image) }}"
+         alt="{{ $legende ?? 'Maine Coon de la Chatterie du Temple des Fées' }}" loading="lazy">
+    <span class="voile" aria-hidden="true"></span>
     @if($legende)
-        <span class="photoband-cap">{{ $legende }}</span>
+        <figcaption>{{ $legende }}</figcaption>
     @endif
-</section>
+</figure>

@@ -6,14 +6,15 @@
 @endphp
 
 @if($photos->isNotEmpty())
-    <div class="strip" aria-label="{{ $titre ?? 'Photos de l’élevage' }}">
+    <div class="ruban" aria-label="{{ $titre ?? 'Photos de l’élevage' }}">
         {{-- La liste est dupliquée pour que le défilement boucle sans saut. --}}
-        <div class="strip-rail">
+        <div class="ruban-rail">
             @foreach($photos->concat($photos) as $i => $photo)
-                <a class="strip-item" href="{{ route('gallery') }}"
+                <a class="ruban-item" href="{{ route('gallery') }}"
                    @if($i >= $photos->count()) aria-hidden="true" tabindex="-1" @endif>
-                    <img src="{{ asset($photo->chemin) }}" alt="{{ $i < $photos->count() ? $photo->alt : '' }}" loading="lazy">
-                    <span class="strip-cap">{{ $photo->legende }}</span>
+                    <img src="{{ asset($photo->chemin) }}"
+                         alt="{{ $i < $photos->count() ? $photo->alt : '' }}" loading="lazy">
+                    <span class="ruban-cap">{{ $photo->legende }}</span>
                 </a>
             @endforeach
         </div>

@@ -1,14 +1,15 @@
 @props(['events'])
 
-{{-- Le suivi de la portee. Le point vert marque l'age legal de cession. --}}
-<ul class="timeline">
+{{-- Le suivi de la portée. Le point vert marque le jalon : l'âge légal de
+     cession. Les points dorés sont les étapes déjà franchies. --}}
+<ol class="chrono">
     @foreach($events as $e)
-        <li @class(['now' => $e->est_jalon, 'done' => $e->est_fait && ! $e->est_jalon])>
-            <span class="pt"></span>
+        <li @class(['encours' => $e->est_jalon, 'faite' => $e->est_fait && ! $e->est_jalon])>
+            <span class="pt" aria-hidden="true"></span>
             <span>
-                <span class="when">{{ $e->quand() }}</span>
-                <span class="what">{{ $e->libelle }}</span>
+                <span class="quand">{{ $e->quand() }}</span>
+                <span class="quoi">{{ $e->libelle }}</span>
             </span>
         </li>
     @endforeach
-</ul>
+</ol>

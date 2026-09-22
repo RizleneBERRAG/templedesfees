@@ -5,79 +5,99 @@
 
 @section('content')
 
-<section class="band">
+<section class="bande">
     <div class="wrap">
+        <div class="frise" style="margin-bottom:clamp(30px,4vw,50px)"><x-fleuron taille="grand" /></div>
+
         <x-section-head
+            class="monte"
             niveau="1"
-            eyebrow="Nos chatons"
-            titre="{{ $portee->code }} — {{ $portee->pere?->nom }} × {{ $portee->mere?->nom }}"
+            eyebrow="{{ $portee->code }} · {{ $portee->pere?->nom }} × {{ $portee->mere?->nom }}"
+            titre="La portée en cours"
             lede="Nés le {{ $portee->date_naissance->translatedFormat('j F Y') }}. {{ $portee->phraseDisponibilite() ? \Illuminate\Support\Str::ucfirst($portee->phraseDisponibilite()).', ' : '' }}identifiés, vaccinés, vermifugés et inscrits au LOOF." />
 
-        <div class="filters">
-            <a href="{{ route('kittens.index') }}"
-               @class(['btn-filter']) aria-pressed="{{ $statut ? 'false' : 'true' }}"
-               role="button">Tous ({{ $total }})</a>
+        <nav class="filtres monte" aria-label="Filtrer les chatons">
+            <a href="{{ route('kittens.index') }}" @if(! $statut) aria-current="true" @endif>Tous ({{ $total }})</a>
             @foreach(\App\Enums\KittenStatus::cases() as $cas)
-                <a href="{{ route('kittens.index', ['statut' => $cas->value]) }}"
-                   aria-pressed="{{ $statut === $cas->value ? 'true' : 'false' }}"
-                   role="button">{{ $cas->libelle() }}s ({{ $filtres[$cas->value] ?? 0 }})</a>
+                @if(($filtres[$cas->value] ?? 0) > 0)
+                    <a href="{{ route('kittens.index', ['statut' => $cas->value]) }}"
+                       @if($statut === $cas->value) aria-current="true" @endif>
+                        {{ $cas->libelle() }}s ({{ $filtres[$cas->value] }})
+                    </a>
+                @endif
             @endforeach
-        </div>
+        </nav>
 
-        <div class="grid">
-            @forelse($chatons as $chaton)
+        @forelse($chatons as $chaton)
+            @if($loop->first)<div class="fiches monte">@endif
                 <x-kitten-card :chaton="$chaton" />
-            @empty
-                <p class="lede">
-                    Aucun chaton dans cette catégorie pour le moment.
-                    <a class="tlink" href="{{ route('adoption.create') }}">Rejoindre la liste d'attente</a>
-                </p>
-            @endforelse
-        </div>
+            @if($loop->last)</div>@endif
+        @empty
+            <p class="lede monte" style="text-align:center;margin-inline:auto">
+                Aucun chaton dans cette catégorie pour le moment.
+                <a class="lien" href="{{ route('adoption.create') }}" style="margin-left:10px">Être prévenu de la prochaine portée</a>
+            </p>
+        @endforelse
     </div>
 </section>
 
-<div class="band tight" style="padding-block:clamp(22px,3vw,36px)">
-    <x-photo-strip titre="Les chatons au fil des semaines" />
-</div>
-
 @if($portee->events->isNotEmpty())
-<section class="band ink2">
+<section class="bande creuse">
     <div class="wrap">
-        <x-section-head
-            eyebrow="Suivi de la portée"
-            titre="Où en sont-ils aujourd'hui"
-            lede="Le même calendrier pour les {{ $portee->nb_chatons }} chatons. Il se remplit au fil des actes vétérinaires saisis dans l'espace de gestion." />
-        <div class="record"><x-timeline :events="$portee->events" /></div>
+        <div class="duo-texte haut monte">
+            <div class="pile">
+                <span class="rubrique">Suivi de la portée</span>
+                <h2>Où en sont-ils<br>aujourd’hui</h2>
+                <p class="lede">
+                    Le même calendrier pour les {{ $portee->nb_chatons }} chatons. Il se remplit au
+                    fil des actes vétérinaires saisis dans l’espace de gestion — ce n’est pas un
+                    texte écrit une fois pour toutes, c’est l’état réel de la portée.
+                </p>
+                <p class="lede">
+                    Le jalon vert est l’âge légal de cession : douze semaines. Aucun chaton ne part
+                    avant, quelles que soient les circonstances.
+                </p>
+            </div>
+
+            <x-record titre="Calendrier de la {{ \Illuminate\Support\Str::lower($portee->code) }}"
+                      meta="{{ $portee->date_naissance->translatedFormat('j F Y') }}">
+                <div style="padding-top:18px"><x-timeline :events="$portee->events" /></div>
+            </x-record>
+        </div>
     </div>
 </section>
 @endif
 
+<div class="bande serree">
+    <x-photo-strip titre="Les chatons au fil des semaines" />
+</div>
+
 @if($archives->isNotEmpty())
-<section class="band paper">
+<section class="bande creuse">
     <div class="wrap">
         <x-section-head
+            class="monte"
             eyebrow="Historique"
             titre="Les portées précédentes"
-            lede="Les portées passées restent en ligne. C'est la meilleure preuve du sérieux d'un élevage : on voit ce que sont devenus les chatons." />
+            lede="Elles restent en ligne. C’est la meilleure preuve du sérieux d’un élevage : on voit ce que sont devenus les chatons, et on voit combien sont revenus." />
 
         @foreach($archives as $archive)
-            <div class="two" @if(! $loop->first) style="margin-top:40px" @endif>
-                <figure class="figure">
-                    <img src="{{ asset($archive->photo_principale ?? 'images/cats/portee.webp') }}"
+            <div class="duo-texte monte" @if(! $loop->first) style="margin-top:clamp(34px,4vw,52px)" @endif>
+                <figure class="vue">
+                    <img src="{{ asset($archive->photo_principale ?: 'images/cats/portee-b.webp') }}"
                          alt="{{ $archive->code }}, chatons Maine Coon" loading="lazy">
                     <figcaption>{{ $archive->code }} — {{ $archive->date_naissance->translatedFormat('F Y') }}</figcaption>
                 </figure>
-                <div class="stack">
+                <div class="pile">
                     <p class="lede">{{ $archive->description }}</p>
-                    <div class="facts">
-                        <div class="fact"><b data-count="{{ $archive->kittens_count }}">0</b><span>Chatons</span></div>
-                        <div class="fact"><b data-count="{{ $archive->kittens_count }}">0</b><span>Adoptés</span></div>
-                        <div class="fact"><b data-count="0">0</b><span>Retour</span></div>
+                    <div class="faits">
+                        <div class="fait"><b data-compte="{{ $archive->kittens_count }}">0</b><span>chatons</span></div>
+                        <div class="fait"><b data-compte="{{ $archive->kittens_count }}">0</b><span>adoptés</span></div>
+                        <div class="fait"><b data-compte="0">0</b><span>retour</span></div>
                     </div>
-                    <p class="small">
-                        Aucun nom de famille d'adoptant n'est publié sur ce site. Le statut d'un chaton
-                        est une information sur le chaton, pas sur la personne qui l'a accueilli.
+                    <p class="petit">
+                        Aucun nom de famille d’adoptant n’est publié sur ce site. Le statut d’un chaton
+                        est une information sur le chaton, pas sur la personne qui l’a accueilli.
                     </p>
                 </div>
             </div>

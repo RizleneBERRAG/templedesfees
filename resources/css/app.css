@@ -693,3 +693,45 @@ a.case:hover{border-color:var(--or-ombre);background:var(--emeraude)}
 .note-forme{grid-column:1/-1;font-size:14px;color:var(--ivoire-dim);
   border-left:2px solid var(--or-ombre);padding-left:16px;line-height:1.65}
 @media (pointer:coarse){.depot > summary{padding-block:7px}}
+
+
+/* ── deux colonnes alignées en haut ──────────────────────────────── */
+.duo-texte.haut{align-items:start}
+.duo-texte.fiche-detail{grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr)}
+@media(max-width:880px){.duo-texte.fiche-detail{grid-template-columns:1fr}}
+
+/* ── visionneuse de fiche ────────────────────────────────────────── */
+/* Toutes les images sont dans le document dès le départ, superposées et
+   masquées par l'opacité. Le fondu n'a donc rien à charger au moment du
+   clic, et la mise en page ne bouge jamais d'un pixel. */
+.viseur{display:flex;flex-direction:column;gap:12px}
+
+.viseur .scene{cursor:zoom-in;aspect-ratio:4/5}
+.viseur .scene > i > u{position:relative}
+.viseur .scene img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  opacity:0;transition:opacity .45s var(--ease)}
+.viseur .scene img.visible{opacity:1}
+.viseur .scene:focus-visible{outline:2px solid var(--or-clair);outline-offset:4px}
+
+.compteur,.loupe{position:absolute;z-index:3;pointer-events:none;
+  font-family:var(--pierre);font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(245,240,230,.85);background:rgba(8,11,10,.62);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border:1px solid var(--filet);padding:6px 11px}
+.compteur{left:50%;top:22px;transform:translateX(-50%);font-variant-numeric:tabular-nums}
+.compteur b{color:var(--or-clair);font-weight:400}
+.loupe{right:14px;bottom:14px;opacity:0;transition:opacity .3s}
+.viseur .scene:hover .loupe,.viseur .scene:focus-visible .loupe{opacity:1}
+/* Sans survol possible, l'indice ne se mériterait jamais : au doigt, il reste. */
+@media (pointer:coarse){.loupe{opacity:1}}
+
+.rail{display:flex;gap:9px;overflow-x:auto;padding-bottom:2px;
+  scrollbar-width:none;scroll-snap-type:x proximity;overscroll-behavior-x:contain}
+.rail::-webkit-scrollbar{display:none}
+.vignette{flex:none;width:clamp(56px,7vw,74px);aspect-ratio:1;padding:0;overflow:hidden;
+  border:1px solid var(--filet-2);background:var(--nuit-3);cursor:pointer;opacity:.5;
+  scroll-snap-align:start;transition:opacity .3s,border-color .3s}
+.vignette img{width:100%;height:100%;object-fit:cover}
+.vignette:hover{opacity:.85;border-color:var(--or-ombre)}
+.vignette[aria-current="true"]{opacity:1;border-color:var(--or)}
+@media (pointer:coarse){.vignette{width:clamp(60px,12vw,74px)}}

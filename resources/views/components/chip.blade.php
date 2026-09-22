@@ -1,5 +1,3 @@
 @props(['statut'])
 
-<span {{ $attributes->merge(['class' => 'chip '.$statut->classe()]) }}>
-    <span class="dot"></span>{{ $statut->libelle() }}
-</span>
+<span {{ $attributes->merge(['class' => 'pastille '.$statut->value]) }}>{{ $statut->libelle() }}</span>
