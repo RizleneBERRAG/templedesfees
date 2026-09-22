@@ -149,7 +149,9 @@ Par ordre de priorité :
 1. **Les photos de chatons et de la maison.** Les onze chats ont leur vraie
    photo, reprise de leur fiche sur le site en ligne. Il manque les chatons
    (5 emplacements : `chaton-1` à `chaton-4` et `portee-b`), occupés par des
-   repères qui portent le nom du fichier attendu.
+   planches gravées aux couleurs de la charte — une case encore vide se lit
+   comme une intention, pas comme un site inachevé. Elles se regénèrent avec
+   `C:\xampp\php\php.exe scripts/plaques-attente.php`.
 
    **Ce que je n'ai volontairement pas repris du site en ligne**, et pourquoi :
    - le **bandeau d'accueil** est un montage qui porte l'ancien logo doré, les
