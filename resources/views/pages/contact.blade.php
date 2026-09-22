@@ -3,10 +3,6 @@
 @section('title', "Contact — venir voir les chatons")
 @section('description', "Écrivez-nous ou appelez la Chatterie du Temple des Fées à Lapeyrouse-Mornay (26), dans la Drôme des collines. Visites sur rendez-vous, réponse sous 48 heures.")
 
-@push('scripts')
-    @vite('resources/js/map.js')
-@endpush
-
 @php
     $tel    = \App\Models\Setting::get('contact.telephone');
     $telRaw = \Illuminate\Support\Str::of($tel)->replace(' ', '')->replaceFirst('0', '+33');
@@ -256,46 +252,7 @@
 {{-- ---------------- carte ---------------- --}}
 <section class="bande creuse serree">
     <div class="wrap">
-        <x-section-head
-            class="monte"
-            eyebrow="Venir jusqu'à nous"
-            titre="Dans la Drôme des collines"
-            lede="L'élevage est à Lapeyrouse-Mornay, tout au nord de la Drôme, à dix minutes de Saint-Rambert-d'Albon et à une heure de Lyon comme de Saint-Étienne. L'adresse exacte vous est communiquée à la prise de rendez-vous." />
-
-        <div class="cadre-carte">
-            <div id="carte" data-carte='@json($points)' role="application"
-                 aria-label="Carte de situation de l'élevage à Lapeyrouse-Mornay"></div>
-            <div class="carte-fiche">
-                <h4>Temps de trajet</h4>
-                <dl>
-                    @foreach($points['reperes'] as $repere)
-                        <dt>{{ $repere['titre'] }}</dt>
-                        <dd>{{ $repere['detail'] }}</dd>
-                    @endforeach
-                </dl>
-                <p class="petit" style="font-size:.78rem">
-                    Nous pouvons venir vous chercher à la gare de La Verpillière.
-                </p>
-                {{-- Visent la commune, pas l'adresse exacte : celle-ci n'est donnée
-                     qu'au rendez-vous, un itinéraire porte-à-porte la publierait. --}}
-                <h4 style="margin-top:24px">Itinéraire</h4>
-                <div class="btnrow" style="margin-top:10px">
-                    <a class="btn creux" href="{{ $itineraire['google'] }}"
-                       target="_blank" rel="noopener noreferrer"
-                       aria-label="Itinéraire vers {{ $itineraire['commune'] }} sur Google Maps (nouvelle fenêtre)"
-                       style="flex:1;justify-content:center;padding:11px 12px;font-size:.8rem">Google Maps</a>
-                    <a class="btn creux" href="{{ $itineraire['waze'] }}"
-                       target="_blank" rel="noopener noreferrer"
-                       aria-label="Itinéraire vers {{ $itineraire['commune'] }} sur Waze (nouvelle fenêtre)"
-                       style="flex:1;justify-content:center;padding:11px 12px;font-size:.8rem">Waze</a>
-                </div>
-            </div>
-        </div>
-
-        <p class="petit" style="margin-top:16px">
-            Carte &copy; OpenStreetMap et CARTO. Aucun traceur publicitaire n'est chargé sur cette page :
-            les liens d'itinéraire ouvrent Google Maps ou Waze dans un nouvel onglet, rien n'est chargé depuis eux ici.
-        </p>
+        <x-carte-situation class="monte" :itineraire="$itineraire" />
     </div>
 </section>
 

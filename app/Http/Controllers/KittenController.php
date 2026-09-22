@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\KittenStatus;
 use App\Models\Kitten;
 use App\Models\Litter;
 use Illuminate\Http\Request;
@@ -28,9 +29,18 @@ class KittenController extends Controller
             'total'     => $chatons->count(),
             'filtres'   => $filtres,
             'statut'    => $statut,
+            /*
+             * Deux comptes distincts : le nombre de chatons de la portee, et
+             * combien sont effectivement partis. Les afficher tous deux avec
+             * le meme chiffre revenait a annoncer « tous adoptes » sans
+             * jamais le verifier.
+             */
             'archives'  => Litter::publiees()
                 ->whereKeyNot($portee->id)
-                ->withCount('kittens')
+                ->withCount([
+                    'kittens',
+                    'kittens as adoptes_count' => fn ($q) => $q->where('statut', KittenStatus::Adopte),
+                ])
                 ->orderByDesc('date_naissance')
                 ->get(),
         ]);

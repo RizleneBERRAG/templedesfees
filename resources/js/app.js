@@ -395,3 +395,175 @@ if (sommaire) {
         placer();
     }
 }
+
+/* ---------- la liasse ----------
+   Plusieurs registres dans le même cadre, un seul à l'écran. On passe de
+   l'un à l'autre par les flèches, par les jalons, au clavier ou d'un glissé
+   du pouce.
+
+   En dessous de deux fiches on ne fait rien : la pile ordinaire est déjà la
+   bonne réponse, et une flèche qui ne mène nulle part serait un mensonge. */
+document.querySelectorAll('[data-liasse]').forEach((liasse) => {
+    const scene = liasse.querySelector('.liasse-scene');
+    const barre = liasse.querySelector('.liasse-barre');
+    const volets = [...scene.children];
+    if (volets.length < 2 || !barre) return;
+
+    const jalons = barre.querySelector('.jalons');
+    let index = 0;
+
+    /* Le nom de chaque fiche est lu sur la fiche elle-même : il n'est écrit
+       qu'à un seul endroit, il ne peut donc pas diverger. */
+    volets.forEach((volet, i) => {
+        const nom = volet.dataset.jalon
+            || volet.querySelector('.entete b')?.textContent.trim()
+            || `Fiche ${i + 1}`;
+
+        const bouton = document.createElement('button');
+        bouton.type = 'button';
+        bouton.textContent = nom;
+        bouton.addEventListener('click', () => aller(i));
+
+        const li = document.createElement('li');
+        li.append(bouton);
+        jalons.append(li);
+    });
+
+    const boutons = [...jalons.querySelectorAll('button')];
+
+    const mesurer = () => {
+        scene.style.setProperty('--h-volet', `${volets[index].offsetHeight}px`);
+    };
+
+    const poser = (cible) => {
+        index = cible;
+
+        volets.forEach((volet, i) => {
+            volet.dataset.etat = i === cible ? 'actif' : (i < cible ? 'avant' : 'apres');
+            volet.toggleAttribute('inert', i !== cible);
+            volet.setAttribute('aria-hidden', String(i !== cible));
+        });
+
+        boutons.forEach((b, i) => {
+            if (i === cible) b.setAttribute('aria-current', 'true');
+            else b.removeAttribute('aria-current');
+        });
+
+        mesurer();
+    };
+
+    /* Les flèches tournent en boucle : avec deux fiches, un bouton grisé une
+       fois sur deux se remarque plus que le passage lui-même. */
+    const aller = (vers) => {
+        const cible = (vers + volets.length) % volets.length;
+        if (cible !== index) poser(cible);
+    };
+
+    barre.querySelectorAll('[data-pas]').forEach((bouton) => {
+        bouton.addEventListener('click', () => aller(index + Number(bouton.dataset.pas)));
+    });
+
+    liasse.addEventListener('keydown', (e) => {
+        if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+        if (e.target.closest('input, textarea, select')) return;
+        e.preventDefault();
+        aller(index + (e.key === 'ArrowRight' ? 1 : -1));
+    });
+
+    /* Le glissé du pouce, au doigt seulement : à la souris, un cliqué-glissé
+       sert à sélectionner du texte. */
+    let depart = null;
+    scene.addEventListener('pointerdown', (e) => {
+        depart = e.pointerType === 'mouse' ? null : { x: e.clientX, y: e.clientY };
+    });
+    scene.addEventListener('pointerup', (e) => {
+        if (!depart) return;
+        const dx = e.clientX - depart.x;
+        const dy = e.clientY - depart.y;
+        depart = null;
+        if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.6) {
+            aller(index + (dx < 0 ? 1 : -1));
+        }
+    });
+
+    liasse.dataset.feuillete = '';
+    barre.hidden = false;
+    poser(0);
+
+    /* Les transitions n'arrivent qu'une fois les polices posées : mesurée
+       avec la police de secours, une fiche ne fait pas la même hauteur, et
+       la scène se verrait alors corriger sa taille en glissant. */
+    const armer = () => requestAnimationFrame(() => { mesurer(); liasse.dataset.pret = ''; });
+    if (document.fonts?.ready) document.fonts.ready.then(armer);
+    else armer();
+
+    /* Une fiche peut changer de hauteur sans que la fenêtre bouge : polices
+       enfin chargées, tableau qui passe en colonne, texte replié. */
+    if ('ResizeObserver' in window) {
+        const veille = new ResizeObserver(mesurer);
+        volets.forEach((volet) => veille.observe(volet));
+    }
+    window.addEventListener('resize', mesurer);
+});
+
+/* ---------- les chiffres qui montent ----------
+
+   Chaque <b data-compte="5"> part de zéro et monte jusqu'à sa valeur en
+   entrant dans le champ. Le texte écrit dans la balise reste « 0 » : si le
+   script ne passe pas, la page affiche un zéro plutôt qu'un trou — mais le
+   filet de sécurité plus bas pose la vraie valeur dans tous les cas. */
+{
+    const compteurs = [...document.querySelectorAll('[data-compte]')];
+
+    if (compteurs.length) {
+        const format = new Intl.NumberFormat('fr-FR');
+        const valeur = (el) => Number(el.dataset.compte);
+
+        const poser = (el) => {
+            const cible = valeur(el);
+            el.textContent = Number.isFinite(cible) ? format.format(cible) : el.textContent;
+            el.dataset.compte = '';
+        };
+
+        const monter = (el) => {
+            const cible = valeur(el);
+            if (!Number.isFinite(cible)) return;
+            if (reduit() || cible === 0) { poser(el, cible); return; }
+
+            el.dataset.compte = '';
+            const duree = 760 + Math.min(cible, 80) * 11;
+            const depart = performance.now();
+
+            const pas = (t) => {
+                const p = Math.min(1, (t - depart) / duree);
+                /* Le compte ralentit avant de s'arrêter : un chiffre qui
+                   s'immobilise net donne l'impression d'un saut. */
+                el.textContent = format.format(Math.round(cible * (1 - (1 - p) ** 3)));
+                if (p < 1) requestAnimationFrame(pas);
+            };
+
+            requestAnimationFrame(pas);
+        };
+
+        if ('IntersectionObserver' in window) {
+            const io = new IntersectionObserver(
+                (entrees) => entrees.forEach((e) => {
+                    if (!e.isIntersecting) return;
+                    io.unobserve(e.target);
+                    monter(e.target);
+                }),
+                { rootMargin: '0px 0px -12% 0px' },
+            );
+            compteurs.forEach((el) => io.observe(el));
+        } else {
+            compteurs.forEach(poser);
+        }
+
+        /* Un chiffre resté à zéro est un mensonge, pas une animation ratée. */
+        setTimeout(() => {
+            document.querySelectorAll('[data-compte]:not([data-compte=""])').forEach((el) => {
+                if (el.getBoundingClientRect().top < window.innerHeight * 1.2) poser(el);
+            });
+        }, 2400);
+    }
+}

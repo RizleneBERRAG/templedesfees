@@ -1,4 +1,4 @@
-@props(['titre', 'meta' => null, 'note' => null])
+@props(['titre', 'meta' => null, 'note' => null, 'jalon' => null])
 
 {{--
     Un registre : un en-tête, un tableau, et une note en bas.
@@ -6,7 +6,7 @@
     parce que chaque angle doit mordre d'un pixel sur le filet pour paraître
     posé dessus.
 --}}
-<div {{ $attributes->merge(['class' => 'registre']) }}>
+<div {{ $attributes->merge(['class' => 'registre']) }} data-jalon="{{ $jalon ?? $titre }}">
     <span class="eq" aria-hidden="true"></span><span class="eq" aria-hidden="true"></span>
     <span class="eq" aria-hidden="true"></span><span class="eq" aria-hidden="true"></span>
 

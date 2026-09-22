@@ -49,6 +49,7 @@
 
             <div class="pile" style="gap:clamp(18px,2.4vw,26px)">
 
+                <x-liasse>
                 <x-record titre="Identité" meta="{{ $chaton->reference }}"
                           note="Les numéros LOOF et ICAD se saisissent depuis l’espace de gestion. Tant qu’ils sont vides, la fiche reste en brouillon et n’est pas publiée — c’est la règle imposée par la réglementation sur les annonces de cession.">
                     <table>
@@ -107,14 +108,15 @@
                     </div>
                 </x-record>
 
-                @if($portee->pere)<x-health-table :chat="$portee->pere" />@endif
-                @if($portee->mere)<x-health-table :chat="$portee->mere" />@endif
+                @if($portee->pere)<x-health-table :chat="$portee->pere" jalon="Santé du père" />@endif
+                @if($portee->mere)<x-health-table :chat="$portee->mere" jalon="Santé de la mère" />@endif
 
                 @if($portee->events->isNotEmpty())
                     <x-record titre="Suivi de la portée" meta="{{ $portee->code }}">
                         <div style="padding-top:18px"><x-timeline :events="$portee->events" /></div>
                     </x-record>
                 @endif
+                </x-liasse>
 
                 @unless($chaton->estDisponible())
                     <div class="registre">

@@ -30,6 +30,7 @@
             </div>
 
             <div class="pile" style="gap:clamp(18px,2.4vw,26px)">
+                <x-liasse>
                 <x-record titre="Identité" meta="{{ $chat->role->libelle() }}">
                     <table>
                         <tr><th>Sexe</th><td>{{ \Illuminate\Support\Str::ucfirst($chat->sexe) }}</td></tr>
@@ -81,6 +82,7 @@
                         </table>
                     </x-record>
                 @endif
+                </x-liasse>
 
                 <div class="btnrow">
                     <a class="btn creux" href="{{ route('kittens.index') }}">La portée en cours</a>

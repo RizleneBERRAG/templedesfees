@@ -92,8 +92,9 @@
                     <p class="lede">{{ $archive->description }}</p>
                     <div class="faits">
                         <div class="fait"><b data-compte="{{ $archive->kittens_count }}">0</b><span>chatons</span></div>
-                        <div class="fait"><b data-compte="{{ $archive->kittens_count }}">0</b><span>adoptés</span></div>
-                        <div class="fait"><b data-compte="0">0</b><span>retour</span></div>
+                        <div class="fait"><b data-compte="{{ $archive->adoptes_count }}">0</b><span>adoptés</span></div>
+                        <div class="fait"><b data-compte="0">0</b><span>retour à l’élevage</span></div>
+                        <div class="fait"><b data-compte="{{ \App\Models\Litter::SEMAINES_AVANT_CESSION }}">0</b><span>semaines avant le départ</span></div>
                     </div>
                     <p class="petit">
                         Aucun nom de famille d’adoptant n’est publié sur ce site. Le statut d’un chaton
