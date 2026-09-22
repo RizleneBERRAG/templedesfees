@@ -186,6 +186,17 @@ return [
      * dans un role en base : ouvrir le back-office a quelqu'un doit etre une
      * decision, pas un effet de bord de la creation d'un compte.
      */
+    /*
+     * Apercu statique.
+     *
+     * L'export (php artisan site:export) rejoue le site en HTML pur, pour
+     * une mise en ligne sans serveur — une page GitHub, par exemple. Dans ce
+     * mode il n'y a personne pour recevoir un formulaire : les trois
+     * formulaires du site le disent alors franchement et donnent le
+     * telephone et l'adresse electronique, qui eux fonctionnent partout.
+     */
+    'apercu_statique' => env('APERCU_STATIQUE', false),
+
     'back_office' => [
         'emails' => [
             'letempledesfees@outlook.fr',

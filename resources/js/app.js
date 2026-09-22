@@ -59,13 +59,41 @@ if (!reduit()) {
         else el.classList.add('vu');
     });
 
-    setTimeout(
-        () =>
-            document.querySelectorAll('.monte:not(.vu)').forEach((el) => {
-                if (el.getBoundingClientRect().top < window.innerHeight * 1.2) el.classList.add('vu');
-            }),
-        2200,
-    );
+    /*
+     * Le filet de securite, deux fois.
+     *
+     * Une seule verification apres deux secondes ne couvrait que le haut de
+     * la page : plus bas, si l'observateur ne se declenchait pas — onglet
+     * d'arriere-plan, navigation par ancre, moteur qui bride les
+     * observateurs — la section restait invisible pour de bon. Une page qui
+     * n'affiche rien est pire qu'une page sans animation, donc le defilement
+     * decouvre aussi ce qui est arrive dans le champ.
+     */
+    const decouvrir = () => {
+        const restants = document.querySelectorAll('.monte:not(.vu)');
+        restants.forEach((el) => {
+            if (el.getBoundingClientRect().top < window.innerHeight * 1.2) el.classList.add('vu');
+        });
+
+        return restants.length;
+    };
+
+    let veille = false;
+    const surveiller = () => {
+        if (veille) return;
+        veille = true;
+        requestAnimationFrame(() => {
+            veille = false;
+            if (decouvrir() === 0) {
+                window.removeEventListener('scroll', surveiller);
+                window.removeEventListener('resize', surveiller);
+            }
+        });
+    };
+
+    window.addEventListener('scroll', surveiller, { passive: true });
+    window.addEventListener('resize', surveiller);
+    setTimeout(decouvrir, 2200);
 } else {
     document.querySelectorAll('.monte').forEach((el) => el.classList.add('vu'));
 }
@@ -567,3 +595,21 @@ document.querySelectorAll('[data-liasse]').forEach((liasse) => {
         }, 2400);
     }
 }
+
+/* ---------- l'aperçu statique ----------
+   Sur la version publiée sans serveur, les formulaires portent data-apercu.
+   Le clic reste possible — c'est la maquette, elle doit se manipuler — mais
+   l'envoi est retenu et la note d'explication reprend la main. */
+document.querySelectorAll('form[data-apercu]').forEach((formulaire) => {
+    formulaire.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const note = formulaire.parentElement.querySelector('.note-apercu');
+        if (!note) return;
+
+        note.classList.remove('bat');
+        void note.offsetWidth;          // on redémarre l'animation
+        note.classList.add('bat');
+        note.scrollIntoView({ block: 'center', behavior: reduit() ? 'auto' : 'smooth' });
+    });
+});

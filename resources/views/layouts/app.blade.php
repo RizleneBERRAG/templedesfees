@@ -7,6 +7,11 @@
     <title>@yield('title', "Chatterie du Temple des Fées") — Élevage de Maine Coon dans la Drôme</title>
     <meta name="description" content="@yield('description', "Chatterie familiale de Maine Coon à Lapeyrouse-Mornay (26), Drôme des collines. Chatons inscrits au LOOF, parents dépistés HCM, SMA et PK-Def, résultats publiés.")">
     <link rel="canonical" href="{{ url()->current() }}">
+    @if(config('chatterie.apercu_statique'))
+        {{-- L'apercu ne doit pas se retrouver indexe a cote du vrai site :
+             deux fois le meme contenu, et les deux y perdent. --}}
+        <meta name="robots" content="noindex, nofollow">
+    @endif
 
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Chatterie du Temple des Fées">

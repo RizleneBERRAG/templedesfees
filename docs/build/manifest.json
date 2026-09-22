@@ -1,0 +1,21 @@
+{
+  "resources/css/app.css": {
+    "file": "assets/app-BpEHyUIm.css",
+    "src": "resources/css/app.css",
+    "isEntry": true,
+    "name": "app",
+    "names": [
+      "app.css"
+    ]
+  },
+  "resources/images/grain.png": {
+    "file": "assets/grain-DV8ptsxN.png",
+    "src": "resources/images/grain.png"
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-jIYJZfqj.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  }
+}

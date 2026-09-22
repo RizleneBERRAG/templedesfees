@@ -82,7 +82,12 @@
                 </div>
             @endif
 
-            <form class="demande" method="POST" action="{{ route('adoption.store') }}">
+            @if(config('chatterie.apercu_statique'))
+                <x-note-apercu quoi="Ce formulaire" />
+            @endif
+
+            <form class="demande" method="POST" action="{{ route('adoption.store') }}"
+                  @if(config('chatterie.apercu_statique')) data-apercu @endif>
                 @csrf
 
                 {{-- Piege a robots : invisible pour un humain, rempli par les bots. --}}

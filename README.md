@@ -181,7 +181,66 @@ quatre requêtes différentes.
 
 ## Carte de la page Contact
 
-Leaflet + fond sombre CartoDB, sans clé API et sans traceur. Les coordonnées et
-les temps de trajet sont dans `config/chatterie.php`, clé `carte`.
-Elles visent la commune, pas le portail : la chatterie publie son adresse
-complète sur son site actuel, mais le site ne le fait pas par défaut.
+Dessinée dans la page, en SVG — aucune tuile, aucune clé, aucun traceur, rien
+qui vienne de l'extérieur. Le composant est
+`resources/views/components/carte-situation.blade.php`.
+
+Les villes ne sont pas placées à la main : elles sont projetées depuis leurs
+coordonnées réelles, dans `config/chatterie.php`, clé `carte`. Corriger une
+latitude là-bas déplace le point sur la carte. Les repères visent la commune et
+non le portail : la chatterie publie son adresse complète sur son site actuel,
+le nouveau ne le fait pas par défaut.
+
+Le fond de plan précédent venait des tuiles sombres de CARTO, qui réclament
+désormais une clé : la carte s'affichait barrée de « API KEY REQUIRED ».
+Leaflet a été retiré du projet à cette occasion (160 ko de moins).
+
+## Aperçu statique (GitHub Pages)
+
+Le site se rejoue en HTML pur, pour être montré sans louer d'hébergement :
+
+```bash
+php artisan site:export
+```
+
+Chaque adresse est demandée à l'application comme le ferait un navigateur, la
+réponse est écrite dans `docs/`, puis **tous les liens sont repris en
+relatif**. L'export fonctionne donc à la racine d'un domaine, dans un
+sous-dossier (`https://untel.github.io/templedesfees/`) et même ouvert depuis
+le disque, sans rien reconfigurer.
+
+Pour publier : pousser le dépôt, puis dans **Settings › Pages**, choisir la
+branche et le dossier **/docs**. Aucune action GitHub à écrire, aucun PHP côté
+serveur.
+
+Options :
+
+| Option | Effet |
+| --- | --- |
+| `--sortie=docs` | Dossier de destination (défaut : `docs`) |
+| `--base=https://untel.github.io/templedesfees` | Rend absolues les balises canonique et Open Graph, pour un partage propre |
+| `--garder` | N'efface pas le dossier avant d'écrire |
+
+Ce que l'export prévoit :
+
+- `.nojekyll`, sans quoi GitHub passerait le dossier à Jekyll ;
+- un `robots.txt` interdisant l'indexation et une balise `noindex` sur chaque
+  page — l'aperçu ne doit pas se retrouver référencé à côté du vrai site, les
+  deux y perdraient ;
+- `404.html`, que GitHub Pages sert pour toute adresse inconnue ;
+- les trois formulaires (contact, avis, pré-réservation) restent affichés et
+  manipulables, mais coiffés d'une note qui dit qu'il n'y a pas de serveur
+  derrière, et qui donne le téléphone et l'adresse électronique. C'est
+  l'indicateur `chatterie.apercu_statique` qui les bascule, posé par la
+  commande.
+
+Ce que l'export ne contient pas : le back-office Filament, qui a besoin de PHP
+et de la base. L'aperçu ne montre que le site public.
+
+**Refaire l'export après chaque changement**, sinon `docs/` reste sur
+l'ancienne version :
+
+```bash
+npm run build
+php artisan site:export
+```

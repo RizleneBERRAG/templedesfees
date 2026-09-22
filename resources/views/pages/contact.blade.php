@@ -41,7 +41,12 @@
                     </div>
                 @endif
 
-                <form class="demo " method="POST" action="{{ route('contact.store') }}">
+                @if(config('chatterie.apercu_statique'))
+                    <x-note-apercu quoi="Ce formulaire" />
+                @endif
+
+                <form class="demo " method="POST" action="{{ route('contact.store') }}"
+                      @if(config('chatterie.apercu_statique')) data-apercu @endif>
                     @csrf
 
                     {{-- Piege a robots : invisible pour un humain. --}}
@@ -186,7 +191,12 @@
         <details class="depot" @if(session('succes_avis') || $errors->avis->any()) open @endif>
             <summary>Vous avez adopté chez nous ? Laissez votre avis</summary>
 
-            <form class="demande" method="POST" action="{{ route('reviews.store') }}">
+            @if(config('chatterie.apercu_statique'))
+                <x-note-apercu quoi="Ce depot d’avis" />
+            @endif
+
+            <form class="demande" method="POST" action="{{ route('reviews.store') }}"
+                  @if(config('chatterie.apercu_statique')) data-apercu @endif>
                 @csrf
 
                 {{-- Piege a robots : invisible pour un humain. --}}
