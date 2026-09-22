@@ -987,3 +987,98 @@ footer > *{position:relative}
 @supports not ((-webkit-background-clip:text) or (background-clip:text)){
   .texte-long > p:first-of-type::first-letter{background:none;color:var(--or-clair)}
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   Reprise du sommaire et du lecteur
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── le sommaire ─────────────────────────────────────────────────── */
+/* Il était translucide et bordé en haut comme en bas : il tranchait dans la
+   photo au lieu de passer devant. Fond quasi opaque, un seul filet en bas,
+   et une ombre portée — il flotte au-dessus du contenu, il ne le coupe pas.
+
+   Les rubriques perdent leur cadre : sept boîtes alignées font barre d'outils.
+   Du texte espacé, et la rubrique courante soulignée d'or, suffisent — c'est
+   aussi le vocabulaire du reste du site. */
+.sommaire{background:rgba(8,11,10,.97);border-top:0;
+  border-bottom:1px solid rgba(217,178,106,.3);
+  box-shadow:0 14px 34px rgba(0,0,0,.5)}
+.sommaire-in{gap:clamp(4px,1.4vw,20px)}
+
+.sommaire a{position:relative;border:0;padding:12px 6px;background:none;
+  font-size:10.5px;letter-spacing:.18em;color:var(--ivoire-dim);transition:color .3s}
+.sommaire a::after{content:"";position:absolute;left:6px;right:6px;bottom:6px;height:1px;
+  background:var(--dorure);transform:scaleX(0);transform-origin:50% 50%;
+  transition:transform .35s var(--ease)}
+.sommaire a:hover{color:var(--ivoire)}
+.sommaire a:hover::after{transform:scaleX(.5)}
+.sommaire a[aria-current="true"]{background:none;color:var(--or-clair)}
+.sommaire a[aria-current="true"]::after{transform:scaleX(1)}
+
+/* ── le lecteur ──────────────────────────────────────────────────── */
+/* Deux colonnes de hauteur comparable : la photo d'un côté, les six traits de
+   l'autre. La liste remplit la colonne, là où un paragraphe seul laissait
+   quatre cents pixels de vide sous lui. */
+.lecteur{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);
+  gap:clamp(24px,3.4vw,52px);align-items:start;max-width:1040px;margin-inline:auto}
+@media(max-width:860px){.lecteur{grid-template-columns:1fr}}
+
+.lecture{position:relative;overflow:hidden;border:1px solid var(--filet);
+  background:var(--nuit-3);width:100%;aspect-ratio:7/10;margin:0}
+.lecture > img{width:100%;height:100%;object-fit:cover;display:block}
+.lecture figcaption{position:absolute;inset:auto 0 0 0;padding:26px 14px 11px;
+  background:linear-gradient(to top,rgba(8,11,10,.9),transparent);
+  font-family:var(--pierre);font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(245,240,230,.76)}
+
+/* ── la liste des traits ─────────────────────────────────────────── */
+.traits{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.traits li{border-bottom:1px solid var(--filet-2)}
+.traits li:last-child{border-bottom:0}
+
+.traits button{display:flex;flex-direction:column;gap:4px;width:100%;text-align:left;
+  padding:15px 34px 15px 0;position:relative;background:none;border:0;cursor:pointer}
+.traits button .k{font-family:var(--pierre);font-size:9px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--or-mat);transition:color .3s}
+.traits button b{font-family:var(--titre);font-size:clamp(1.3rem,2.1vw,1.7rem);
+  font-weight:400;line-height:1.14;color:var(--ivoire-2);transition:color .3s}
+
+/* Le chevron dit que la ligne s'ouvre. Il pivote quand elle est ouverte. */
+.traits button::after{content:"";position:absolute;right:8px;top:50%;width:9px;height:9px;
+  margin-top:-6px;border-right:1.4px solid var(--or-ombre);border-bottom:1.4px solid var(--or-ombre);
+  transform:rotate(45deg);transition:transform .35s var(--ease),border-color .3s}
+
+.traits button:hover b,
+.traits button[aria-current="true"] b{color:var(--ivoire)}
+.traits button[aria-current="true"] .k{color:var(--or)}
+.traits button[aria-current="true"]::after{transform:rotate(-135deg);border-color:var(--or)}
+
+/* Le texte du trait courant. La transition porte sur grid-template-rows, qui
+   passe de 0fr à 1fr : elle s'anime sans qu'on ait à connaître la hauteur du
+   paragraphe, et sans JavaScript pour la mesurer.
+
+   L'enveloppe est indispensable : c'est elle qui est la grille, et le
+   paragraphe qu'elle contient est l'élément que l'on réduit. Un nœud de texte
+   nu deviendrait une boîte anonyme, sur laquelle min-height:0 ne s'applique
+   pas — et rien ne se replierait. */
+.traits .repli{display:grid;grid-template-rows:0fr;opacity:0;
+  transition:grid-template-rows .4s var(--ease),opacity .3s,padding-bottom .4s}
+.traits .repli > p{min-height:0;overflow:hidden;
+  font-size:15px;line-height:1.72;color:var(--ivoire-3);max-width:58ch}
+.traits li:has(> button[aria-current="true"]) .repli{grid-template-rows:1fr;opacity:1;padding-bottom:17px}
+
+/* Sans :has(), rien ne se replie : les six textes restent visibles. La page
+   perd son pliage, jamais son contenu. */
+@supports not selector(li:has(> button)){
+  .traits .repli{grid-template-rows:1fr;opacity:1;padding-bottom:17px}
+}
+
+/* La photo accompagne la lecture de la liste plutôt que de laisser un vide
+   sous elle : les deux colonnes n'ont pas la même hauteur, et c'est très bien
+   tant que l'œil garde le chat sous les yeux en parcourant les traits. */
+@media(min-width:861px){
+  .lecture{position:sticky;top:calc(var(--h-bandeau,74px) + 66px)}
+}
+
+@media (pointer:coarse){.traits button{padding-block:17px}}

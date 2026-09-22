@@ -90,9 +90,14 @@
 
         @php($points = config('chatterie.morphologie'))
 
-        <div class="lecteur monte">
-            <div class="lecture" id="lecture"
-                 data-points="{{ json_encode(collect($points)->map(fn ($p) => ['k' => $p['categorie'], 't' => $p['titre'], 'd' => $p['texte']]), JSON_UNESCAPED_UNICODE) }}">
+        {{-- Le lecteur : la photo et ses repères à gauche, la liste des six
+             traits à droite. Survoler un trait allume son repère sur la photo
+             et déplie son explication — et inversement. La liste remplit la
+             colonne, là où un seul paragraphe y laissait un trou. --}}
+        <div class="lecteur monte" id="lecture"
+             data-points="{{ json_encode(collect($points)->map(fn ($p) => ['k' => $p['categorie'], 't' => $p['titre'], 'd' => $p['texte']]), JSON_UNESCAPED_UNICODE) }}">
+
+            <div class="lecture">
                 <img src="{{ asset('images/cats/tika.webp') }}"
                      alt="Tika, Maine Coon red de la chatterie, vue de profil"
                      width="1200" height="1714" loading="lazy">
@@ -103,14 +108,29 @@
                             aria-pressed="{{ $i === 0 ? 'true' : 'false' }}"
                             aria-label="{{ $p['titre'] }}"><span class="onde" aria-hidden="true"></span></button>
                 @endforeach
+                <figcaption>Tika, red · repères du standard</figcaption>
             </div>
-            <div class="lecture-info" id="lecture-info">
-                {{-- Rempli par app.js au survol. Le premier repère est déjà écrit
-                     côté serveur : sans JavaScript, la page reste complète. --}}
-                <span class="k">{{ $points[0]['categorie'] }}</span>
-                <h3>{{ $points[0]['titre'] }}</h3>
-                <p>{{ $points[0]['texte'] }}</p>
-            </div>
+
+            <ol class="traits">
+                @foreach($points as $i => $p)
+                    <li>
+                        <button type="button" data-point="{{ $i }}"
+                                @if($i === 0) aria-current="true" @endif>
+                            <span class="k">{{ $p['categorie'] }}</span>
+                            <b>{{ $p['titre'] }}</b>
+                        </button>
+                        {{-- Les six textes sont écrits côté serveur : sans
+                             JavaScript, la page reste complète, tout est
+                             simplement déplié.
+
+                             Le paragraphe est enveloppé : le repli se fait sur
+                             une grille qui passe de 0fr à 1fr, et cette
+                             technique exige un élément intérieur — un nœud de
+                             texte nu ne peut pas être réduit à zéro. --}}
+                        <div class="repli"><p>{{ $p['texte'] }}</p></div>
+                    </li>
+                @endforeach
+            </ol>
         </div>
     </div>
 </section>
