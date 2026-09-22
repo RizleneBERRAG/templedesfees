@@ -144,11 +144,29 @@ portent tous un `[TEXTE À ÉCRIRE]` bien visible.
 
 ## Reste à faire
 
-- Les pages intérieures dans la nouvelle charte (fiches chat et chaton,
-  Le Maine Coon, galerie, contact, adopter, questions, mentions)
-- Les vraies photos — les emplacements sont occupés par des repères générés
-  qui portent le nom du fichier attendu
-- Envoi des emails de notification et d'accusé de réception (`AdoptionController::store`)
+Par ordre de priorité :
+
+1. **Les vraies photos.** Les 40 emplacements sont occupés par des repères
+   générés qui portent le nom du fichier attendu (`karrington.webp`,
+   `chatons-3.webp`…). Trois seulement sont de vraies photos, récupérées sur le
+   site en ligne. Il suffit de déposer les fichiers aux mêmes noms.
+2. **Les textes de présentation des chats**, à écrire avec l'éleveuse. Ils
+   portent tous un `[TEXTE À ÉCRIRE]` bien visible dans
+   `database/seeders/data/content.php`.
+3. **La vraie portée** à la place de la portée B de démonstration.
+4. **Les mentions légales obligatoires** : SIREN, certificat de capacité,
+   directeur de publication, hébergeur. Elles s'affichent « À compléter » en or
+   tant qu'elles manquent, ce qui est volontaire.
+5. **Envoi des emails** de notification et d'accusé de réception
+   (`AdoptionController::store`), une fois le SMTP configuré.
+6. **Repositionner les repères de morphologie** (`config/chatterie.php`, clé
+   `morphologie`) quand la photo de la page « Le Maine Coon » sera remplacée :
+   les coordonnées sont en pourcentages sur l'image actuelle.
+
+Idée non faite, à discuter : éclater « Le Maine Coon » en un hub plus quatre
+pages filles (origines, besoins, santé, préparation). La page actuelle couvre
+les quatre sujets avec des ancres ; quatre URL distinctes ranqueraient sur
+quatre requêtes différentes.
 
 ## Carte de la page Contact
 
