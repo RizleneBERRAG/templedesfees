@@ -903,3 +903,38 @@ a.case:hover{border-color:var(--or-ombre);background:var(--emeraude)}
 footer::before{content:"";position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(120% 90% at 50% 0%,rgba(20,48,42,.3),transparent 66%)}
 footer > *{position:relative}
+
+
+/* ── le sommaire qui suit ────────────────────────────────────────── */
+/* Une page longue sans sommaire collant oblige à remonter tout en haut pour
+   changer de section. Celui-ci se colle sous le bandeau — dont la hauteur
+   réelle est mesurée par app.js et posée dans --h-bandeau, parce qu'elle
+   change entre le bureau et le téléphone. La rubrique en cours de lecture
+   s'allume toute seule. */
+.sommaire{position:sticky;top:calc(var(--h-bandeau,74px) - 1px);z-index:30;
+  margin-bottom:clamp(26px,4vw,44px);padding-block:13px;
+  background:rgba(8,11,10,.9);backdrop-filter:blur(16px) saturate(140%);
+  -webkit-backdrop-filter:blur(16px) saturate(140%);
+  border-bottom:1px solid var(--filet-2);
+  display:flex;flex-wrap:nowrap;gap:8px;align-items:center;justify-content:center;
+  overflow-x:auto;scrollbar-width:none;overscroll-behavior-x:contain;
+  scroll-snap-type:x proximity}
+.sommaire::-webkit-scrollbar{display:none}
+.sommaire a{flex:none;scroll-snap-align:center;
+  display:inline-flex;align-items:center;padding:10px 17px;border:1px solid var(--filet);
+  font-family:var(--pierre);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ivoire-3);white-space:nowrap;transition:.3s}
+.sommaire a:hover{color:var(--ivoire);border-color:var(--or-ombre)}
+.sommaire a[aria-current="true"]{background:var(--or);border-color:var(--or);color:#14100A}
+@media(max-width:700px){.sommaire{justify-content:flex-start}}
+@media (pointer:coarse){.sommaire a{min-height:44px}}
+
+/* La cible d'une ancre ne doit pas passer sous le bandeau et le sommaire. */
+[id]{scroll-margin-top:calc(var(--h-bandeau,74px) + 76px)}
+
+/* ── la rangée d'icônes du bandeau ───────────────────────────────── */
+.barre-socials{gap:8px}
+.barre-socials .social-mark{width:36px;height:36px}
+.barre-socials .social-mark svg{width:17px;height:17px}
+@media(max-width:1180px){.barre-socials{display:none}}
+@media(max-width:1320px){.barre-socials .social--mail{display:none}}

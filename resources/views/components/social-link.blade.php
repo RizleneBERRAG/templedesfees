@@ -1,6 +1,6 @@
 @props([
     'url',
-    'type'   => 'instagram',   {{-- instagram | mail | tel --}}
+    'type'   => 'instagram',   {{-- instagram | facebook | mail | tel --}}
     'handle' => '@templedesfees',
 ])
 
@@ -20,11 +20,12 @@
 --}}
 
 @php
-    $externe = $type === 'instagram';
+    $externe = in_array($type, ['instagram', 'facebook'], true);
 
     [$titre, $intitule] = match ($type) {
         'mail' => ["Email — {$handle}",     "Écrire à {$handle}"],
         'tel'  => ["Téléphone — {$handle}", "Appeler le {$handle}"],
+        'facebook' => ["Facebook — {$handle}", "Facebook {$handle} (nouvelle fenêtre)"],
         default => ["Instagram — {$handle}", "Instagram {$handle} (nouvelle fenêtre)"],
     };
 @endphp
@@ -46,6 +47,12 @@
             @case('tel')
                 <svg viewBox="0 0 24 24" fill="currentColor" focusable="false">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M1.5 4.5a3 3 0 0 1 3-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 0 1-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 0 0 6.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 0 1 1.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 0 1-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5Z"/>
+                </svg>
+                @break
+
+            @case('facebook')
+                <svg viewBox="0 0 24 24" fill="currentColor" focusable="false">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12S0 5.446 0 12.073c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073Z"/>
                 </svg>
                 @break
 

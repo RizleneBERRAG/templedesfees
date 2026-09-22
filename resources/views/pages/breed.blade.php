@@ -25,7 +25,7 @@
 
         {{-- Un sommaire plutôt qu'un fil d'Ariane : la page est longue, et
              chacun n'y cherche pas la même chose. --}}
-        <nav class="filtres monte" aria-label="Sommaire de la page">
+        <nav class="sommaire" aria-label="Sommaire de la page">
             <a href="#origines">Origines</a>
             <a href="#morphologie">Le lire</a>
             <a href="#robe">La robe</a>
@@ -138,7 +138,33 @@
             </div>
         </div>
 
-        <p class="lede monte" style="margin-top:clamp(24px,3vw,34px);margin-inline:auto;text-align:center">
+        {{-- Quatre robes de l'élevage plutôt qu'une définition abstraite : le
+             vocabulaire du standard prend son sens quand on voit à quoi il
+             s'applique. --}}
+        <div class="retable monte" style="margin-top:clamp(30px,4vw,46px)">
+            @foreach([
+                ['delenn',  'Black smoke',                      'Sous-poil clair, pointe noire'],
+                ['boonie',  'Black tortie silver ticked tabby',  'Écaille sur fond silver'],
+                ['helios',  'Red',                               'Roux franc, sans silver'],
+                ['alaska',  'Blanche',                           'Blanc uni, test d’audition demandé'],
+            ] as [$fichier, $robe, $detail])
+                <figure class="portrait" style="width:min(250px,84vw);margin:0">
+                    <div class="arche petite">
+                        <i><u>
+                            <img src="{{ asset('images/cats/'.$fichier.'.webp') }}"
+                                 alt="Maine Coon de la chatterie, robe {{ \Illuminate\Support\Str::lower($robe) }}"
+                                 width="1200" height="1714" loading="lazy">
+                        </u></i>
+                    </div>
+                    <figcaption style="display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center">
+                        <b style="font-family:var(--pierre);font-size:14px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--or-clair)">{{ $robe }}</b>
+                        <small style="font-family:var(--titre);font-style:italic;font-size:16px;color:var(--ivoire-3)">{{ $detail }}</small>
+                    </figcaption>
+                </figure>
+            @endforeach
+        </div>
+
+        <p class="lede monte" style="margin-top:clamp(28px,3.4vw,40px);margin-inline:auto;text-align:center">
             La texture compte autant que la couleur : un poil mi-long hydrofuge, court sur les
             épaules et long sur les flancs, qui donne son volume à la silhouette.
         </p>
@@ -175,8 +201,9 @@
     </div>
 </section>
 
-<figure class="bande-photo" style="--h:40vh">
-    <img src="{{ asset('images/cats/delenn.webp') }}" alt="La maison de la chatterie en fin de journée" loading="lazy">
+<figure class="bande-photo" style="--h:42vh">
+    <img src="{{ asset('images/cats/kora.webp') }}"
+         alt="Kora, jeune Maine Coon noire de la chatterie" loading="lazy">
     <span class="voile" aria-hidden="true"></span>
     <figcaption>Tous nos chats vivent dans la maison — pas en box, pas en cage</figcaption>
 </figure>
@@ -258,8 +285,28 @@
             </div>
         </div>
 
-        <div class="btnrow monte" style="justify-content:center;margin-top:clamp(28px,4vw,40px)">
-            <a class="btn" href="{{ route('cats.index') }}">Voir les résultats de nos chats</a>
+        <div class="duo-texte monte" style="margin-top:clamp(30px,4vw,46px);align-items:center">
+            <figure class="vue haute" style="max-width:380px;margin-inline:auto">
+                <img src="{{ asset('images/cats/uriana.webp') }}"
+                     alt="Uriana, reproductrice de la chatterie, dont les dépistages sont publiés"
+                     width="1200" height="1714" loading="lazy">
+                <figcaption>Uriana — dépistages publiés sur sa fiche</figcaption>
+            </figure>
+            <div class="pile">
+                <h3>Nous publions tout, y compris ce qui manque</h3>
+                <p class="lede">
+                    Chaque fiche de reproducteur porte les six lignes, avec leur date et leur
+                    laboratoire. Une ligne encore vide s’affiche telle quelle, en or — nous ne
+                    masquons pas ce qui n’est pas fait.
+                </p>
+                <p class="lede">
+                    C’est vérifiable en une minute, et c’est exactement ce qu’un acheteur
+                    sérieux vient contrôler avant de vous appeler.
+                </p>
+                <div class="btnrow" style="margin-top:6px">
+                    <a class="btn" href="{{ route('cats.index') }}">Voir les résultats de nos chats</a>
+                </div>
+            </div>
         </div>
     </div>
 </section>

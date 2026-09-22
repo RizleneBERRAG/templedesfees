@@ -2,6 +2,7 @@
     $tel   = \App\Models\Setting::get('contact.telephone', '06 77 35 45 87');
     $mail  = \App\Models\Setting::get('contact.email', 'letempledesfees@outlook.fr');
     $insta = \App\Models\Setting::get('contact.instagram');
+    $fb    = \App\Models\Setting::get('contact.facebook');
     $siren = \App\Models\Setting::get('legal.siren');
     $telLien = \Illuminate\Support\Str::of($tel)->replace(' ', '')->replaceFirst('0', '+33');
 @endphp
@@ -40,13 +41,23 @@
 
             <div>
                 <h4>Nous joindre</h4>
-                <ul>
-                    <li><a href="tel:{{ $telLien }}">{{ $tel }}</a></li>
-                    <li><a href="mailto:{{ $mail }}">{{ $mail }}</a></li>
-                    <li><a href="{{ route('contact') }}">Venir nous voir</a></li>
+
+                {{-- Quatre pictogrammes plutôt que quatre lignes de texte. Le
+                     libellé complet reste dans l'intitulé accessible de chaque
+                     lien : rien n'est perdu pour un lecteur d'écran. --}}
+                <div class="socials" style="margin-bottom:18px">
+                    <x-social-link type="tel"  :url="'tel:'.$telLien" :handle="$tel" />
+                    <x-social-link type="mail" :url="'mailto:'.$mail" :handle="$mail" />
                     @if($insta)
-                        <li><a href="{{ $insta }}" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+                        <x-social-link type="instagram" :url="$insta" handle="chatteriedutempledesfees" />
                     @endif
+                    @if($fb)
+                        <x-social-link type="facebook" :url="$fb" handle="Chatterie du Temple des Fées" />
+                    @endif
+                </div>
+
+                <ul>
+                    <li><a href="{{ route('contact') }}">Venir nous voir</a></li>
                 </ul>
             </div>
         </div>

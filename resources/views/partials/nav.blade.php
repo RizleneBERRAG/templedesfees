@@ -1,10 +1,14 @@
 @php
     $tel   = \App\Models\Setting::get('contact.telephone', '06 77 35 45 87');
+    $mail  = \App\Models\Setting::get('contact.email', 'letempledesfees@outlook.fr');
+    $insta = \App\Models\Setting::get('contact.instagram');
+    $fb    = \App\Models\Setting::get('contact.facebook');
     $telLien = \Illuminate\Support\Str::of($tel)->replace(' ', '')->replaceFirst('0', '+33');
 @endphp
 
 {{--
-    La marque à gauche, les rubriques et le numéro à droite.
+    La marque à gauche, les rubriques et les quatre moyens de nous joindre à
+    droite.
 
     Le fronton centré a été essayé : avec sept rubriques il ne tient pas — la
     marque n'est jamais au milieu et vient buter dans le menu. Trois zones
@@ -26,10 +30,27 @@
             <a href="{{ route('gallery') }}"       @if(request()->routeIs('gallery'))   aria-current="page" @endif>Galerie</a>
             <a href="{{ route('faq') }}"           @if(request()->routeIs('faq'))       aria-current="page" @endif>Questions</a>
             <a href="{{ route('contact') }}"       @if(request()->routeIs('contact'))   aria-current="page" @endif>Contact</a>
+
+            {{-- Dans le menu déplié, les icônes ne suffisent plus : on écrit le
+                 numéro et l'adresse en toutes lettres, doigt oblige. --}}
             <a class="menu-tel" href="tel:{{ $telLien }}">{{ $tel }}</a>
+            <a class="menu-tel" href="mailto:{{ $mail }}">{{ $mail }}</a>
         </nav>
 
-        <a class="tel" href="tel:{{ $telLien }}">{{ $tel }}</a>
+        {{-- Téléphone, courriel, Instagram, Facebook : quatre pictogrammes
+             plutôt qu'un numéro écrit. Chacun garde son intitulé complet pour
+             les lecteurs d'écran. --}}
+        <div class="socials barre-socials">
+            <x-social-link type="tel"  :url="'tel:'.$telLien" :handle="$tel" />
+            <x-social-link type="mail" :url="'mailto:'.$mail" :handle="$mail" />
+            @if($insta)
+                <x-social-link type="instagram" :url="$insta" handle="chatteriedutempledesfees" />
+            @endif
+            @if($fb)
+                <x-social-link type="facebook" :url="$fb" handle="Chatterie du Temple des Fées" />
+            @endif
+        </div>
+
         <button class="cle" id="cle" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
     </div>
 

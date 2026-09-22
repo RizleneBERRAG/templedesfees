@@ -359,3 +359,82 @@ if (chiffres.length) {
         });
     }
 }
+
+
+/* ---------- hauteur réelle du bandeau ----------
+
+   Le sommaire collant et les ancres doivent se placer juste sous le bandeau.
+   Sa hauteur change entre le bureau et le téléphone, et selon la longueur de
+   la marque : on la mesure plutôt que de la deviner. */
+
+const mesurerBandeau = () => {
+    if (!bandeau) return;
+    document.documentElement.style.setProperty('--h-bandeau', `${Math.round(bandeau.offsetHeight)}px`);
+};
+mesurerBandeau();
+window.addEventListener('resize', mesurerBandeau);
+
+/* ---------- sommaire : la section en cours s'allume ----------
+
+   Calcul direct plutot qu'un IntersectionObserver : on cherche la derniere
+   section dont le haut est deja passe sous le bandeau. C'est trois lignes de
+   geometrie, ca ne depend d'aucune heuristique de fenetre d'observation, et
+   ca donne le meme resultat sur un saut d'ancre que sur un defilement lent.
+
+   L'appel est cale sur requestAnimationFrame : la position n'est lue qu'une
+   fois par image, jamais a chaque evenement de defilement. */
+
+const sommaire = document.querySelector('.sommaire');
+
+if (sommaire) {
+    const liens = [...sommaire.querySelectorAll('a[href^="#"]')];
+    const sections = liens
+        .map((a) => ({ lien: a, cible: document.getElementById(decodeURIComponent(a.getAttribute('href').slice(1))) }))
+        .filter((s) => s.cible);
+
+    if (sections.length) {
+        let enAttente = false;
+        let dernier = null;
+
+        const placer = () => {
+            enAttente = false;
+
+            // La ligne de reference : juste sous le bandeau et le sommaire.
+            const ligne = (bandeau?.offsetHeight ?? 74) + sommaire.offsetHeight + 8;
+
+            let courante = sections[0];
+            for (const s of sections) {
+                if (s.cible.getBoundingClientRect().top <= ligne) courante = s;
+            }
+
+            // En bas de page, la derniere section gagne meme si son haut est
+            // reste au-dessus de la ligne : sinon elle ne s'allume jamais.
+            if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 4) {
+                courante = sections[sections.length - 1];
+            }
+
+            if (courante === dernier) return;
+            dernier = courante;
+
+            sections.forEach(({ lien }) => lien.removeAttribute('aria-current'));
+            courante.lien.setAttribute('aria-current', 'true');
+
+            if (sommaire.scrollWidth > sommaire.clientWidth) {
+                courante.lien.scrollIntoView({
+                    inline: 'center', block: 'nearest',
+                    behavior: reduit() ? 'auto' : 'smooth',
+                });
+            }
+        };
+
+        const demander = () => {
+            if (enAttente) return;
+            enAttente = true;
+            requestAnimationFrame(placer);
+        };
+
+        window.addEventListener('scroll', demander, { passive: true });
+        window.addEventListener('resize', demander);
+        placer();
+    }
+}

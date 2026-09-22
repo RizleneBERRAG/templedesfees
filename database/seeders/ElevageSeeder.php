@@ -97,6 +97,7 @@ class ElevageSeeder extends Seeder
             ['cle' => 'contact.itineraire_waze',   'libelle' => 'Lien d’itinéraire Waze (vide = vers la commune)',        'valeur' => null, 'groupe' => 'contact'],
             ['cle' => 'contact.avis_google',  'libelle' => 'Lien vers les avis Google', 'valeur' => null, 'groupe' => 'contact'],
             ['cle' => 'contact.email',        'libelle' => 'Email',                    'valeur' => 'letempledesfees@outlook.fr',    'groupe' => 'contact'],
+            ['cle' => 'contact.facebook',     'libelle' => 'Facebook',                 'valeur' => 'https://www.facebook.com/profile.php?id=61550725534940', 'groupe' => 'contact'],
             ['cle' => 'contact.instagram',    'libelle' => 'Instagram',                'valeur' => 'https://www.instagram.com/chatteriedutempledesfees/', 'groupe' => 'contact'],
             // Mentions obligatoires : vides, donc signalees "À compléter" sur le site.
             ['cle' => 'legal.siren',          'libelle' => 'SIREN / SIRET',            'valeur' => null, 'groupe' => 'legal', 'est_obligatoire' => true],
