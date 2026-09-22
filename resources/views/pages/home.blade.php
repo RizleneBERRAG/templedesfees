@@ -153,7 +153,7 @@
 
 {{-- ═══ chapitre second ═══ --}}
 @if($vitrine)
-<section class="bande creuse">
+<section class="bande creuse encadree">
     <div class="wrap">
         <div class="registre monte">
             <span class="eq" aria-hidden="true"></span><span class="eq" aria-hidden="true"></span>

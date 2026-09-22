@@ -39,6 +39,11 @@
 </head>
 <body>
 
+{{-- Le grain de la page : une tuile de bruit fixe, posee au-dessus du fond et
+     sous tout le reste. C'est elle qui empeche les aplats sombres de paraitre
+     plats. --}}
+<div id="grain" aria-hidden="true"></div>
+
 @include('partials.nav')
 
 <main id="app">

@@ -26,48 +26,49 @@ return [
      * Nord-Est americain, ou seuls tenaient les chats bien equipes. C'est
      * l'angle de la page — expliquer a quoi sert ce qu'on regarde.
      *
-     * Les coordonnees sont calees sur images/cats/hero-duo.webp. A reprendre
-     * quand l'eleveuse fournira ses propres photos.
+     * Les coordonnees sont calees sur images/cats/tika.webp, choisie parce
+     * qu'elle est assise de profil, corps entier : chaque trait du standard
+     * s'y montre. Changer cette photo impose de les reprendre.
      */
     'morphologie' => [
         [
-            'x' => 52,
-            'y' => 16,
+            'x' => 62,
+            'y' => 9,
             'categorie' => 'Oreilles',
             'titre' => 'Lynx tips',
             'texte' => 'Les touffes de poils qui prolongent la pointe de l\'oreille. Elles brisent le vent et protègent le conduit du froid. Grandes oreilles larges à la base, plantées haut : c\'est l\'un des traits les plus recherchés du standard.',
         ],
         [
-            'x' => 54,
-            'y' => 27,
+            'x' => 57,
+            'y' => 30,
             'categorie' => 'Tête',
             'titre' => 'Museau carré',
             'texte' => 'Le museau du Maine Coon se coupe net, en angle droit vu de profil, avec un menton ferme aligné sous le nez. C\'est ce qui lui donne son air sérieux, et c\'est un point que les juges regardent en premier.',
         ],
         [
-            'x' => 49,
-            'y' => 43,
+            'x' => 55,
+            'y' => 41,
             'categorie' => 'Poil',
             'titre' => 'Collerette',
             'texte' => 'La fraise de poils longs autour du cou, très marquée en hiver, beaucoup plus discrète après la mue de printemps. Elle protège la gorge — la zone la plus exposée quand le chat dort en boule dans la neige.',
         ],
         [
-            'x' => 40,
-            'y' => 62,
+            'x' => 25,
+            'y' => 55,
             'categorie' => 'Fourrure',
             'titre' => 'Poil mi-long hydrofuge',
             'texte' => 'Court sur les épaules, long sur les flancs et la culotte. Cette répartition n\'est pas un hasard : elle laisse l\'épaule libre pour marcher et couvre ce qui touche le sol. Le poil repousse l\'eau plutôt que de l\'absorber.',
         ],
         [
             'x' => 28,
-            'y' => 80,
+            'y' => 83,
             'categorie' => 'Queue',
             'titre' => 'Queue en panache',
             'texte' => 'Longue — elle doit atteindre au moins l\'épaule quand on la rabat — et très fournie. Le chat s\'en couvre le museau et les coussinets pour dormir. C\'est une couverture, pas un ornement.',
         ],
         [
-            'x' => 66,
-            'y' => 55,
+            'x' => 44,
+            'y' => 68,
             'categorie' => 'Ossature',
             'titre' => 'Corps rectangulaire',
             'texte' => 'Poitrine large, ossature lourde, corps plus long que haut. Un mâle adulte pèse entre six et neuf kilos, et met trois à quatre ans à finir de se construire — deux fois plus longtemps qu\'un chat de gouttière.',

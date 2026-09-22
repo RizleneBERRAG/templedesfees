@@ -69,7 +69,7 @@
             <div class="pile">
                 <span class="rubrique">Notre façon de faire</span>
                 <h2>Peu de portées,<br>et jamais sur commande</h2>
-                <p class="lede">
+                <p class="lede lettrine">
                     Le rythme est calé sur la récupération des femelles, jamais sur la demande.
                     Une chatte ne porte pas deux fois dans l'année parce qu'il y a une liste
                     d'attente.

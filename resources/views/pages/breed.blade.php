@@ -49,7 +49,7 @@
             <div class="pile">
                 <span class="numero" style="font-family:var(--pierre);font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--or-mat)">Chapitre premier</span>
                 <h2>Une race née dans<br>les hivers du Maine</h2>
-                <p class="lede">
+                <p class="lede lettrine">
                     Le Maine Coon est l'une des plus anciennes races naturelles d'Amérique du Nord.
                     Personne ne l'a dessiné : il s'est formé tout seul dans le Nord-Est des
                     États-Unis, où seuls tenaient les chats à fourrure dense, à grandes pattes et
@@ -81,11 +81,12 @@
 
         @php($points = config('chatterie.morphologie'))
 
-        <div style="max-width:940px;margin-inline:auto" class="monte">
+        <div class="lecteur monte">
             <div class="lecture" id="lecture"
                  data-points="{{ json_encode(collect($points)->map(fn ($p) => ['k' => $p['categorie'], 't' => $p['titre'], 'd' => $p['texte']]), JSON_UNESCAPED_UNICODE) }}">
-                <img src="{{ asset('images/cats/karrington.webp') }}"
-                     alt="Maine Coon de la chatterie, morphologie de la race" loading="lazy">
+                <img src="{{ asset('images/cats/tika.webp') }}"
+                     alt="Tika, Maine Coon red de la chatterie, vue de profil"
+                     width="1200" height="1714" loading="lazy">
                 @foreach($points as $i => $p)
                     <button class="repere" type="button"
                             style="left:{{ $p['x'] }}%;top:{{ $p['y'] }}%"
@@ -226,7 +227,7 @@
 </section>
 
 {{-- ═══ santé ═══ --}}
-<section class="bande creuse" id="sante">
+<section class="bande creuse encadree" id="sante">
     <div class="wrap">
         <x-section-head
             class="monte"

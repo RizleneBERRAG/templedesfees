@@ -48,7 +48,7 @@
             <div class="pile">
                 <span class="rubrique">Suivi de la portée</span>
                 <h2>Où en sont-ils<br>aujourd’hui</h2>
-                <p class="lede">
+                <p class="lede lettrine">
                     Le même calendrier pour les {{ $portee->nb_chatons }} chatons. Il se remplit au
                     fil des actes vétérinaires saisis dans l’espace de gestion — ce n’est pas un
                     texte écrit une fois pour toutes, c’est l’état réel de la portée.
