@@ -297,6 +297,27 @@
     </div>
 </section>
 
+{{-- ═══ le livre ═══ --}}
+<section class="bande creuse" id="le-livre">
+    <div class="wrap">
+        <div class="chapitre monte">
+            <span class="rubrique">Ce qui ne se négocie pas</span>
+            <h2 class="sous-pinceau">
+                <x-pinceau />
+                Le livre de la maison
+            </h2>
+            <p class="lede">
+                Six pages. Appuyez sur la page de droite pour tourner, sur celle de gauche
+                pour revenir en arrière.
+            </p>
+        </div>
+
+        <x-livre :pages="config('chatterie.livre')"
+                 legende="Le livre de la maison — six pages"
+                 class="monte" />
+    </div>
+</section>
+
 {{-- ═══ envoi ═══ --}}
 <section class="bande">
     <div class="wrap citation monte">

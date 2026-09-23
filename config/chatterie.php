@@ -187,6 +187,46 @@ return [
      * decision, pas un effet de bord de la creation d'un compte.
      */
     /*
+     * Le livre de la maison.
+     *
+     * Six pages qui disent ce qui ne se negocie pas chez cette eleveuse.
+     * Elles vivent ici plutot qu'en base : ce ne sont pas des donnees qui
+     * changent au fil des portees, c'est la ligne de conduite de l'elevage,
+     * et elle se modifie en connaissance de cause.
+     *
+     * Le composant <x-livre> les repartit deux par deux sur ses feuillets :
+     * en ajouter ou en retirer suffit, il n'y a pas de mise en page a
+     * reprendre. Un nombre impair laisse une derniere page blanche, ce qui
+     * est exactement ce qu'on trouve a la fin d'un ouvrage.
+     */
+    'livre' => [
+        [
+            'titre' => "L'attente",
+            'texte' => "Un chaton part à douze semaines, jamais avant. Ce n’est pas une précaution de confort : c’est le temps qu’il lui faut pour apprendre de sa mère et de sa fratrie ce qu’aucun humain ne peut lui enseigner. Un chaton séparé trop tôt mord, griffe et supporte mal la solitude, et cela ne se rattrape pas.",
+        ],
+        [
+            'titre' => "Le dépistage",
+            'texte' => "La cardiomyopathie hypertrophique se cherche de deux façons qui ne se remplacent pas : le test génétique, une fois pour la vie, et l’échocardiographie, qui ne vaut que pour le jour où elle a été faite. Un élevage qui n’affiche que le test ADN n’a fait que la moitié du chemin.",
+        ],
+        [
+            'titre' => "La maison",
+            'texte' => "Les chatons naissent au milieu de la maison, pas dans un box au fond du jardin. Ils grandissent avec l’aspirateur, la sonnette, les casseroles et les visites. C’est ce qui fait un chat qui ne se cache pas sous le canapé le jour où il change de vie.",
+        ],
+        [
+            'titre' => "Le nombre",
+            'texte' => "Une à deux portées par an, pas davantage. Une femelle qui enchaîne s’use, et des chatons qui se suivent ne reçoivent plus la même présence. Moins de portées veut dire plus d’attente pour vous, et c’est le seul arrangement possible.",
+        ],
+        [
+            'titre' => "La franchise",
+            'texte' => "Un résultat qui manque s’affiche tel quel, en or, sur la fiche du chat concerné. Nous ne masquons pas ce qui n’est pas encore fait, et nous ne publions pas un examen que nous n’avons pas. Vous saurez donc toujours où nous en sommes, y compris quand cela ne nous arrange pas.",
+        ],
+        [
+            'titre' => "Le retour",
+            'texte' => "Un chat né ici qui ne peut plus rester chez vous revient ici, à n’importe quel âge et quelle qu’en soit la raison. Cela figure au contrat. Un éleveur qui ne reprend pas ses chats n’est pas un éleveur, c’est un vendeur.",
+        ],
+    ],
+
+    /*
      * Apercu statique.
      *
      * L'export (php artisan site:export) rejoue le site en HTML pur, pour

@@ -613,3 +613,135 @@ document.querySelectorAll('form[data-apercu]').forEach((formulaire) => {
         note.scrollIntoView({ block: 'center', behavior: reduit() ? 'auto' : 'smooth' });
     });
 });
+
+/* ---------- le livre ----------
+
+   Deux lectures du même contenu. En large, un feuillet porte deux pages et
+   pivote sur son bord intérieur : on voit 02 et 03 côte à côte, comme dans
+   un livre ouvert. En étroit, deux pages côte à côte deviennent illisibles,
+   alors on en montre une seule et c'est elle qui pivote.
+
+   Le même geste dans les deux cas : on appuie sur la moitié droite pour
+   avancer, sur la gauche pour revenir. */
+document.querySelectorAll('[data-livre]').forEach((bloc) => {
+    const livre = bloc.querySelector('.livre');
+    const feuillets = [...bloc.querySelectorAll('.feuillet')];
+    const faces = [...bloc.querySelectorAll('.face')];
+    const ou = bloc.querySelector('.livre-ou');
+    const boutons = [...bloc.querySelectorAll('[data-pas]')];
+    if (!livre || !feuillets.length) return;
+
+    /* Le seuil : en dessous, une page de livre ferait moins de 420 px de
+       large, ou le texte ne tient plus une mesure lisible. */
+    const etroit = window.matchMedia('(max-width: 860px)');
+    let simple = etroit.matches;
+    let etat = 0;                     // feuillets tournés, ou page courante
+
+    const bornes = () => (simple ? faces.length - 1 : feuillets.length);
+
+    const peindre = (precedent = null) => {
+        if (simple) {
+            faces.forEach((f, i) => {
+                f.toggleAttribute('data-active', i === etat);
+                f.toggleAttribute('inert', i !== etat);
+            });
+
+            /* La page qu'on quitte pivote, puis s'efface. Elle n'est retirée
+               qu'à la fin de l'animation, sinon on la verrait disparaître
+               d'un coup au lieu de tourner. */
+            if (precedent !== null && precedent < etat && !reduit()) {
+                const sortante = faces[precedent];
+                sortante.setAttribute('data-sort', '');
+                sortante.addEventListener('animationend',
+                    () => sortante.removeAttribute('data-sort'), { once: true });
+            }
+
+            if (ou) ou.textContent = `Page ${etat + 1} sur ${faces.length}`;
+        } else {
+            feuillets.forEach((f, i) => {
+                const tourne = i < etat;
+                f.toggleAttribute('data-tourne', tourne);
+                /* Le dernier feuillet tourné doit couvrir la pile de gauche,
+                   le prochain à tourner doit couvrir celle de droite. */
+                f.style.zIndex = tourne ? i + 1 : feuillets.length - i;
+            });
+
+            faces.forEach((f, i) => {
+                const feuillet = Math.floor(i / 2);
+                const visible = i % 2 === 0 ? feuillet === etat : feuillet === etat - 1;
+                f.toggleAttribute('inert', !visible);
+            });
+
+            if (ou) {
+                ou.textContent = etat === 0
+                    ? 'Ouvrir le livre'
+                    : (etat === feuillets.length
+                        ? 'Fin du livre'
+                        : `Pages ${etat * 2} et ${etat * 2 + 1}`);
+            }
+        }
+
+        boutons.forEach((b) => {
+            const pas = Number(b.dataset.pas);
+            b.disabled = pas < 0 ? etat === 0 : etat >= bornes();
+        });
+    };
+
+    const aller = (pas) => {
+        const cible = Math.min(bornes(), Math.max(0, etat + pas));
+        if (cible === etat) return;
+        const precedent = etat;
+        etat = cible;
+        peindre(precedent);
+    };
+
+    boutons.forEach((b) => b.addEventListener('click', () => aller(Number(b.dataset.pas))));
+
+    /* Appuyer sur le livre : la moitié droite avance, la gauche revient. */
+    livre.addEventListener('click', (e) => {
+        if (e.target.closest('a, button')) return;
+        const r = livre.getBoundingClientRect();
+        aller(e.clientX - r.left > r.width / 2 ? 1 : -1);
+    });
+
+    bloc.addEventListener('keydown', (e) => {
+        if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+        e.preventDefault();
+        aller(e.key === 'ArrowRight' ? 1 : -1);
+    });
+
+    /* Le glissé du pouce, au doigt seulement. */
+    let depart = null;
+    livre.addEventListener('pointerdown', (e) => {
+        depart = e.pointerType === 'mouse' ? null : { x: e.clientX, y: e.clientY };
+    });
+    livre.addEventListener('pointerup', (e) => {
+        if (!depart) return;
+        const dx = e.clientX - depart.x;
+        const dy = e.clientY - depart.y;
+        depart = null;
+        if (Math.abs(dx) > 44 && Math.abs(dx) > Math.abs(dy) * 1.5) aller(dx < 0 ? 1 : -1);
+    });
+
+    /* Passer d'une lecture à l'autre : on repart de l'endroit équivalent
+       plutôt que du début, pour ne pas perdre le lecteur en tournant
+       l'appareil. */
+    const relire = () => {
+        const desormais = etroit.matches;
+        if (desormais === simple) return;
+        etat = desormais ? Math.min(faces.length - 1, etat * 2) : Math.floor(etat / 2);
+        simple = desormais;
+        livre.toggleAttribute('data-simple', simple);
+        peindre();
+    };
+
+    livre.toggleAttribute('data-simple', simple);
+    peindre();
+
+    /* Le change d'une media query suffit en theorie. En pratique il n'arrive
+       pas toujours — fenetre pilotee, affichage emule — alors que le
+       redimensionnement, lui, arrive toujours. Les deux sont ecoutes, et
+       relire() ne fait rien quand rien n'a change. */
+    etroit.addEventListener('change', relire);
+    window.addEventListener('resize', relire);
+});
