@@ -1868,6 +1868,188 @@ footer > *{position:relative}
 .texte-reglage p{margin:0;font-size:15px;line-height:1.76;color:var(--ivoire-3);max-width:68ch}
 .texte-reglage strong{font-weight:400;color:var(--ivoire)}
 
+/* ── la bannière d'Olimpia ───────────────────────────────────────── */
+/* Elle se présente une fois, à l'arrivée sur le site, et se retire d'un geste.
+   Ce n'est pas une fenêtre modale : rien n'est bloqué derrière, la page se lit
+   pendant qu'elle est là. Un hommage n'a pas à prendre le visiteur en otage.
+
+   Elle se pose en bas, sur toute la largeur au-dessus de 720 px, et devient
+   une carte au-dessus du pouce sur un téléphone. */
+
+.banniere-olimpia{position:fixed;z-index:70;
+  left:0;right:0;bottom:0;
+  display:flex;align-items:stretch;gap:0;
+  background:rgba(8,11,10,.965);
+  backdrop-filter:blur(18px) saturate(140%);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);
+  border-top:1px solid var(--filet);
+  box-shadow:0 -20px 54px rgba(0,0,0,.6);
+  transform:translateY(100%);
+  transition:transform .75s var(--ease),opacity .5s var(--ease);
+  opacity:0}
+
+.banniere-olimpia[hidden]{display:none}
+.banniere-olimpia.vue{transform:none;opacity:1}
+
+/* Un filet d'or en haut, plus marqué que la bordure : c'est ce qui la
+   rattache au reste de la maison. */
+.banniere-olimpia::before{content:"";position:absolute;inset:0 0 auto 0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--or-mat) 22%,var(--or) 50%,
+    var(--or-mat) 78%,transparent);
+  opacity:.72}
+
+.banniere-olimpia .corps{flex:1;min-width:0;
+  display:flex;align-items:center;gap:clamp(14px,2vw,26px);
+  padding:clamp(12px,1.3vw,15px) clamp(16px,3vw,40px);
+  text-decoration:none;color:inherit}
+
+/* C'est le portrait qui fait la hauteur de la bannière. Au-delà d'une
+   soixantaine de pixels, elle cesse d'être une bannière et devient un encart
+   posé en travers de la page. */
+.banniere-olimpia .portrait{flex:none;display:block;
+  width:clamp(46px,3.8vw,56px);aspect-ratio:7/10;overflow:hidden;
+  border:1px solid var(--filet-2);
+  border-radius:44% 44% 2px 2px / 22% 22% 2px 2px}
+.banniere-olimpia .portrait img{width:100%;height:100%;object-fit:cover}
+
+.banniere-olimpia .dit{min-width:0;display:block}
+.banniere-olimpia .rubrique{display:block;margin-bottom:3px;font-size:9.5px}
+
+.banniere-olimpia b{display:block;font-family:var(--titre);font-weight:300;
+  font-size:clamp(21px,2.1vw,27px);line-height:1.1;letter-spacing:.02em;
+  color:var(--ivoire)}
+
+.banniere-olimpia .phrase{display:block;margin-top:4px;max-width:62ch;
+  font-size:14.5px;line-height:1.55;color:var(--ivoire-3)}
+
+.banniere-olimpia .lien{flex:none;margin-left:auto;
+  display:inline-flex;align-items:center;gap:9px;white-space:nowrap;
+  padding:11px 20px;border:1px solid var(--filet);border-radius:2px;
+  font-family:var(--corps);font-weight:300;font-size:10.5px;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--or-tendre);
+  transition:border-color .35s var(--ease),color .35s var(--ease),
+    background .35s var(--ease)}
+.banniere-olimpia .lien svg{width:14px;height:14px;
+  transition:transform .35s var(--ease)}
+
+.banniere-olimpia .corps:hover .lien{border-color:var(--or);color:var(--or-clair);
+  background:rgba(217,178,106,.08)}
+.banniere-olimpia .corps:hover .lien svg{transform:translateX(3px)}
+
+/* La croix. Elle est hors du lien : on doit pouvoir refuser sans risquer
+   d'ouvrir ce qu'on refuse. */
+.banniere-olimpia .fermer{flex:none;align-self:stretch;
+  display:flex;align-items:center;justify-content:center;
+  width:clamp(46px,4vw,58px);
+  border:0;border-left:1px solid var(--filet-2);background:none;
+  color:var(--ivoire-dim);cursor:pointer;
+  transition:color .3s var(--ease),background .3s var(--ease)}
+.banniere-olimpia .fermer:hover{color:var(--ivoire);background:var(--voile-beige)}
+.banniere-olimpia .fermer svg{width:16px;height:16px}
+
+@media (max-width:860px){
+  .banniere-olimpia .phrase{display:none}
+}
+
+@media (max-width:720px){
+  .banniere-olimpia{left:clamp(10px,3vw,16px);right:clamp(10px,3vw,16px);
+    bottom:clamp(10px,3vw,16px);
+    border:1px solid var(--filet);border-radius:3px;
+    box-shadow:0 22px 60px rgba(0,0,0,.66)}
+  .banniere-olimpia::before{left:1px;right:1px}
+  .banniere-olimpia .corps{flex-wrap:wrap;gap:14px;padding:16px}
+  .banniere-olimpia .lien{margin-left:0;width:100%;justify-content:center}
+  .banniere-olimpia .fermer{align-self:flex-start;
+    width:44px;height:44px;border-left:0}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .banniere-olimpia{transition:opacity .3s linear;transform:none}
+}
+
+/* ── Olimpia : le premier écran ──────────────────────────────────── */
+/* Elle, et rien d'autre. Le portrait tient tout l'écran sous le bandeau, son
+   nom est posé dessus, et le seul geste proposé est de descendre.
+
+   C'est le même cliché que dans l'arche plus bas, cadré autrement : serré sur
+   la tête ici, entier là — une affiche, puis une planche. */
+
+.olimpia-ouverture{position:relative;overflow:hidden;
+  /* svh et non vh : sur un téléphone, vh compte la barre d'adresse comme si
+     elle n'existait pas, et le premier écran dépasse toujours d'une
+     cinquantaine de pixels. */
+  min-height:calc(100vh - var(--h-bandeau,74px));
+  min-height:calc(100svh - var(--h-bandeau,74px));
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:0 clamp(20px,4vw,64px) clamp(74px,9vh,120px)}
+
+.olimpia-ouverture .fond{position:absolute;inset:0;z-index:0;
+  width:100%;height:100%;object-fit:cover;
+  /* Le cadrage est calé sur la tête : à 16/9, un cadrage centré ne montrerait
+     que le poitrail et la couverture rouge. */
+  object-position:50% 18%}
+
+/* Deux voiles, pas un. Le premier assombrit l'ensemble juste assez pour que
+   l'or tienne dessus ; le second noie le bas, là où le nom se pose. */
+.olimpia-ouverture .voile{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    linear-gradient(180deg,
+      rgba(8,11,10,.58) 0%,
+      rgba(8,11,10,.14) 26%,
+      rgba(8,11,10,.42) 58%,
+      rgba(8,11,10,.88) 84%,
+      var(--nuit) 100%),
+    radial-gradient(120% 78% at 50% 34%,
+      transparent 40%, rgba(8,11,10,.5) 100%)}
+
+/* Assez large pour que « Olimpia Maryliss Country » tienne sur une ligne :
+   un nom complet coupé en deux se lit comme deux noms. */
+.olimpia-ouverture .dit{position:relative;z-index:2;max-width:min(92vw,760px)}
+
+.olimpia-ouverture .rubrique{margin-bottom:14px}
+
+.olimpia-ouverture h1{margin:0;font-weight:300;line-height:.92;
+  font-size:clamp(62px,11vw,170px);letter-spacing:.005em;
+  color:var(--ivoire);
+  /* Une ombre très large et très douce : elle ne se voit pas, elle décolle le
+     nom de la fourrure blanche qui passe derrière. */
+  text-shadow:0 8px 50px rgba(8,11,10,.85)}
+
+.olimpia-ouverture .complet{margin:22px 0 0;
+  font-family:var(--corps);font-weight:400;font-size:clamp(11px,1.1vw,13px);
+  letter-spacing:.26em;text-transform:uppercase;color:var(--or-tendre)}
+
+.olimpia-ouverture .dates{margin:8px 0 0;
+  font-family:var(--corps);font-weight:300;font-size:13.5px;
+  letter-spacing:.14em;color:var(--ivoire-2)}
+
+/* Le seul geste proposé sur cet écran. */
+.olimpia-ouverture .descendre{position:absolute;z-index:2;
+  left:50%;bottom:clamp(20px,3.4vh,34px);transform:translateX(-50%);
+  display:inline-flex;flex-direction:column;align-items:center;gap:9px;
+  font-family:var(--corps);font-weight:300;font-size:10.5px;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--ivoire-dim);
+  transition:color .35s var(--ease)}
+
+.olimpia-ouverture .descendre:hover{color:var(--or-clair)}
+.olimpia-ouverture .descendre svg{width:17px;height:17px;
+  animation:appel-descendre 2.8s ease-in-out infinite}
+
+@keyframes appel-descendre{
+  0%,62%,100%{transform:translateY(0);opacity:.72}
+  80%        {transform:translateY(6px);opacity:1}
+}
+
+@media (max-width:640px){
+  .olimpia-ouverture{padding-bottom:clamp(86px,14vh,120px)}
+  .olimpia-ouverture .dit{max-width:none}
+  .olimpia-ouverture .descendre .mot{display:none}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .olimpia-ouverture .descendre svg{animation:none}
+}
+
 /* ── en mémoire d'Olimpia ────────────────────────────────────────── */
 /* Une page qui rend hommage ne se met pas en grille. Tout y est plus lent
    et plus large qu'ailleurs : une colonne de texte, un portrait, une seule
@@ -1943,7 +2125,7 @@ footer > *{position:relative}
 
 /* Son nom, à la taille d'un titre de page et pas davantage : ce qui le rend
    précieux, c'est l'or dessous, pas la dimension. */
-.hommage-texte .nom{margin:0;font-size:clamp(46px,6.4vw,86px);line-height:.98;
+.hommage-texte .nom{margin:0;font-size:clamp(38px,4.6vw,62px);line-height:1.02;
   letter-spacing:.005em;font-weight:300}
 
 .hommage-texte .nom .sous-pinceau{padding-inline:.06em}
@@ -1956,7 +2138,7 @@ footer > *{position:relative}
   font-family:var(--corps);font-weight:300;font-size:13.5px;
   letter-spacing:.14em;color:var(--ivoire-dim)}
 
-.hommage-texte .recit{margin-top:clamp(26px,3vw,38px)}
+.hommage-texte .recit{margin-top:clamp(22px,2.6vw,32px)}
 
 .hommage-texte .recit p{margin:0 0 15px;
   font-size:clamp(17.5px,1.34vw,20px);line-height:1.72;color:var(--ivoire-2)}

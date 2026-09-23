@@ -249,9 +249,21 @@ et `hommage.fille`, l'identifiant de la chatte qu'il décrit comme « exactement
 la même ». Ni une date ni une filiation ne se devinent. Tant qu'ils sont vides,
 les blocs correspondants n'existent pas — pas d'encadré vide pour faire joli.
 
-On y arrive par un seul endroit visible : un bloc en fin de page « Nos chats »,
-et un lien au pied de page. Pas dans le menu — une page qui rend hommage n'est
-pas une rubrique commerciale.
+La page s'ouvre en **plein écran** : son portrait tient tout l'écran sous le
+bandeau, son nom posé dessus, et le seul geste proposé est de descendre. C'est
+le même cliché que dans l'arche plus bas, cadré autrement — serré sur la tête
+là-haut, entier en dessous. Une affiche, puis une planche.
+
+On y arrive par une **bannière** qui se présente une fois, à l'arrivée sur le
+site, et se retire d'un geste. Retirée, elle ne revient plus : le navigateur
+s'en souvient (`localStorage`, lu et écrit sous `try`, car il peut manquer).
+Ce n'est pas une fenêtre modale — rien n'est bloqué derrière. Elle ne paraît ni
+sur sa propre page, ni sur les pages de réservation : une famille en train de
+verser un acompte n'a pas à voir surgir autre chose.
+
+Et par deux liens permanents : un bloc en fin de page « Nos chats », et le pied
+de page. **Pas dans le menu** — la place y manquait pour une neuvième rubrique,
+et une page qui rend hommage n'est pas une rubrique comme les autres.
 
 Le portrait se regénère avec `php scripts/portrait-olimpia.php <photo.jpg>` :
 recadrage en 7/10 pour l'arche, trois tailles, et un ré-encodage complet qui

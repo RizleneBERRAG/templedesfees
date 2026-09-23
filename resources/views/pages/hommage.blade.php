@@ -18,7 +18,40 @@
 
 @section('content')
 
-<section class="bande hommage">
+{{-- ── premier écran : elle, et rien d'autre ──
+
+     Le portrait tient tout l'écran. Pas de titre de section, pas de bouton,
+     pas de texte à lire : on la regarde, on descend quand on veut.
+
+     C'est le même cliché qu'en dessous, cadré autrement — serré sur la tête
+     ici, entier dans l'arche plus bas. Une affiche, puis une planche. --}}
+<section class="olimpia-ouverture">
+
+    <x-img class="fond" src="images/hommage/olimpia.webp" alt=""
+           sizes="100vw" :urgent="true" />
+
+    <div class="voile" aria-hidden="true"></div>
+
+    <div class="dit">
+        <span class="rubrique">En mémoire</span>
+        <h1>Olimpia</h1>
+        <p class="complet">Olimpia Maryliss&nbsp;Country</p>
+        @if($dates)
+            <p class="dates">{{ $dates }}</p>
+        @endif
+    </div>
+
+    {{-- Le seul geste proposé sur cet écran. --}}
+    <a class="descendre" href="#son-histoire">
+        <span class="mot">Son histoire</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor"
+             stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 5v14m0 0-6-6m6 6 6-6"/>
+        </svg>
+    </a>
+</section>
+
+<section class="bande hommage" id="son-histoire">
 
     {{-- Le halo. Une seule lueur, très large et très lente, derrière le
          portrait : c'est la seule chose qui bouge sur cette page. --}}
@@ -53,19 +86,11 @@
 
             <div class="hommage-texte">
 
-                <p class="rubrique monte">En mémoire</p>
-
-                {{-- Son nom, souligné à l'or. C'est le coup de pinceau de la
-                     charte, posé là où il veut dire quelque chose. --}}
-                <h1 class="nom monte">
-                    <span class="sous-pinceau">Olimpia<x-pinceau /></span>
-                </h1>
-
-                <p class="complet monte">Olimpia Maryliss&nbsp;Country</p>
-
-                @if($dates)
-                    <p class="dates monte">{{ $dates }}</p>
-                @endif
+                {{-- Son nom est sur l'écran d'ouverture : ici il ne sert plus
+                     qu'à ouvrir le récit, souligné du coup de pinceau doré. --}}
+                <h2 class="nom monte">
+                    <span class="sous-pinceau">Son histoire<x-pinceau /></span>
+                </h2>
 
                 @if(filled($texte))
                     <div class="recit monte">

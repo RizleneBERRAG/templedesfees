@@ -66,6 +66,8 @@
 
 @include('partials.footer')
 
+@include('partials.banniere-olimpia')
+
 @stack('scripts')
 </body>
 </html>

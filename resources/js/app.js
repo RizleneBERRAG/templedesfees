@@ -819,3 +819,69 @@ if (!('name' in document.createElement('details'))) {
         });
     });
 }
+/* ---------- la bannière d'Olimpia ----------
+
+   Elle se présente une fois, à l'arrivée sur le site, et se retire d'un
+   geste. Retirée, elle ne revient plus : on ne redemande pas deux fois la
+   même attention à quelqu'un.
+
+   Le souvenir tient dans localStorage, qui peut manquer — navigation privée,
+   cookies bloqués, certains navigateurs d'entreprise. Toute lecture et toute
+   écriture sont donc protégées : au pire la bannière se represente, au pire
+   elle ne se montre jamais. Jamais une page qui casse. */
+
+const banniere = document.getElementById('banniere-olimpia');
+
+if (banniere) {
+    const CLEF = 'olimpia.banniere';
+
+    const dejaVue = () => {
+        try {
+            return localStorage.getItem(CLEF) === 'retiree';
+        } catch {
+            return false;
+        }
+    };
+
+    const retenir = () => {
+        try {
+            localStorage.setItem(CLEF, 'retiree');
+        } catch {
+            /* tant pis : elle se representera à la prochaine visite */
+        }
+    };
+
+    const retirer = () => {
+        banniere.classList.remove('vue');
+        retenir();
+
+        // On attend la fin du glissement pour la sortir du document : la
+        // retirer tout de suite ferait disparaître l'animation avec elle.
+        window.setTimeout(() => { banniere.hidden = true; }, reduit() ? 0 : 800);
+    };
+
+    if (!dejaVue()) {
+        /* Une seconde et demie : le temps que la page se soit posée et que le
+           regard ait fait le tour. Arriver en même temps que le contenu ferait
+           d'elle une pop-up de plus. */
+        window.setTimeout(() => {
+            banniere.hidden = false;
+            /* Un souffle pour que le navigateur prenne l'état de départ avant
+               d'animer : sans cela, elle apparaît d'un coup, déjà en place.
+               Un délai plutôt qu'une image d'animation — dans un onglet en
+               arrière-plan, requestAnimationFrame ne se déclenche pas, et la
+               bannière resterait invisible en attendant qu'on revienne. */
+            window.setTimeout(() => banniere.classList.add('vue'), 40);
+        }, 1500);
+    }
+
+    banniere.querySelector('.fermer')?.addEventListener('click', retirer);
+
+    // Cliquer sur la bannière, c'est l'avoir lue : elle a fait son travail et
+    // n'a plus de raison de revenir.
+    banniere.querySelector('.corps')?.addEventListener('click', retenir);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && banniere.classList.contains('vue')) retirer();
+    });
+}
