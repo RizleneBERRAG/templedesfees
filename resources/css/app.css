@@ -1465,7 +1465,7 @@ footer > *{position:relative}
    tiennent pas leur texte, et une page coupee ne se rattrape pas, le
    debordement etant masque. Plus le livre est etroit, plus il est haut. */
 .livre{position:relative;margin:0;width:100%;aspect-ratio:16/9;
-  perspective:2600px;cursor:pointer;user-select:none}
+  cursor:pointer;user-select:none}
 @media(max-width:1060px){.livre{aspect-ratio:16/10}}
 @media(max-width:960px){.livre{aspect-ratio:4/3}}
 
@@ -1478,7 +1478,18 @@ footer > *{position:relative}
   background:linear-gradient(90deg,transparent,rgba(0,0,0,.6) 46%,
     rgba(0,0,0,.6) 54%,transparent)}
 
-.livre .pages{position:absolute;inset:0;transform-style:preserve-3d}
+/* La perspective est portee par la PILE, pas par le livre, et la pile reste
+   plate.
+
+   Une pile en transform-style:preserve-3d fond ses feuillets dans une seule
+   scene, ou l'ordre d'empilement se deduit de la position dans l'espace et
+   ou le z-index n'est plus lu. La page tournee ne se posait donc jamais a
+   gauche, et passe la deuxieme, la bonne page n'etait plus au-dessus.
+
+   Pile plate, chaque feuillet redevient un calque ordinaire que le z-index
+   ordonne — et chacun garde son propre preserve-3d pour ses deux faces,
+   qui est le seul endroit ou la troisieme dimension sert vraiment. */
+.livre .pages{position:absolute;inset:0;perspective:2600px}
 
 .feuillet{position:absolute;left:50%;top:0;width:50%;height:100%;
   transform-origin:left center;transform-style:preserve-3d;
@@ -1530,8 +1541,8 @@ footer > *{position:relative}
   text-transform:uppercase;color:var(--ivoire-dim);min-width:11ch;text-align:center}
 
 /* ── une page à la fois ── */
-.livre[data-simple]{aspect-ratio:3/4.2;perspective:1500px}
-.livre[data-simple] .pages{transform-style:flat}
+.livre[data-simple]{aspect-ratio:3/4.2}
+.livre[data-simple] .pages{perspective:1500px}
 .livre[data-simple] .feuillet{position:static;width:auto;transform:none;
   transform-style:flat;transition:none}
 .livre[data-simple] .face{backface-visibility:visible;transform:none;
