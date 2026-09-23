@@ -16,7 +16,13 @@
                     Élevage familial de Maine Coon à Lapeyrouse-Mornay (26210), dans la Drôme
                     des collines. Une à deux portées par an, parents dépistés, résultats publiés.
                 </p>
-                <x-fleuron taille="petit" style="margin-top:20px;color:var(--or-mat)" />
+                {{-- Le blason remplace le fleuron des qu'il existe : au pied
+                     d'une page, l'embleme vaut mieux qu'un ornement. --}}
+                @if(file_exists(public_path('images/blason.png')))
+                    <x-blason class="blason-pied" :taille="66" />
+                @else
+                    <x-fleuron taille="petit" style="margin-top:20px;color:var(--or-mat)" />
+                @endif
             </div>
 
             <div>

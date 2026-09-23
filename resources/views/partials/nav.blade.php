@@ -52,6 +52,11 @@
             @endif
         </div>
 
+        {{-- Le blason ferme le bandeau a droite : la marque ecrite d'un cote,
+             l'embleme de l'autre. Il ne s'affiche que lorsque le fichier
+             existe, ce qui evite un cadre vide en attendant. --}}
+        <x-blason class="blason-bandeau" :taille="44" :lien="true" />
+
         <button class="cle" id="cle" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
     </div>
 

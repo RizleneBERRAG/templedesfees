@@ -1560,3 +1560,26 @@ footer > *{position:relative}
   .feuillet{transition:none}
   .livre[data-simple] .face[data-sort]{animation:none;opacity:0;visibility:hidden}
 }
+
+/* ── le blason ───────────────────────────────────────────────────── */
+/* La tête de Maine Coon du logo, déjà dorée dans le fichier : la dorure y
+   est cuite plutôt que posée en CSS, pour qu'elle suive l'image partout —
+   onglet, écran d'accueil, aperçu de partage. */
+
+.blason{display:block;width:var(--blason,42px);height:auto;flex:none}
+.blason-lien{display:inline-flex;flex:none;transition:transform .4s var(--ease),opacity .3s}
+.blason-lien:hover{transform:translateY(-1px) scale(1.04)}
+
+/* Dans le bandeau, il ferme la ligne à droite, derrière un filet qui le
+   sépare des moyens de contact. */
+.blason-bandeau,.barre-droite > .blason-lien{--blason:clamp(34px,3.4vw,46px)}
+.barre-droite > .blason-lien{padding-left:clamp(12px,1.6vw,20px);
+  border-left:1px solid var(--filet-2)}
+
+.blason-pied{--blason:66px;margin-top:20px;opacity:.92}
+
+/* Sous le seuil du menu déplié, la place manque : la clé et la marque
+   suffisent, le blason se retire. */
+@media(max-width:1180px){
+  .barre-droite > .blason-lien{display:none}
+}

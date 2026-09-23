@@ -7,6 +7,15 @@
     <title>@yield('title', "Chatterie du Temple des Fées") — Élevage de Maine Coon dans la Drôme</title>
     <meta name="description" content="@yield('description', "Chatterie familiale de Maine Coon à Lapeyrouse-Mornay (26), Drôme des collines. Chatons inscrits au LOOF, parents dépistés HCM, SMA et PK-Def, résultats publiés.")">
     <link rel="canonical" href="{{ url()->current() }}">
+
+    {{-- Les icones sont tirees du logo par scripts/blason.php. Tant qu'elles
+         n'existent pas, rien n'est declare et le favicon.ico de la racine
+         sert de secours. --}}
+    @if(file_exists(public_path('images/blason-32.png')))
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/blason-32.png') }}">
+        <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('images/blason-192.png') }}">
+        <link rel="apple-touch-icon" href="{{ asset('images/blason-180.png') }}">
+    @endif
     @if(config('chatterie.apercu_statique'))
         {{-- L'apercu ne doit pas se retrouver indexe a cote du vrai site :
              deux fois le meme contenu, et les deux y perdent. --}}
