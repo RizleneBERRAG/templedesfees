@@ -247,7 +247,10 @@
 @endif
 
 {{-- ═══ chapitre quatrième ═══ --}}
-<section class="bande creuse">
+{{-- La bande de parchemin : une page claire au milieu du livre. C'est le
+     chapitre du départ, celui qu'on lit en entier — il gagne à être posé sur
+     du papier plutôt que dans la nuit. --}}
+<section class="bande parchemin" id="le-depart">
     <div class="wrap">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(30px,5vw,68px);align-items:start">
             <div class="chapitre gauche monte" style="margin-bottom:0">

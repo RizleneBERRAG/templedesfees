@@ -152,6 +152,78 @@ em{font-style:italic}
 .vue::after{right:9px;bottom:9px;
   border-right:1px solid var(--or);border-bottom:1px solid var(--or)}
 
+/* ── la bande de parchemin ──────────────────────────── */
+/* Une page claire au milieu du livre.
+
+   L'eleveur cherchait du beige, et le beige qu'il a en tete n'est pas une
+   teinte posee sur du sombre : c'est une surface. Une bande de parchemin
+   tranche mille fois plus qu'un reglage de couleur, et elle respire le
+   recit — on tourne la page, le papier change.
+
+   Elle ne redefinit aucun composant : elle redefinit les JETONS, ici
+   seulement. Un chapitre, une chronologie, un bouton, un registre posent
+   donc leurs couleurs comme partout ailleurs, et s'inversent tout seuls.
+   C'est aussi ce qui garantit qu'un composant ecrit demain y fonctionnera
+   sans qu'on ait pense a lui.
+
+   L'or, lui, doit descendre : sur du papier, un or clair disparait. Le
+   degrade passe donc au bronze, et c'est --or-ombre qui s'eclaircit pour
+   garder son role de filet discret. */
+
+.bande.parchemin{
+  /* le papier — ce sont les fonds de cartes et de pastilles */
+  --nuit:#F6EDDB; --nuit-2:#F0E6D2; --nuit-3:#EADFC8;
+  --emeraude:#DCD2B8; --emeraude-2:#D2C6A8; --emeraude-3:#C6B993;
+
+  /* l'encre s'inverse */
+  --ivoire:#1B1712; --ivoire-2:#3C352A; --ivoire-3:#5A5142; --ivoire-dim:#665B4A;
+
+  /* la dorure descend au bronze pour rester lisible sur le papier */
+  /* Chaque ton qui porte du TEXTE descend jusqu'a tenir 4,5:1 sur le bas du
+     papier, qui est sa partie la plus sombre. Seul --or, reserve aux filets
+     et aux pastilles, reste plus clair : un trait n'a besoin que de 3:1. */
+  --or-pale:#745724; --or-clair:#745724; --or:#8A6A2E; --or-mat:#7D5E27;
+  --or-tendre:#745724; --or-ombre:#BFA268;
+  --dorure:linear-gradient(180deg,#B89152 0%,#8F6E31 46%,#6B4F22 100%);
+  --dorure-filet:linear-gradient(180deg,rgba(107,79,34,.5),rgba(107,79,34,.12));
+
+  --sain:#4A663C; --sain-2:#3C5531; --attente:#7D5E27; --alerte:#8F4127;
+
+  --filet:rgba(107,79,34,.34);
+  --filet-2:rgba(107,79,34,.18);
+  --filet-3:rgba(27,23,18,.1);
+  --voile-beige:rgba(107,79,34,.05);
+
+  color:var(--ivoire);
+  background:radial-gradient(120% 90% at 50% 0%,#FCF6E8,#F5EBD7 55%,#ECE0C6 100%);
+  border-block:1px solid rgba(107,79,34,.42)}
+
+/* La profondeur s'inverse aussi : la lumiere vient du haut, l'ombre
+   s'installe au pied de la page. */
+.bande.parchemin::before{
+  background:
+    radial-gradient(120% 70% at 50% 0%,rgba(255,255,255,.55),transparent 62%),
+    radial-gradient(100% 55% at 50% 100%,rgba(107,79,34,.1),transparent 70%)}
+
+/* Le meme peigne que les bandes creuses, en bronze. */
+.bande.parchemin::after{content:"";position:absolute;inset:0 0 auto 0;height:7px;
+  pointer-events:none;z-index:1;
+  background:repeating-linear-gradient(90deg,
+    rgba(107,79,34,.5) 0 2px, transparent 2px 16px);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent)}
+
+/* Les deux seules regles qui codent leur couleur en dur plutot que par un
+   jeton, et qu'il faut donc reprendre a la main. */
+.bande.parchemin .btn.creux{background:rgba(107,79,34,.07);
+  border-color:rgba(107,79,34,.45);color:#6B4F22}
+.bande.parchemin .btn.creux:hover{background:rgba(107,79,34,.14);border-color:#8A6A2E}
+.bande.parchemin .arche{border-color:rgba(107,79,34,.5);
+  background:linear-gradient(180deg,rgba(107,79,34,.1),rgba(107,79,34,.02) 60%)}
+.bande.parchemin .arche > i{border-color:rgba(107,79,34,.3)}
+.bande.parchemin .lien{color:#745724;border-bottom-color:rgba(107,79,34,.45)}
+.bande.parchemin .lien:hover{color:#5C4419;border-bottom-color:#8A6A2E}
+
 /* ── rubrique et frises ──────────────────────────────────────────── */
 .rubrique{display:block;font-size:10.5px;font-weight:400;letter-spacing:.42em;
   text-transform:uppercase;color:var(--or-tendre)}

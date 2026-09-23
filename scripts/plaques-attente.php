@@ -172,13 +172,20 @@ foreach ($plaques as $nom => [$L, $H, $variante]) {
         $voute[] = [$cx + ($largeur / 2) * cos($theta), $epaule - $fleche * sin($theta)];
     }
 
-    tracer($im, $voute, $or, 2.2);
-    tracer($im, [[$cx - $largeur / 2, $epaule], [$cx - $largeur / 2, $pied]], $or, 2.2);
-    tracer($im, [[$cx + $largeur / 2, $epaule], [$cx + $largeur / 2, $pied]], $or, 2.2);
-    tracer($im, [[$cx - $largeur / 2, $pied], [$cx + $largeur / 2, $pied]], $or, 2.2);
+    /* L'arche n'est dessinee que sur la plaque large. Les plaques portrait
+       s'affichent DANS le cadre en arche du site : en dessiner une seconde a
+       l'interieur donnait deux arches emboitees, ce qui se voit tout de
+       suite et ne ressemble a rien. */
+    if (! $portrait) {
+        tracer($im, $voute, $or, 2.2);
+        tracer($im, [[$cx - $largeur / 2, $epaule], [$cx - $largeur / 2, $pied]], $or, 2.2);
+        tracer($im, [[$cx + $largeur / 2, $epaule], [$cx + $largeur / 2, $pied]], $or, 2.2);
+        tracer($im, [[$cx - $largeur / 2, $pied], [$cx + $largeur / 2, $pied]], $or, 2.2);
+    }
 
-    /* ---- le fleuron, au coeur de l'arche ---- */
-    $fy = $epaule + ($pied - $epaule) * 0.34;
+    /* ---- le fleuron ----
+       Au coeur de l'arche quand il y en a une, au centre de la plaque sinon. */
+    $fy = $portrait ? $H * 0.5 : $epaule + ($pied - $epaule) * 0.34;
     $u  = $largeur / ($portrait ? 132 : 112);
 
     // La feuille centrale et son point.
@@ -199,8 +206,10 @@ foreach ($plaques as $nom => [$L, $H, $variante]) {
         (int) round(2.4 * $u), (int) round(2.4 * $u), $or);
 
     // Le point de clef, a la pointe de la voute.
-    imagefilledellipse($im, (int) round($cx), (int) round($epaule - $fleche),
-        (int) round(3.6 * $u), (int) round(3.6 * $u), $orVif);
+    if (! $portrait) {
+        imagefilledellipse($im, (int) round($cx), (int) round($epaule - $fleche),
+            (int) round(3.6 * $u), (int) round(3.6 * $u), $orVif);
+    }
 
     imagewebp($im, "$destination/$nom.webp", 86);
     imagedestroy($im);
