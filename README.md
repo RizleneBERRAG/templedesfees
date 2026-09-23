@@ -207,6 +207,31 @@ Le fond de plan précédent venait des tuiles sombres de CARTO, qui réclament
 désormais une clé : la carte s'affichait barrée de « API KEY REQUIRED ».
 Leaflet a été retiré du projet à cette occasion (160 ko de moins).
 
+## Les outils de mise au point
+
+`scripts/` contient de quoi fabriquer et regarder :
+
+| Script | Ce qu'il fait |
+| --- | --- |
+| `banc.py <page> <selecteur> <nom>` | Sort un bloc de page sur `/apercus-banc/<nom>/`, seul et en haut d'une page vide. L'aperçu de la machine de dev refuse de faire défiler : sans lui, tout ce qui n'est pas au premier écran est invisible. |
+| `banc-livre.py` | Le même, dédié au livre de l'accueil, sur `/apercus-livre/`. |
+| `vignettes.php` | Pose deux réductions (800 et 400 px) à côté de chaque photo. À relancer après chaque ajout. |
+| `blason.php <logo>` | Tire du logo le blason doré et les icônes d'onglet. |
+| `plaques-attente.php` | Regénère les planches gravées qui tiennent la place d'une photo manquante. |
+
+Les bancs ne sont pas versionnés et n'entrent pas dans l'export.
+
+## Les images
+
+Une photo de chat fait 1200 px. Elle n'est jamais servie telle quelle dans une
+vignette : le composant `<x-img>` déclare les réductions en `srcset`, et
+l'appelant précise en `sizes` la place que l'image occupe vraiment. **Sans
+`sizes`, le navigateur suppose toute la largeur de la fenêtre et reprend
+systématiquement la plus grande** — l'attribut n'est donc pas optionnel.
+
+Quand les réductions n'existent pas, pour une photo qu'on vient de déposer, le
+composant sert l'original et rien ne casse.
+
 ## Aperçu statique (GitHub Pages)
 
 Le site se rejoue en HTML pur, pour être montré sans louer d'hébergement :
