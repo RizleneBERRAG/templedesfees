@@ -34,8 +34,8 @@
                 <article class="billet">
                     <a class="arche petite" href="{{ route('articles.show', $article) }}" tabindex="-1" aria-hidden="true">
                         <i><u>
-                            <img src="{{ asset($article->photo_principale ?: 'images/cats/uriana.webp') }}"
-                                 alt="" width="1200" height="1714" loading="lazy">
+                            <x-img :src="$article->photo_principale ?: 'images/cats/uriana.webp'"
+                                   alt="" sizes="200px" :largeur="1200" :hauteur="1714" />
                         </u></i>
                     </a>
                     <div class="bd">

@@ -12,8 +12,9 @@
             @foreach($photos->concat($photos) as $i => $photo)
                 <a class="ruban-item" href="{{ route('gallery') }}"
                    @if($i >= $photos->count()) aria-hidden="true" tabindex="-1" @endif>
-                    <img src="{{ asset($photo->chemin) }}"
-                         alt="{{ $i < $photos->count() ? $photo->alt : '' }}" loading="lazy">
+                    <x-img :src="$photo->chemin"
+                           :alt="$i < $photos->count() ? $photo->alt : ''"
+                           sizes="(max-width:560px) 46vw, 240px" />
                     <span class="ruban-cap">{{ $photo->legende }}</span>
                 </a>
             @endforeach

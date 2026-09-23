@@ -12,8 +12,9 @@
     @if($photos->isNotEmpty())
         <div class="arche">
             <i><u>
-                <img src="{{ asset($photos[0]['chemin']) }}" alt="{{ $photos[0]['alt'] }}"
-                     width="1200" height="1500">
+                <x-img :src="$photos[0]['chemin']" :alt="$photos[0]['alt']"
+                       sizes="(max-width:980px) 90vw, 42vw"
+                       :largeur="1200" :hauteur="1500" :urgent="true" />
             </u></i>
         </div>
     @endif
@@ -27,9 +28,9 @@
         <div class="arche scene" data-zoom role="button" tabindex="0" aria-label="Agrandir la photo">
             <i><u>
                 @foreach($photos as $i => $photo)
-                    <img src="{{ asset($photo['chemin']) }}" alt="{{ $photo['alt'] }}"
-                         @class(['visible' => $i === 0])
-                         @if($i > 0) loading="lazy" @endif>
+                    <x-img :src="$photo['chemin']" :alt="$photo['alt']"
+                           sizes="(max-width:980px) 90vw, 42vw"
+                           @class(['visible' => $i === 0]) :urgent="$i === 0" />
                 @endforeach
             </u></i>
             <span class="compteur"><b>1</b>&thinsp;/&thinsp;{{ $photos->count() }}</span>
@@ -47,9 +48,9 @@
                         tabindex="{{ $i === 0 ? '0' : '-1' }}"
                         data-full="{{ asset($photo['chemin']) }}"
                         data-legende="{{ $photo['legende'] ?: $photo['alt'] }}">
-                    <img src="{{ asset($photo['chemin']) }}"
-                         alt="Photo {{ $i + 1 }} — {{ $photo['alt'] }}"
-                         loading="lazy" width="150" height="150">
+                    <x-img :src="$photo['chemin']"
+                           alt="Photo {{ $i + 1 }} — {{ $photo['alt'] }}"
+                           sizes="74px" :largeur="150" :hauteur="150" />
                 </button>
             @endforeach
         </div>

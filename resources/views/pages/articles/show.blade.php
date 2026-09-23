@@ -66,8 +66,9 @@
 
         @if($article->photo_principale)
             <figure class="vue monte" style="max-width:900px;margin-inline:auto">
-                <img src="{{ asset($article->photo_principale) }}" alt="{{ $article->titre }}"
-                     width="1200" height="1714" loading="lazy">
+                <x-img :src="$article->photo_principale" :alt="$article->titre"
+                       sizes="(max-width:960px) 92vw, 900px"
+                       :largeur="1200" :hauteur="1714" />
             </figure>
         @endif
 
@@ -86,8 +87,8 @@
                 <article class="billet">
                     <a class="arche petite" href="{{ route('articles.show', $autre) }}" tabindex="-1" aria-hidden="true">
                         <i><u>
-                            <img src="{{ asset($autre->photo_principale ?: 'images/cats/uriana.webp') }}"
-                                 alt="" width="1200" height="1714" loading="lazy">
+                            <x-img :src="$autre->photo_principale ?: 'images/cats/uriana.webp'"
+                                   alt="" sizes="200px" :largeur="1200" :hauteur="1714" />
                         </u></i>
                     </a>
                     <div class="bd">
