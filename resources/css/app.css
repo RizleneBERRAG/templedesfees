@@ -2183,8 +2183,13 @@ html.seuil-ouvert,html.seuil-ouvert body{overflow:hidden}
 
 /* Ses photos se relaient derrière le texte, en fondu très lent : six
    secondes de pose, deux secondes et demie de passage. Rien ne clignote, et
-   la principale ouvre toujours. */
-.seuil--b .fonds{position:absolute;inset:0;z-index:0}
+   la principale ouvre toujours.
+
+   Le conteneur est opaque, et ce n'est pas décoratif : pendant un fondu, deux
+   images à cinquante pour cent ne couvrent que soixante-quinze pour cent de
+   ce qu'il y a dessous, et le site se lisait au travers. Le noir dessous rend
+   la chose impossible — même si une photo manquait à l'appel. */
+.seuil--b .fonds{position:absolute;inset:0;z-index:0;background:#060504}
 
 .seuil--b .fond{position:absolute;inset:0;z-index:0;opacity:0;
   transition:opacity 2.5s var(--ease);

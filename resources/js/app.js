@@ -925,13 +925,22 @@ if (seuil) {
 
     if (fonds.length > 1 && !reduit()) {
         let courante = 0;
+        let etage = 1;
 
         charger(fonds[1]);                  // la suivante, des maintenant
 
         relais = window.setInterval(() => {
-            fonds[courante].classList.remove('vue');
+            const precedente = courante;
             courante = (courante + 1) % fonds.length;
+
+            /* La suivante monte d'un etage et se fond PAR-DESSUS la courante,
+               qui reste opaque en dessous jusqu'au bout. Les faire se croiser
+               a cinquante pour cent chacune laissait un quart de transparence
+               au milieu du passage, et on voyait le site au travers. */
+            fonds[courante].style.zIndex = ++etage;
             fonds[courante].classList.add('vue');
+
+            window.setTimeout(() => fonds[precedente].classList.remove('vue'), 2600);
 
             charger(fonds[(courante + 1) % fonds.length]);
         }, 6000);
