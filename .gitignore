@@ -25,3 +25,7 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Les bancs d essai : des pages de mise au point, regenerees a la demande
+/public/apercus-banc
+/public/apercus-livre

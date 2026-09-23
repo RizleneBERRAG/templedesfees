@@ -177,13 +177,14 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// La scène est annoncée comme un bouton : elle doit répondre au clavier.
+/* La scène d'une fiche et les clichés de la galerie sont annoncés comme des
+   boutons : ils doivent répondre au clavier comme tels. */
 document.addEventListener('keydown', (e) => {
     if (e.key !== 'Enter' && e.key !== ' ') return;
-    const scene = e.target.closest?.('[data-zoom]');
-    if (!scene) return;
+    const cible = e.target.closest?.('[data-zoom], [data-lightbox] figure[data-full]');
+    if (!cible) return;
     e.preventDefault();
-    scene.click();
+    cible.click();
 });
 
 /* ---------- visionneuse de fiche ---------- */
