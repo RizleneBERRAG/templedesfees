@@ -64,6 +64,9 @@
             @endforeach
         </div>
 
+        {{-- L'ombre que la page en vol projette dans la reliure. --}}
+        <span class="ombre-vol" aria-hidden="true"></span>
+
         <span class="signet" aria-hidden="true"></span>
     </figure>
 

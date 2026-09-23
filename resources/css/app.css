@@ -1022,14 +1022,43 @@ a.case:hover{border-color:var(--or-ombre);background:var(--emeraude)}
   transition:transform .35s var(--ease)}
 .social:hover{transform:translateY(-1px)}
 .social-mark{position:relative;width:40px;height:40px;display:grid;place-items:center;
-  border-radius:50%;border:1px solid var(--or-ombre);color:inherit;
-  transition:color .35s,border-color .35s,box-shadow .35s}
+  border-radius:50%;border:1px solid var(--or-ombre);color:inherit;overflow:hidden;
+  transition:color .4s var(--ease),border-color .4s,box-shadow .4s}
 .social-mark svg{position:relative;z-index:1;width:19px;height:19px;display:block}
+
+/* La couleur de marque.
+
+   Elle n'est pas posee sur la bordure mais sur un disque qui monte en fondu
+   sous le pictogramme : c'est ce qui la fait arriver en douceur plutot que
+   de claquer. Chaque reseau apporte son degrade et son halo par deux
+   variables, le reste de la regle ne bouge pas.
+
+   Le glyphe Instagram reste un aplat blanc sur le degrade officiel : c'est
+   l'usage prevu par Meta, qui interdit en revanche de recolorer le trace
+   lui-meme. */
+.social-mark::before{content:"";position:absolute;inset:-1px;border-radius:50%;
+  opacity:0;background:var(--teinte);
+  transition:opacity .45s var(--ease)}
+.social:hover .social-mark::before,
+.social:focus-visible .social-mark::before{opacity:1}
+
+.social{--teinte:linear-gradient(180deg,#F6E7BF,#D9B26A 58%,#A8813F);--halo:217,178,106}
+.social--instagram{--halo:221,42,123;
+  --teinte:radial-gradient(118% 118% at 28% 108%,
+    #FDCB5C 0%,#F8853C 21%,#EE2A7B 51%,#9C36B5 76%,#5B51D8 100%)}
+.social--facebook{--halo:24,119,242;
+  --teinte:linear-gradient(180deg,#4A90F7,#1877F2 55%,#0D5CC4)}
+.social--tel{--halo:52,184,108;
+  --teinte:linear-gradient(180deg,#63D693,#34B86C 55%,#1F8C4E)}
+.social--mail{--halo:245,240,230;
+  --teinte:linear-gradient(180deg,#FFFFFF,#F1EADB 58%,#D4CBB6)}
+
 .social:hover .social-mark,.social:focus-visible .social-mark{
-  border-color:var(--or);color:var(--or-clair);
-  box-shadow:0 0 0 3px rgba(217,178,106,.12),0 0 20px rgba(217,178,106,.3)}
-.social--instagram:hover .social-mark{border-color:#EE2A7B;color:#FFF1F7;
-  box-shadow:0 0 0 3px rgba(238,42,123,.12),0 0 20px rgba(238,42,123,.32)}
+  border-color:transparent;color:#FFFFFF;
+  box-shadow:0 0 0 3px rgba(var(--halo),.16),0 0 24px rgba(var(--halo),.42)}
+
+/* Sur le disque clair du courriel, un glyphe blanc disparaitrait. */
+.social--mail:hover .social-mark,.social--mail:focus-visible .social-mark{color:#14100A}
 @media (pointer:coarse){.social-mark{width:44px;height:44px}}
 
 /* ── citation au fil d'une page ──────────────────────────────────── */
@@ -1523,21 +1552,55 @@ footer > *{position:relative}
    chemin, et la page retombe exactement la ou la regle la place. */
 .feuillet{position:absolute;left:50%;top:0;width:50%;height:100%;
   transform-origin:left center;transform-style:preserve-3d;
-  --duree:1.05s}
+  --duree:1.15s}
 .feuillet[data-tourne]{transform:rotateY(-180deg)}
 
+/* Une page a du poids.
+
+   Elle ne parcourt pas ses 180 degres a vitesse constante : le doigt la
+   souleve lentement, elle bascule d'elle-meme passe la verticale, puis elle
+   retombe et se pose. Le mouvement est donc ecrit en cinq temps, chacun avec
+   sa propre courbe — c'est cette irregularite qui fait le papier, une seule
+   courbe donnant toujours un battant de porte.
+
+   Le rotateZ est infime, moins de deux degres : une feuille tenue par un
+   angle ne tourne jamais parfaitement droit. On ne le voit pas, on le sent. */
+/* Le profil du mouvement, releve degre par degre.
+
+   La premiere version hesitait : entre 70 et 80 % du parcours, la page ne
+   faisait plus que 10 degres quand elle en faisait 26 juste avant. Deux
+   courbes s'y succedaient dont la premiere finissait a l'arret et la seconde
+   repartait vite — un a-coup au moment precis ou l'oeil suit la page.
+
+   Le profil est donc : depart lent, milieu a vitesse constante, arrivee
+   freinee une seule fois. Chaque temps rend la main a la vitesse ou le
+   suivant la prend, ce qui est toute la difference entre une page et un
+   volet. */
 @keyframes tourner-avant{
-  0%  {transform:rotateY(0)       translateZ(0)}
-  45% {transform:rotateY(-78deg)  translateZ(30px)}
-  100%{transform:rotateY(-180deg) translateZ(0)}
+  0%  {transform:rotateY(0)       translateZ(0)    rotateZ(0);
+       animation-timing-function:cubic-bezier(.32,0,.68,.28)}
+  25% {transform:rotateY(-30deg)  translateZ(22px) rotateZ(.7deg);
+       animation-timing-function:linear}
+  50% {transform:rotateY(-85deg)  translateZ(34px) rotateZ(1.4deg);
+       animation-timing-function:linear}
+  75% {transform:rotateY(-140deg) translateZ(20px) rotateZ(.7deg);
+       animation-timing-function:cubic-bezier(.22,.32,.3,1)}
+  100%{transform:rotateY(-180deg) translateZ(0)    rotateZ(0)}
 }
 @keyframes tourner-arriere{
-  0%  {transform:rotateY(-180deg) translateZ(0)}
-  45% {transform:rotateY(-102deg) translateZ(30px)}
-  100%{transform:rotateY(0)       translateZ(0)}
+  0%  {transform:rotateY(-180deg) translateZ(0)    rotateZ(0);
+       animation-timing-function:cubic-bezier(.32,0,.68,.28)}
+  25% {transform:rotateY(-150deg) translateZ(22px) rotateZ(-.7deg);
+       animation-timing-function:linear}
+  50% {transform:rotateY(-95deg)  translateZ(34px) rotateZ(-1.4deg);
+       animation-timing-function:linear}
+  75% {transform:rotateY(-40deg)  translateZ(20px) rotateZ(-.7deg);
+       animation-timing-function:cubic-bezier(.22,.32,.3,1)}
+  100%{transform:rotateY(0)       translateZ(0)    rotateZ(0)}
 }
-.feuillet[data-anime="avant"]{animation:tourner-avant var(--duree) cubic-bezier(.42,.02,.32,1)}
-.feuillet[data-anime="arriere"]{animation:tourner-arriere var(--duree) cubic-bezier(.42,.02,.32,1)}
+.feuillet[data-anime]{will-change:transform}
+.feuillet[data-anime="avant"]{animation:tourner-avant var(--duree) linear}
+.feuillet[data-anime="arriere"]{animation:tourner-arriere var(--duree) linear}
 
 /* L'ombre de la page en vol : elle naît au dos, s'installe quand la page est
    sur la tranche, et s'efface quand la page se repose. Sans elle le papier
@@ -1546,15 +1609,20 @@ footer > *{position:relative}
   opacity:0;background:linear-gradient(90deg,rgba(0,0,0,.62),rgba(0,0,0,0) 46%)}
 .face.verso::after{background:linear-gradient(270deg,rgba(0,0,0,.62),rgba(0,0,0,0) 46%)}
 .feuillet[data-anime] .face::after{animation:ombre-page var(--duree) ease-in-out}
-@keyframes ombre-page{0%{opacity:0}48%{opacity:1}100%{opacity:0}}
+@keyframes ombre-page{0%{opacity:0}20%{opacity:.5}52%{opacity:1}84%{opacity:.4}100%{opacity:0}}
 
 /* Le reflet : le papier prend la lumiere en passant par la tranche. C'est ce
    qui acheve de le faire lire comme une feuille plutot qu'un panneau. */
 .face::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
   opacity:0;background:linear-gradient(105deg,
     transparent 30%,rgba(246,231,191,.16) 50%,transparent 70%)}
-.feuillet[data-anime] .face::before{animation:reflet-page var(--duree) ease-in-out}
-@keyframes reflet-page{0%,100%{opacity:0}52%{opacity:1}}
+.feuillet[data-anime] .face::before{animation:reflet-page var(--duree) linear}
+@keyframes reflet-page{
+  0%  {opacity:0;  transform:translateX(-34%)}
+  30% {opacity:.75;transform:translateX(-12%)}
+  56% {opacity:1;  transform:translateX(6%)}
+  100%{opacity:0;  transform:translateX(34%)}
+}
 
 .face{position:absolute;inset:0;backface-visibility:hidden;overflow:hidden;
   display:flex;flex-direction:column;gap:13px;
@@ -1623,8 +1691,22 @@ footer > *{position:relative}
 .garde .filet{display:block;width:44px;height:1px;background:var(--dorure);opacity:.8}
 .livre[data-simple] .garde{display:none}
 
+/* L'ombre portee.
+
+   Une page en l'air assombrit la reliure sous elle. C'est le seul indice qui
+   dise au lecteur que quelque chose passe AU-DESSUS du livre, et non dedans :
+   sans elle, la page tourne dans le vide.
+
+   Elle se tient au-dessus des pages posees et sous la page en vol, qui monte
+   a l'etage 60. */
+.ombre-vol{position:absolute;inset:0;z-index:40;pointer-events:none;opacity:0;
+  background:radial-gradient(58% 104% at 50% 50%,
+    rgba(0,0,0,.6),rgba(0,0,0,.26) 46%,transparent 74%)}
+.livre[data-anime] .ombre-vol{animation:ombre-reliure var(--duree,1.15s) ease-in-out}
+@keyframes ombre-reliure{0%{opacity:0}18%{opacity:.55}52%{opacity:1}86%{opacity:.4}100%{opacity:0}}
+
 /* Le signet, cousu au dos et pendant sur la tranche. */
-.livre .signet{position:absolute;right:clamp(28px,4vw,62px);top:-16px;z-index:5;
+.livre .signet{position:absolute;right:clamp(28px,4vw,62px);top:-16px;z-index:70;
   width:clamp(16px,1.6vw,22px);height:clamp(74px,8vw,104px);pointer-events:none;
   background:linear-gradient(180deg,#8E6A2C,#6B4F22);
   clip-path:polygon(0 0,100% 0,100% 100%,50% 76%,0 100%);
@@ -1656,9 +1738,13 @@ footer > *{position:relative}
 .livre[data-simple] .face[data-sort]{opacity:1;visibility:visible;z-index:3;
   animation:tourner-page .72s cubic-bezier(.36,.06,.2,1) forwards}
 @keyframes tourner-page{
-  0%  {transform:rotateY(0)       translateZ(0);opacity:1}
-  45% {transform:rotateY(-62deg)  translateZ(24px);opacity:.92}
-  100%{transform:rotateY(-115deg) translateZ(0);opacity:0}
+  0%  {transform:rotateY(0)      translateZ(0);opacity:1;
+       animation-timing-function:cubic-bezier(.35,0,.75,.28)}
+  22% {transform:rotateY(-20deg) translateZ(16px);opacity:1;
+       animation-timing-function:cubic-bezier(.3,.05,.5,.6)}
+  58% {transform:rotateY(-72deg) translateZ(26px);opacity:.9;
+       animation-timing-function:cubic-bezier(.4,.5,.6,1)}
+  100%{transform:rotateY(-118deg) translateZ(6px);opacity:0}
 }
 
 @media(prefers-reduced-motion:reduce){

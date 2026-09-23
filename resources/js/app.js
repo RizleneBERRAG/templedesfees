@@ -687,9 +687,16 @@ document.querySelectorAll('[data-livre]').forEach((bloc) => {
                     f.style.zIndex = '60';
                     f.dataset.anime = etat > precedent ? 'avant' : 'arriere';
 
+                    /* Le livre entier est prévenu : c'est lui qui porte
+                       l'ombre projetée dans la reliure. */
+                    livre.dataset.anime = f.dataset.anime;
+
                     const reposer = () => {
                         delete f.dataset.anime;
-                        if (!bloc.querySelector('.feuillet[data-anime]')) etager();
+                        if (!bloc.querySelector('.feuillet[data-anime]')) {
+                            delete livre.dataset.anime;
+                            etager();
+                        }
                     };
 
                     /* Le filet de sécurité : une animation lancée dans un

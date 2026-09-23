@@ -8,6 +8,7 @@
     $telRaw = \Illuminate\Support\Str::of($tel)->replace(' ', '')->replaceFirst('0', '+33');
     $mail   = \App\Models\Setting::get('contact.email');
     $insta  = \App\Models\Setting::get('contact.instagram');
+    $fb     = \App\Models\Setting::get('contact.facebook');
 @endphp
 
 @section('content')
@@ -119,12 +120,17 @@
                     </table>
                 </x-record>
 
+                {{-- Le meme ordre que dans le bandeau et le pied de page :
+                     joindre d'abord, suivre ensuite. --}}
                 <div class="socials">
-                    @if($insta)
-                        <x-social-link :url="$insta" />
-                    @endif
-                    <x-social-link type="mail" :url="'mailto:'.$mail" :handle="$mail" />
                     <x-social-link type="tel" :url="'tel:'.$telRaw" :handle="$tel" />
+                    <x-social-link type="mail" :url="'mailto:'.$mail" :handle="$mail" />
+                    @if($insta)
+                        <x-social-link type="instagram" :url="$insta" handle="chatteriedutempledesfees" />
+                    @endif
+                    @if($fb)
+                        <x-social-link type="facebook" :url="$fb" handle="Chatterie du Temple des Fées" />
+                    @endif
                 </div>
 
                 <div class="btnrow">
