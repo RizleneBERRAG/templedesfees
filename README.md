@@ -207,6 +207,32 @@ Le fond de plan précédent venait des tuiles sombres de CARTO, qui réclament
 désormais une clé : la carte s'affichait barrée de « API KEY REQUIRED ».
 Leaflet a été retiré du projet à cette occasion (160 ko de moins).
 
+## Entrer dans le back-office
+
+```bash
+php artisan back-office:acces
+```
+
+Le compte est créé par le seeder avec un mot de passe aléatoire, affiché une
+seule fois. Passée cette ligne, personne ne le connaît plus — et rejouer le
+seeder entier pour retrouver l'accès republie des fiches et repose des numéros
+de démonstration, ce qui n'a rien à voir.
+
+Le mot de passe se choisit dans `.env`, qui n'est pas versionné :
+
+```
+BACK_OFFICE_MOT_DE_PASSE=celui-que-vous-voulez
+```
+
+puis la commande le pose et rappelle par où entrer. Il n'est **pas** demandé en
+argument : un mot de passe tapé dans un terminal reste en clair dans
+l'historique du shell, indéfiniment.
+
+Le panneau est à `/admin`. Il n'ouvre qu'aux adresses listées dans
+`config/chatterie.php › back_office.emails` : un compte juste et un mot de
+passe juste, avec une adresse absente de cette liste, donnent une porte close
+sans explication. La commande le signale.
+
 ## En mémoire d'Olimpia
 
 Une page à elle seule, à `/olimpia`. Pas une fiche de chat parmi les autres,

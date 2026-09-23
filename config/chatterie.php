@@ -284,6 +284,19 @@ return [
         'emails' => [
             'letempledesfees@outlook.fr',
         ],
+
+        /*
+         * Le compte de gestion. Le mot de passe vit dans .env, qui n'est pas
+         * versionne : ecrit ici, il partirait sur GitHub avec le reste du
+         * code, et un mot de passe publie n'en est plus un.
+         *
+         * Il se pose avec : php artisan back-office:acces
+         */
+        'compte' => [
+            'email'        => env('BACK_OFFICE_EMAIL', 'letempledesfees@outlook.fr'),
+            'nom'          => 'Chatterie du Temple des Fées',
+            'mot_de_passe' => env('BACK_OFFICE_MOT_DE_PASSE'),
+        ],
     ],
 
     /*
