@@ -1350,6 +1350,54 @@ footer > *{position:relative}
 .sommaire a:hover{color:var(--ivoire)}
 .sommaire a:hover::after{transform:scaleX(.5)}
 .sommaire a[aria-current="true"]{background:none;color:var(--or-clair)}
+
+/* ── le sommaire en rail, à partir de 1400 px ────────────────────── */
+/* Deux barres collées l'une sous l'autre mangent cent trente pixels de
+   hauteur sur une page qu'on lit en descendant. Dès qu'il y a une marge —
+   au-delà de 1400 px, elle fait plus de cent dix pixels — le sommaire sort
+   du flux et va s'y tenir, en colonne, à mi-hauteur.
+
+   La page récupère toute sa hauteur, rien ne passe plus sous une barre, et
+   la section en cours se marque par un tiret d'or qui s'allonge. En dessous
+   de 1400 px il n'y a pas de marge où le mettre : la barre horizontale
+   reprend sa place, telle quelle. */
+
+@media (min-width:1400px){
+
+  /* On le sort du flux plutôt que de le laisser collant : collé, il garderait
+     sa hauteur de barre dans la page et le décalage d'ancre avec. */
+  .sommaire{position:fixed;top:50%;transform:translateY(-50%);
+    left:max(10px,calc((100vw - var(--maxw)) / 2 - 116px));
+    padding:0;background:none;border:0;box-shadow:none;
+    backdrop-filter:none;-webkit-backdrop-filter:none}
+
+  .sommaire-in{display:block;width:auto;max-width:none;margin:0;padding:0;
+    overflow:visible}
+
+  .sommaire a{display:flex;align-items:center;gap:9px;
+    padding:7px 0;border:0;background:none;
+    font-size:9px;letter-spacing:.16em;color:var(--ivoire-dim);
+    transition:color .35s var(--ease)}
+
+  /* Le tiret. C'est lui qui porte l'information : il s'allonge et s'éclaire
+     sur la section en cours, il reste court et mat partout ailleurs. */
+  .sommaire a::before{content:"";flex:none;
+    width:14px;height:1px;background:var(--filet);
+    transition:width .45s var(--ease),background .45s var(--ease)}
+
+  /* Le soulignement de la barre horizontale n'a plus de sens en colonne. */
+  .sommaire a::after{display:none}
+
+  .sommaire a:hover{color:var(--ivoire)}
+  .sommaire a:hover::before{width:22px;background:var(--or-mat)}
+
+  .sommaire a[aria-current="true"]{color:var(--or-clair)}
+  .sommaire a[aria-current="true"]::before{width:30px;background:var(--or)}
+
+  /* Le sommaire ne surplombe plus rien : une ancre n'a plus à se décaler que
+     de la hauteur du bandeau. */
+  [id]{scroll-margin-top:calc(var(--h-bandeau,74px) + 22px)}
+}
 .sommaire a[aria-current="true"]::after{transform:scaleX(1)}
 
 /* ── le lecteur ──────────────────────────────────────────────────── */
@@ -1844,3 +1892,196 @@ footer > *{position:relative}
 .texte-reglage{display:flex;flex-direction:column;gap:13px;padding-top:16px}
 .texte-reglage p{margin:0;font-size:15px;line-height:1.76;color:var(--ivoire-3);max-width:68ch}
 .texte-reglage strong{font-weight:400;color:var(--ivoire)}
+
+/* ── en mémoire d'Olimpia ────────────────────────────────────────── */
+/* Une page qui rend hommage ne se met pas en grille. Tout y est plus lent
+   et plus large qu'ailleurs : une colonne de texte, un portrait, une seule
+   lueur qui respire derrière lui, et rien qui appelle à autre chose.
+
+   Les proportions sont les seules du site à ne pas suivre la maquette : un
+   titre plus grand, des paragraphes plus aérés, une marge haute qui laisse
+   la page s'ouvrir. C'est volontaire — on ralentit le lecteur. */
+
+.hommage{position:relative;overflow:hidden;
+  padding-block:clamp(56px,7vw,110px) clamp(64px,8vw,130px)}
+
+/* La lueur. Un seul dégradé radial, très large, animé sur vingt secondes :
+   assez lent pour qu'on ne le voie pas bouger, assez présent pour que le
+   fond ne soit pas mort. */
+.hommage > .lueur{position:absolute;z-index:0;pointer-events:none;
+  top:-12%;left:-6%;width:66%;height:104%;
+  background:radial-gradient(ellipse at 42% 46%,
+    rgba(217,178,106,.17) 0%,
+    rgba(217,178,106,.075) 34%,
+    rgba(217,178,106,.018) 58%,
+    transparent 74%);
+  animation:respire-lueur 22s ease-in-out infinite}
+
+@keyframes respire-lueur{
+  0%,100%{opacity:.78;transform:scale(1)}
+  50%    {opacity:1;transform:scale(1.06)}
+}
+
+.hommage > .wrap{position:relative;z-index:1}
+
+.hommage-grille{display:grid;gap:clamp(34px,5vw,74px);align-items:center;
+  grid-template-columns:minmax(0,.86fr) minmax(0,1fr)}
+
+/* ── le portrait ─────────────────────────────────────────────────── */
+
+.hommage-portrait{position:relative;max-width:420px;margin-inline:auto;width:100%}
+
+/* Le cimier, au-dessus de l'arche. Le fleuron sort du composant en SVG
+   inline, donc en display:inline et calé à gauche : il faut le poser. */
+.hommage-portrait > .cimier{display:block;width:44px;height:auto;
+  margin:0 auto 18px;color:var(--or-mat);opacity:.92}
+
+.hommage-portrait .cadre{position:relative}
+
+/* Le filet se dessine à l'arrivée : un seul trait, parti du bas, qui monte
+   des deux côtés et se referme à la clef de l'arche. Il est décoratif — la
+   photo ne l'attend pas pour s'afficher. */
+.hommage-portrait .trace-arche{position:absolute;z-index:2;pointer-events:none;
+  inset:-26px -26px -20px;width:calc(100% + 52px);height:calc(100% + 46px);
+  color:rgba(233,203,148,.5);
+  /* La longueur réelle du tracé est de 950 unités : un pointillé plus long
+     ferait terminer l'animation avant la fin, et on verrait le trait
+     s'immobiliser pendant une demi-seconde. */
+  stroke-dasharray:960;stroke-dashoffset:960}
+
+.monte.vu .trace-arche{animation:trace-or 2.4s cubic-bezier(.24,.62,.2,1) .35s forwards}
+
+@keyframes trace-or{to{stroke-dashoffset:0}}
+
+/* Un second filet, un peu plus fin que celui de l'arche, posé à distance :
+   deux traits concentriques avec un vrai intervalle font un encadrement.
+   Collés l'un à l'autre, ils auraient l'air d'une erreur. */
+
+.hommage-portrait .arche{--format:7/10;
+  box-shadow:0 46px 130px -40px rgba(0,0,0,.92)}
+
+/* ── le texte ────────────────────────────────────────────────────── */
+
+.hommage-texte{min-width:0;max-width:60ch}
+
+.hommage-texte > .rubrique{margin:0 0 10px}
+
+/* Son nom, à la taille d'un titre de page et pas davantage : ce qui le rend
+   précieux, c'est l'or dessous, pas la dimension. */
+.hommage-texte .nom{margin:0;font-size:clamp(46px,6.4vw,86px);line-height:.98;
+  letter-spacing:.005em;font-weight:300}
+
+.hommage-texte .nom .sous-pinceau{padding-inline:.06em}
+
+.hommage-texte .complet{margin:26px 0 0;
+  font-family:var(--corps);font-weight:400;font-size:13px;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--or-tendre)}
+
+.hommage-texte .dates{margin:8px 0 0;
+  font-family:var(--corps);font-weight:300;font-size:13.5px;
+  letter-spacing:.14em;color:var(--ivoire-dim)}
+
+.hommage-texte .recit{margin-top:clamp(26px,3vw,38px)}
+
+.hommage-texte .recit p{margin:0 0 15px;
+  font-size:clamp(17.5px,1.34vw,20px);line-height:1.72;color:var(--ivoire-2)}
+
+.hommage-texte .recit p:last-child{margin-bottom:0}
+
+/* Le mot qui la faisait accourir. C'est le seul passage en gras du texte,
+   et il est en or : dans cette page, c'est le détail qui vaut tout le
+   reste. */
+.hommage-texte .recit strong{font-weight:400;color:var(--or-tendre);
+  font-style:italic;letter-spacing:.01em}
+
+/* ── la dernière phrase ──────────────────────────────────────────── */
+
+.adieu{margin:clamp(30px,3.6vw,46px) 0 0;padding:0 0 0 clamp(18px,2vw,26px);
+  border-left:1px solid var(--filet)}
+
+.adieu blockquote{margin:0;
+  font-family:var(--titre);font-weight:300;font-style:italic;
+  font-size:clamp(22px,2.5vw,31px);line-height:1.34;color:var(--ivoire)}
+
+.adieu figcaption{margin-top:12px;
+  font-family:var(--corps);font-weight:300;font-size:12px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--ivoire-dim)}
+
+.adieu figcaption::before{content:'— ';color:var(--or-mat)}
+
+/* ── sa fille ────────────────────────────────────────────────────── */
+/* Le seul lien qui sorte de la page. Il ne ressemble pas à un bouton : on
+   ne met pas d'appel à l'action sur un hommage. */
+
+.filiation{margin-top:clamp(30px,3.6vw,44px)}
+
+.filiation .etiquette{display:block;margin-bottom:12px;
+  font-family:var(--corps);font-weight:400;font-size:11px;
+  letter-spacing:.26em;text-transform:uppercase;color:var(--or-tendre)}
+
+.filiation a{display:inline-flex;align-items:center;gap:16px;
+  padding:12px 20px 12px 12px;border:1px solid var(--filet-2);border-radius:2px;
+  background:var(--voile-beige);text-decoration:none;color:inherit;
+  transition:border-color .35s ease,background .35s ease,transform .35s ease}
+
+.filiation a:hover{border-color:var(--filet);background:rgba(217,178,106,.07);
+  transform:translateY(-2px)}
+
+.filiation .vignette{display:block;flex:none;width:62px;height:62px;
+  overflow:hidden;border-radius:50%;border:1px solid var(--filet-2)}
+.filiation .vignette img{width:100%;height:100%;object-fit:cover}
+
+.filiation .dit b{display:block;font-family:var(--titre);font-weight:400;
+  font-size:19px;letter-spacing:.03em;color:var(--ivoire)}
+.filiation .dit small{display:block;margin-top:3px;
+  font-family:var(--corps);font-weight:300;font-size:12.5px;color:var(--ivoire-dim)}
+
+/* ── l'entrée, depuis la page des chats ──────────────────────────── */
+/* Un seul bloc, en fin de page, qui ne crie pas. Elle n'est pas un produit :
+   elle ne va ni dans la grille des reproducteurs ni dans le menu. */
+
+.entree-hommage{display:flex;align-items:center;gap:clamp(18px,2.4vw,30px);
+  margin-top:clamp(34px,4vw,54px);padding:clamp(18px,2.2vw,26px);
+  border:1px solid var(--filet-2);border-radius:2px;
+  background:linear-gradient(120deg,rgba(217,178,106,.07),transparent 62%);
+  text-decoration:none;color:inherit;
+  transition:border-color .4s ease,transform .4s ease}
+
+.entree-hommage:hover{border-color:var(--filet);transform:translateY(-2px)}
+
+.entree-hommage .portrait{display:block;flex:none;width:clamp(76px,9vw,104px);
+  aspect-ratio:7/10;overflow:hidden;border-radius:44% 44% 2px 2px / 22% 22% 2px 2px;
+  border:1px solid var(--filet-2)}
+.entree-hommage .portrait img{width:100%;height:100%;object-fit:cover}
+
+.entree-hommage .dit{min-width:0}
+.entree-hommage .dit .rubrique{margin:0 0 6px}
+.entree-hommage .dit b{display:block;font-family:var(--titre);font-weight:300;
+  font-size:clamp(24px,2.6vw,32px);letter-spacing:.02em;color:var(--ivoire)}
+.entree-hommage .dit p{margin:8px 0 0;max-width:52ch;
+  font-size:16px;line-height:1.6;color:var(--ivoire-3)}
+
+/* ── au petit écran ──────────────────────────────────────────────── */
+
+@media (max-width:900px){
+  .hommage-grille{grid-template-columns:1fr;gap:clamp(30px,6vw,44px)}
+  .hommage-portrait{max-width:min(340px,80vw)}
+  .hommage-texte{max-width:none;text-align:center;margin-inline:auto}
+  .hommage-texte .recit p{text-align:left}
+  .adieu{text-align:left;margin-inline:auto;max-width:44ch}
+  .hommage > .lueur{width:120%;left:-10%;height:52%;top:-4%}
+  .filiation a{width:100%}
+}
+
+@media (max-width:560px){
+  .entree-hommage{flex-direction:column;align-items:flex-start;text-align:left}
+  .entree-hommage .portrait{width:92px}
+}
+
+/* Sur une page qu'on veut calme, un mouvement qu'on n'a pas demandé est une
+   agression. Ici tout s'arrête. */
+@media (prefers-reduced-motion:reduce){
+  .hommage > .lueur{animation:none}
+  .hommage-portrait .trace-arche{stroke-dashoffset:0}
+  .monte.vu .trace-arche{animation:none}
+}

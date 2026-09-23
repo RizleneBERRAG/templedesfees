@@ -7,6 +7,7 @@ use App\Models\Faq;
 use App\Models\Kitten;
 use App\Models\Litter;
 use App\Models\Photo;
+use App\Models\Setting;
 
 class PageController extends Controller
 {
@@ -34,6 +35,25 @@ class PageController extends Controller
     public function breed()
     {
         return view('pages.breed');
+    }
+
+    /**
+     * En memoire d'Olimpia.
+     *
+     * Le texte et les dates vivent en reglage : c'est l'eleveur qui parle, a
+     * la premiere personne, et il doit pouvoir reprendre ses propres mots sans
+     * demander une intervention. Le lien vers sa fille n'apparait que s'il a
+     * designe laquelle — on ne devine pas une filiation.
+     */
+    public function hommage()
+    {
+        $filleSlug = Setting::get('hommage.fille');
+
+        return view('pages.hommage', [
+            'texte' => Setting::get('hommage.texte'),
+            'dates' => Setting::get('hommage.dates'),
+            'fille' => $filleSlug ? Cat::where('slug', $filleSlug)->first() : null,
+        ]);
     }
 
     public function gallery()

@@ -384,8 +384,12 @@ if (sommaire) {
         const placer = () => {
             enAttente = false;
 
-            // La ligne de reference : juste sous le bandeau et le sommaire.
-            const ligne = (bandeau?.offsetHeight ?? 74) + sommaire.offsetHeight + 8;
+            /* La ligne de reference : juste sous ce qui surplombe la page.
+               En rail, le sommaire est sorti du flux et ne surplombe plus
+               rien — compter sa hauteur ferait allumer la section suivante
+               trois cents pixels trop tot. */
+            const enRail = getComputedStyle(sommaire).position === 'fixed';
+            const ligne = (bandeau?.offsetHeight ?? 74) + (enRail ? 24 : sommaire.offsetHeight + 8);
 
             let courante = sections[0];
             for (const s of sections) {

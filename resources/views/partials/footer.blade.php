@@ -33,6 +33,7 @@
                     <li><a href="{{ route('articles.index') }}">Articles</a></li>
                     <li><a href="{{ route('gallery') }}">Galerie</a></li>
                     <li><a href="{{ route('breed') }}">Le Maine Coon</a></li>
+                    <li><a href="{{ route('hommage') }}">En mémoire d'Olimpia</a></li>
                 </ul>
             </div>
 

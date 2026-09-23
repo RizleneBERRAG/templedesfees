@@ -207,6 +207,30 @@ Le fond de plan précédent venait des tuiles sombres de CARTO, qui réclament
 désormais une clé : la carte s'affichait barrée de « API KEY REQUIRED ».
 Leaflet a été retiré du projet à cette occasion (160 ko de moins).
 
+## En mémoire d'Olimpia
+
+Une page à elle seule, à `/olimpia`. Pas une fiche de chat parmi les autres,
+pas une vignette dans la galerie : elle n'est plus de l'élevage, elle en est
+l'origine, et un hommage ne se met pas en grille.
+
+Le texte est celui de l'éleveur, à la première personne. Il a été remis en
+phrases — la ponctuation, les accords — et rien d'autre : **on ne réécrit pas
+le deuil de quelqu'un.** Il vit en réglage (`hommage.texte`) pour qu'il puisse
+le reprendre quand il veut, depuis Le site › Réglages.
+
+Deux champs restent vides, et c'est voulu : `hommage.dates`, les deux années,
+et `hommage.fille`, l'identifiant de la chatte qu'il décrit comme « exactement
+la même ». Ni une date ni une filiation ne se devinent. Tant qu'ils sont vides,
+les blocs correspondants n'existent pas — pas d'encadré vide pour faire joli.
+
+On y arrive par un seul endroit visible : un bloc en fin de page « Nos chats »,
+et un lien au pied de page. Pas dans le menu — une page qui rend hommage n'est
+pas une rubrique commerciale.
+
+Le portrait se regénère avec `php scripts/portrait-olimpia.php <photo.jpg>` :
+recadrage en 7/10 pour l'arche, trois tailles, et un ré-encodage complet qui
+supprime les métadonnées EXIF du cliché.
+
 ## La réservation et l'acompte
 
 Une réservation **naît d'une décision de l'éleveuse**, après la visite : ce n'est

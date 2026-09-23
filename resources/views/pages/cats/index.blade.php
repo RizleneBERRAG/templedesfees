@@ -94,6 +94,23 @@
             </div>
         </div>
 
+        {{-- Olimpia. Elle n'est ni dans la grille des reproducteurs ni dans le
+             menu : elle n'est plus de l'élevage, elle en est l'origine. Un seul
+             bloc, en fin de page, qui ne crie pas. --}}
+        <a class="entree-hommage monte" href="{{ route('hommage') }}">
+            <span class="portrait">
+                <x-img src="images/hommage/olimpia.webp" alt="Olimpia" sizes="104px" />
+            </span>
+            <span class="dit">
+                <span class="rubrique">En mémoire</span>
+                <b>Olimpia</b>
+                <p>
+                    Elle a brillé sur les podiums, elle arrivait en courant à un seul mot,
+                    et elle a laissé une fille qui lui ressemble en tout. Son histoire est ici.
+                </p>
+            </span>
+        </a>
+
         <div class="btnrow monte" style="justify-content:center;margin-top:clamp(30px,4vw,44px)">
             <a class="btn" href="{{ route('kittens.index') }}">Voir les chatons</a>
             <a class="btn creux" href="{{ route('contact') }}">Venir nous voir</a>

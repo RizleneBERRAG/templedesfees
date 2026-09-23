@@ -27,6 +27,9 @@ class SitemapController extends Controller
         'adoption.create' => ['0.8', 'yearly'],
         'faq'             => ['0.7', 'yearly'],
         'contact'         => ['0.7', 'yearly'],
+        // Elle a sa place dans le plan du site : c'est une page qu'on cherche
+        // par son nom, et qu'on envoie en lien.
+        'hommage'         => ['0.5', 'yearly'],
         'legal'           => ['0.3', 'yearly'],
     ];
 

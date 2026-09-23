@@ -21,6 +21,15 @@ Route::get('/elevage/{cat}',           [CatController::class, 'show'])->name('ca
 
 Route::get('/le-maine-coon',               [PageController::class, 'breed'])->name('breed');
 
+/*
+ * L'hommage a Olimpia.
+ *
+ * Une page a elle seule, et pas une fiche de chat parmi les autres : elle
+ * n'est plus de l'elevage, elle en est l'origine. L'adresse est courte et se
+ * retient — c'est un lien qu'on envoie a quelqu'un.
+ */
+Route::get('/olimpia',                 [PageController::class, 'hommage'])->name('hommage');
+
 Route::get('/articles',                [ArticleController::class, 'index'])->name('articles.index');
 Route::get('/articles/{article}',      [ArticleController::class, 'show'])->name('articles.show');
 Route::get('/galerie',                 [PageController::class, 'gallery'])->name('gallery');

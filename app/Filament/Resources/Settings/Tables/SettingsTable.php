@@ -14,6 +14,7 @@ class SettingsTable
     /** Les groupes du seeder, dans l'ordre ou ils comptent. */
     private const GROUPES = [
         'legal'   => 'Mentions légales',
+        'hommage' => 'En mémoire d’Olimpia',
         'contact' => 'Contact',
         'elevage' => 'L’élevage',
         'general' => 'Général',

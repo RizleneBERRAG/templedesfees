@@ -150,6 +150,21 @@ class ElevageSeeder extends Seeder
              'valeur' => require database_path('seeders/data/acompte.php'), 'groupe' => 'legal'],
 
             /*
+             * En memoire d'Olimpia Maryliss Country.
+             *
+             * C'est la parole de l'eleveur, a la premiere personne : elle vit
+             * en reglage pour qu'il puisse la reprendre quand il veut. Les
+             * deux annees et le nom de sa fille restent vides — on ne devine
+             * ni une date ni une filiation.
+             */
+            ['cle' => 'hommage.texte', 'libelle' => 'En mémoire d’Olimpia — le texte',
+             'valeur' => require database_path('seeders/data/olimpia.php'), 'groupe' => 'hommage'],
+            ['cle' => 'hommage.dates', 'libelle' => 'En mémoire d’Olimpia — les années (par exemple « 2019 — 2024 »)',
+             'valeur' => null, 'groupe' => 'hommage'],
+            ['cle' => 'hommage.fille', 'libelle' => 'En mémoire d’Olimpia — l’identifiant de sa fille sur le site (son « slug »)',
+             'valeur' => null, 'groupe' => 'hommage'],
+
+            /*
              * Les clauses du contrat de reservation, meme principe. Le
              * document ecrit le reste tout seul a partir de la fiche.
              */

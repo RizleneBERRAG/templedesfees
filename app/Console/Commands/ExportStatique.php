@@ -105,7 +105,8 @@ class ExportStatique extends Command
     private function adresses(): array
     {
         $fixes = ['/', '/chatons', '/elevage', '/le-maine-coon', '/articles',
-                  '/galerie', '/questions', '/contact', '/adopter', '/mentions-legales'];
+                  '/galerie', '/questions', '/contact', '/adopter', '/mentions-legales',
+                  '/olimpia'];
 
         $fiches = collect()
             ->merge(Cat::all()->map(fn (Cat $c) => '/elevage/'.$c->slug))
