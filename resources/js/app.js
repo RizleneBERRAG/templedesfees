@@ -819,75 +819,97 @@ if (!('name' in document.createElement('details'))) {
         });
     });
 }
-/* ---------- la bannière d'Olimpia ----------
+/* ---------- le seuil : Olimpia, avant d'entrer ----------
 
-   Elle se présente une fois, à l'arrivée sur le site, et se retire d'un
-   geste. Retirée, elle ne revient plus : on ne redemande pas deux fois la
-   même attention à quelqu'un.
+   Un voile plein écran posé par-dessus le site à l'arrivée. On la regarde, on
+   lit deux phrases, on entre.
 
-   Le souvenir tient dans localStorage, qui peut manquer — navigation privée,
-   cookies bloqués, certains navigateurs d'entreprise. Toute lecture et toute
-   écriture sont donc protégées : au pire la bannière se represente, au pire
-   elle ne se montre jamais. Jamais une page qui casse. */
+   Deux mémoires, et pas une seule :
 
-const banniere = document.getElementById('banniere-olimpia');
+   - sessionStorage : refermé, il ne revient pas de la visite. C'est la règle
+     par défaut, et elle suffit dans l'immense majorité des cas.
+   - localStorage : la case « Ne plus afficher » cochée, il ne revient jamais.
 
-if (banniere) {
-    const CLEF = 'olimpia.banniere';
+   Les deux peuvent manquer — navigation privée, cookies bloqués, navigateur
+   d'entreprise. Chaque lecture et chaque écriture est donc protégée : au pire
+   le seuil se represente, jamais une page qui casse.
 
-    /* Une adresse en ?banniere=1 la fait paraitre tout de suite, sans tenir
-       compte de ce que le navigateur a retenu. C'est le lien qu'on envoie a
-       quelqu'un pour la lui montrer, et c'est ce qui permet de la revoir sans
-       aller vider le stockage a la main. */
-    const forcee = new URLSearchParams(window.location.search).has('banniere');
+   ?banniere=1 sur l'adresse le force, quelles que soient ces mémoires : c'est
+   le lien qu'on envoie pour le montrer à quelqu'un. */
 
-    const dejaVue = () => {
+const seuil = document.getElementById('seuil-olimpia');
+
+if (seuil) {
+    const CLEF = 'olimpia.seuil';
+
+    const forcer = new URLSearchParams(window.location.search).has('banniere');
+
+    const lu = (magasin) => {
         try {
-            return localStorage.getItem(CLEF) === 'retiree';
+            return window[magasin].getItem(CLEF) !== null;
         } catch {
             return false;
         }
     };
 
-    const retenir = () => {
+    const ecrire = (magasin) => {
         try {
-            localStorage.setItem(CLEF, 'retiree');
+            window[magasin].setItem(CLEF, 'vu');
         } catch {
-            /* tant pis : elle se representera à la prochaine visite */
+            /* tant pis : il se representera */
         }
     };
 
-    const retirer = () => {
-        banniere.classList.remove('vue');
-        retenir();
+    const jamais = seuil.querySelector('#seuil-olimpia-jamais');
+    let rendu = null;                       // à qui rendre le focus en sortant
 
-        // On attend la fin du glissement pour la sortir du document : la
-        // retirer tout de suite ferait disparaître l'animation avec elle.
-        window.setTimeout(() => { banniere.hidden = true; }, reduit() ? 0 : 800);
+    const refermer = () => {
+        seuil.classList.remove('ouvert');
+        document.documentElement.classList.remove('seuil-ouvert');
+
+        // Coché, il ne revient jamais ; sinon, il ne revient pas de la visite.
+        ecrire(jamais?.checked ? 'localStorage' : 'sessionStorage');
+
+        window.setTimeout(() => {
+            seuil.hidden = true;
+            rendu?.focus?.();
+        }, reduit() ? 0 : 650);
     };
 
-    if (forcee || !dejaVue()) {
-        /* Neuf dixièmes de seconde : le temps que la page se soit posée, sans
-           qu'on se demande s'il se passe quelque chose. Arriver en même temps
-           que le contenu ferait d'elle une pop-up de plus. */
+    const ouvrir = () => {
+        rendu = document.activeElement;
+
+        seuil.hidden = false;
+        document.documentElement.classList.add('seuil-ouvert');
+
+        /* Un souffle pour que le navigateur prenne l'état de départ avant
+           d'animer. Un délai plutôt qu'une image d'animation : dans un onglet
+           en arrière-plan, requestAnimationFrame ne se déclenche pas. */
         window.setTimeout(() => {
-            banniere.hidden = false;
-            /* Un souffle pour que le navigateur prenne l'état de départ avant
-               d'animer : sans cela, elle apparaît d'un coup, déjà en place.
-               Un délai plutôt qu'une image d'animation — dans un onglet en
-               arrière-plan, requestAnimationFrame ne se déclenche pas, et la
-               bannière resterait invisible en attendant qu'on revienne. */
-            window.setTimeout(() => banniere.classList.add('vue'), 40);
-        }, forcee ? 0 : 900);
+            seuil.classList.add('ouvert');
+            seuil.querySelector('.fermer')?.focus({ preventScroll: true });
+        }, 40);
+    };
+
+    if (forcer || !(lu('localStorage') || lu('sessionStorage'))) {
+        /* Tout de suite : un seuil qui arrive après coup n'est plus un seuil,
+           c'est une fenêtre qui surgit au milieu de la lecture. */
+        ouvrir();
     }
 
-    banniere.querySelector('.fermer')?.addEventListener('click', retirer);
+    seuil.querySelector('.fermer')?.addEventListener('click', refermer);
+    seuil.querySelector('.entrer')?.addEventListener('click', refermer);
 
-    // Cliquer sur la bannière, c'est l'avoir lue : elle a fait son travail et
-    // n'a plus de raison de revenir.
-    banniere.querySelector('.corps')?.addEventListener('click', retenir);
+    // Lire son histoire, c'est sortir aussi : on part sur sa page, le voile
+    // n'a plus rien à faire derrière.
+    seuil.querySelector('.lire')?.addEventListener('click', () => {
+        ecrire(jamais?.checked ? 'localStorage' : 'sessionStorage');
+    });
+
+    // Cliquer à côté de la feuille referme, comme partout ailleurs.
+    seuil.querySelector('.voile')?.addEventListener('click', refermer);
 
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && banniere.classList.contains('vue')) retirer();
+        if (e.key === 'Escape' && seuil.classList.contains('ouvert')) refermer();
     });
 }

@@ -254,12 +254,23 @@ bandeau, son nom posé dessus, et le seul geste proposé est de descendre. C'est
 le même cliché que dans l'arche plus bas, cadré autrement — serré sur la tête
 là-haut, entier en dessous. Une affiche, puis une planche.
 
-On y arrive par une **bannière** qui se présente une fois, à l'arrivée sur le
-site, et se retire d'un geste. Retirée, elle ne revient plus : le navigateur
-s'en souvient (`localStorage`, lu et écrit sous `try`, car il peut manquer).
-Ce n'est pas une fenêtre modale — rien n'est bloqué derrière. Elle ne paraît ni
-sur sa propre page, ni sur les pages de réservation : une famille en train de
-verser un acompte n'a pas à voir surgir autre chose.
+On y arrive par le **seuil** : un voile plein écran posé par-dessus le site à
+l'arrivée. On la regarde, on lit deux phrases, on entre. Trois sorties, aucune
+cachée — la croix, le bouton « Entrer sur le site », la touche Échap — plus le
+clic à côté de la feuille.
+
+Deux mémoires, et pas une seule. **`sessionStorage`** : refermé, il ne revient
+pas de la visite — c'est la règle par défaut. **`localStorage`** : la case
+« Ne plus afficher » cochée, il ne revient jamais. Les deux peuvent manquer
+(navigation privée, cookies bloqués), donc chaque lecture et chaque écriture
+est sous `try` : au pire le seuil se represente, jamais une page qui casse.
+
+`?banniere=1` sur n'importe quelle adresse le force, quelles que soient ces
+mémoires : c'est le lien qu'on envoie pour le montrer à quelqu'un.
+
+Il ne paraît ni sur sa propre page, ni sur les pages de réservation : une
+famille en train de verser un acompte n'a pas à voir surgir autre chose. Ses
+deux phrases vivent en réglage (`hommage.seuil`), comme le reste de sa parole.
 
 Et par deux liens permanents : un bloc en fin de page « Nos chats », et le pied
 de page. **Pas dans le menu** — la place y manquait pour une neuvième rubrique,

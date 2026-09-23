@@ -159,6 +159,8 @@ class ElevageSeeder extends Seeder
              */
             ['cle' => 'hommage.texte', 'libelle' => 'En mémoire d’Olimpia — le texte',
              'valeur' => require database_path('seeders/data/olimpia.php'), 'groupe' => 'hommage'],
+            ['cle' => 'hommage.seuil', 'libelle' => 'En mémoire d’Olimpia — les deux phrases affichées à l’arrivée sur le site',
+             'valeur' => require database_path('seeders/data/olimpia-seuil.php'), 'groupe' => 'hommage'],
             ['cle' => 'hommage.dates', 'libelle' => 'En mémoire d’Olimpia — les années (par exemple « 2019 — 2024 »)',
              'valeur' => null, 'groupe' => 'hommage'],
             ['cle' => 'hommage.fille', 'libelle' => 'En mémoire d’Olimpia — l’identifiant de sa fille sur le site (son « slug »)',

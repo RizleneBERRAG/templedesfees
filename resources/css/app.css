@@ -1868,103 +1868,165 @@ footer > *{position:relative}
 .texte-reglage p{margin:0;font-size:15px;line-height:1.76;color:var(--ivoire-3);max-width:68ch}
 .texte-reglage strong{font-weight:400;color:var(--ivoire)}
 
-/* ── la bannière d'Olimpia ───────────────────────────────────────── */
-/* Elle se présente une fois, à l'arrivée sur le site, et se retire d'un geste.
-   Ce n'est pas une fenêtre modale : rien n'est bloqué derrière, la page se lit
-   pendant qu'elle est là. Un hommage n'a pas à prendre le visiteur en otage.
+/* ── le seuil : Olimpia, avant d'entrer ──────────────────────────── */
+/* Un voile plein écran posé par-dessus le site à l'arrivée. On la regarde, on
+   lit deux phrases, on entre. Le fond du site reste visible derrière, très
+   assombri : on ne remplace pas le site, on s'arrête devant.
 
-   Elle se pose en bas, sur toute la largeur au-dessus de 720 px, et devient
-   une carte au-dessus du pouce sur un téléphone. */
+   Ce n'est pas la page d'Olimpia en réduction — c'est un seuil. Le portrait y
+   est plus petit, le texte plus court, et le seul verbe proposé est « entrer ». */
 
-.banniere-olimpia{position:fixed;z-index:70;
-  left:0;right:0;bottom:0;
-  display:flex;align-items:stretch;gap:0;
-  background:rgba(8,11,10,.965);
-  backdrop-filter:blur(18px) saturate(140%);
-  -webkit-backdrop-filter:blur(18px) saturate(140%);
-  border-top:1px solid var(--filet);
-  box-shadow:0 -20px 54px rgba(0,0,0,.6);
-  transform:translateY(100%);
-  transition:transform .75s var(--ease),opacity .5s var(--ease);
-  opacity:0}
+.seuil-olimpia{position:fixed;inset:0;z-index:95;
+  display:flex;align-items:center;justify-content:center;
+  padding:clamp(12px,2.6vw,36px);
+  opacity:0;transition:opacity .6s var(--ease)}
 
-.banniere-olimpia[hidden]{display:none}
-.banniere-olimpia.vue{transform:none;opacity:1}
+.seuil-olimpia[hidden]{display:none}
+.seuil-olimpia.ouvert{opacity:1}
 
-/* Un filet d'or en haut, plus marqué que la bordure : c'est ce qui la
-   rattache au reste de la maison. */
-.banniere-olimpia::before{content:"";position:absolute;inset:0 0 auto 0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--or-mat) 22%,var(--or) 50%,
-    var(--or-mat) 78%,transparent);
-  opacity:.72}
+.seuil-olimpia > .voile{position:absolute;inset:0;
+  background:rgba(4,6,5,.88);
+  backdrop-filter:blur(7px) saturate(120%);
+  -webkit-backdrop-filter:blur(7px) saturate(120%)}
 
-.banniere-olimpia .corps{flex:1;min-width:0;
-  display:flex;align-items:center;gap:clamp(14px,2vw,26px);
-  padding:clamp(12px,1.3vw,15px) clamp(16px,3vw,40px);
-  text-decoration:none;color:inherit}
+/* La feuille. Elle ne dépasse jamais l'écran : au-delà, c'est elle qui défile,
+   pas la page derrière — sinon on perd le site sous le voile. */
+.seuil-olimpia .feuille{position:relative;z-index:1;
+  width:min(100%,980px);max-height:100%;overflow-y:auto;overscroll-behavior:contain;
+  display:flex;flex-direction:column;
+  background:linear-gradient(170deg,var(--nuit-3),var(--nuit-2) 42%,var(--nuit));
+  border:1px solid var(--filet);border-radius:3px;
+  box-shadow:0 40px 120px -20px rgba(0,0,0,.92);
+  transform:translateY(14px) scale(.985);
+  transition:transform .7s var(--ease)}
 
-/* C'est le portrait qui fait la hauteur de la bannière. Au-delà d'une
-   soixantaine de pixels, elle cesse d'être une bannière et devient un encart
-   posé en travers de la page. */
-.banniere-olimpia .portrait{flex:none;display:block;
-  width:clamp(46px,3.8vw,56px);aspect-ratio:7/10;overflow:hidden;
-  border:1px solid var(--filet-2);
-  border-radius:44% 44% 2px 2px / 22% 22% 2px 2px}
-.banniere-olimpia .portrait img{width:100%;height:100%;object-fit:cover}
+.seuil-olimpia.ouvert .feuille{transform:none}
 
-.banniere-olimpia .dit{min-width:0;display:block}
-.banniere-olimpia .rubrique{display:block;margin-bottom:3px;font-size:9.5px}
+/* Un filet d'or en haut de la feuille, comme sur les documents. */
+.seuil-olimpia .feuille::before{content:"";position:absolute;inset:0 0 auto 0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--or-mat) 20%,var(--or) 50%,
+    var(--or-mat) 80%,transparent);opacity:.8}
 
-.banniere-olimpia b{display:block;font-family:var(--titre);font-weight:300;
-  font-size:clamp(21px,2.1vw,27px);line-height:1.1;letter-spacing:.02em;
+/* ── l'en-tête ───────────────────────────────────────────────────── */
+
+.seuil-olimpia .entete{flex:none;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:clamp(12px,1.6vw,18px) clamp(14px,2.2vw,26px);
+  border-bottom:1px solid var(--filet-2)}
+
+.seuil-olimpia .maison{display:inline-flex;align-items:center;gap:11px;min-width:0}
+.seuil-olimpia .maison img{width:32px;height:32px;flex:none;object-fit:contain;opacity:.92}
+.seuil-olimpia .maison b{font-family:var(--pierre);font-weight:500;font-size:11px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--ivoire-2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.seuil-olimpia .fermer{flex:none;
+  display:inline-flex;align-items:center;justify-content:center;
+  width:40px;height:40px;border:1px solid var(--filet-2);border-radius:50%;
+  background:none;color:var(--ivoire-dim);cursor:pointer;
+  transition:color .3s var(--ease),border-color .3s var(--ease),
+    background .3s var(--ease)}
+.seuil-olimpia .fermer:hover{color:var(--ivoire);border-color:var(--filet);
+  background:var(--voile-beige)}
+.seuil-olimpia .fermer svg{width:16px;height:16px}
+
+/* ── le corps ────────────────────────────────────────────────────── */
+
+.seuil-olimpia .corps{display:grid;gap:clamp(20px,3vw,44px);align-items:center;
+  grid-template-columns:minmax(0,.74fr) minmax(0,1fr);
+  padding:clamp(22px,3.2vw,44px) clamp(18px,3vw,44px)}
+
+.seuil-olimpia .portrait{min-width:0}
+.seuil-olimpia .portrait .arche{--format:7/10;max-width:270px;margin-inline:auto;
+  box-shadow:0 30px 80px -30px rgba(0,0,0,.9)}
+
+.seuil-olimpia .dit{min-width:0}
+.seuil-olimpia .dit > .rubrique{margin-bottom:9px}
+
+.seuil-olimpia .nom{margin:0;font-family:var(--titre);font-weight:300;
+  font-size:clamp(42px,5.4vw,70px);line-height:1;letter-spacing:.01em;
   color:var(--ivoire)}
 
-.banniere-olimpia .phrase{display:block;margin-top:4px;max-width:62ch;
-  font-size:14.5px;line-height:1.55;color:var(--ivoire-3)}
+.seuil-olimpia .complet{margin:20px 0 0;
+  font-family:var(--corps);font-weight:400;font-size:11.5px;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--or-tendre)}
 
-.banniere-olimpia .lien{flex:none;margin-left:auto;
-  display:inline-flex;align-items:center;gap:9px;white-space:nowrap;
-  padding:11px 20px;border:1px solid var(--filet);border-radius:2px;
-  font-family:var(--corps);font-weight:300;font-size:10.5px;
-  letter-spacing:.22em;text-transform:uppercase;color:var(--or-tendre);
-  transition:border-color .35s var(--ease),color .35s var(--ease),
-    background .35s var(--ease)}
-.banniere-olimpia .lien svg{width:14px;height:14px;
-  transition:transform .35s var(--ease)}
+.seuil-olimpia .mots{margin-top:clamp(16px,2vw,24px)}
+.seuil-olimpia .mots p{margin:0 0 11px;max-width:46ch;
+  font-size:clamp(16px,1.15vw,17.5px);line-height:1.7;color:var(--ivoire-2)}
+.seuil-olimpia .mots p:last-child{margin-bottom:0}
 
-.banniere-olimpia .corps:hover .lien{border-color:var(--or);color:var(--or-clair);
-  background:rgba(217,178,106,.08)}
-.banniere-olimpia .corps:hover .lien svg{transform:translateX(3px)}
+.seuil-olimpia .dates{margin:clamp(16px,2vw,22px) 0 0;
+  font-family:var(--corps);font-weight:300;font-size:12.5px;
+  letter-spacing:.18em;color:var(--ivoire-dim)}
 
-/* La croix. Elle est hors du lien : on doit pouvoir refuser sans risquer
-   d'ouvrir ce qu'on refuse. */
-.banniere-olimpia .fermer{flex:none;align-self:stretch;
-  display:flex;align-items:center;justify-content:center;
-  width:clamp(46px,4vw,58px);
-  border:0;border-left:1px solid var(--filet-2);background:none;
-  color:var(--ivoire-dim);cursor:pointer;
-  transition:color .3s var(--ease),background .3s var(--ease)}
-.banniere-olimpia .fermer:hover{color:var(--ivoire);background:var(--voile-beige)}
-.banniere-olimpia .fermer svg{width:16px;height:16px}
+/* ── le pied ─────────────────────────────────────────────────────── */
 
-@media (max-width:860px){
-  .banniere-olimpia .phrase{display:none}
+.seuil-olimpia .pied{flex:none;
+  display:grid;gap:14px;justify-items:center;
+  padding:clamp(18px,2.4vw,26px) clamp(18px,3vw,44px) clamp(20px,2.8vw,30px);
+  border-top:1px solid var(--filet-2)}
+
+.seuil-olimpia .entrer{width:100%;max-width:520px;justify-content:center;gap:11px;
+  display:inline-flex;align-items:center;cursor:pointer}
+.seuil-olimpia .entrer svg{width:15px;height:15px;transition:transform .35s var(--ease)}
+.seuil-olimpia .entrer:hover svg{transform:translateX(3px)}
+
+.seuil-olimpia .lire{font-family:var(--corps);font-weight:300;font-size:12px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--or-tendre);
+  padding-bottom:3px;border-bottom:1px solid var(--filet-2);
+  transition:color .3s var(--ease),border-color .3s var(--ease)}
+.seuil-olimpia .lire:hover{color:var(--or-clair);border-color:var(--or-mat)}
+
+/* La case. Elle est discrète mais lisible : on ne cache pas la sortie
+   définitive derrière un gris illisible. */
+.seuil-olimpia .plus{display:inline-flex;align-items:center;gap:9px;
+  margin-top:2px;cursor:pointer;
+  font-family:var(--corps);font-weight:300;font-size:12.5px;
+  color:var(--ivoire-dim);transition:color .3s var(--ease)}
+.seuil-olimpia .plus:hover{color:var(--ivoire-3)}
+.seuil-olimpia .plus input{width:15px;height:15px;accent-color:var(--or-mat);cursor:pointer}
+
+/* ── au petit écran ──────────────────────────────────────────────── */
+
+@media (max-width:880px){
+  .seuil-olimpia{padding:0}
+  .seuil-olimpia .feuille{width:100%;height:100%;max-height:none;
+    border:0;border-radius:0}
+  .seuil-olimpia .corps{grid-template-columns:1fr;text-align:center;
+    align-content:start}
+  .seuil-olimpia .portrait .arche{max-width:min(46vw,186px)}
+  .seuil-olimpia .mots p{text-align:left;margin-inline:auto}
+
+  /* Le pied reste au bas de la feuille pendant que le reste défile : sur un
+     téléphone court, le bouton se retrouvait sous la ligne de flottaison et
+     rien ne disait qu'il fallait descendre pour entrer. */
+  .seuil-olimpia .pied{position:sticky;bottom:0;
+    background:linear-gradient(180deg,rgba(13,17,14,.92),var(--nuit-2) 38%);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  .seuil-olimpia .nom .sous-pinceau{padding-inline:.08em}
 }
 
-@media (max-width:720px){
-  .banniere-olimpia{left:clamp(10px,3vw,16px);right:clamp(10px,3vw,16px);
-    bottom:clamp(10px,3vw,16px);
-    border:1px solid var(--filet);border-radius:3px;
-    box-shadow:0 22px 60px rgba(0,0,0,.66)}
-  .banniere-olimpia::before{left:1px;right:1px}
-  .banniere-olimpia .corps{flex-wrap:wrap;gap:14px;padding:16px}
-  .banniere-olimpia .lien{margin-left:0;width:100%;justify-content:center}
-  .banniere-olimpia .fermer{align-self:flex-start;
-    width:44px;height:44px;border-left:0}
+/* Sur un téléphone court, ce sont ses deux phrases qui passaient sous la
+   ligne de flottaison — or c'est pour elles qu'on s'arrête. Le portrait cède
+   la place : il est déjà en entier sur sa page. */
+@media (max-width:880px) and (max-height:780px){
+  .seuil-olimpia .corps{padding-block:clamp(14px,2.2vh,22px);gap:clamp(12px,2vh,18px)}
+  .seuil-olimpia .portrait .arche{max-width:min(34vw,136px)}
+  .seuil-olimpia .nom{font-size:clamp(32px,8.4vw,44px)}
+  .seuil-olimpia .complet{margin-top:12px;font-size:10.5px;letter-spacing:.2em}
+  .seuil-olimpia .mots{margin-top:14px}
+  .seuil-olimpia .mots p{margin-bottom:9px;font-size:15px;line-height:1.6}
+  .seuil-olimpia .pied{gap:10px;padding-block:14px 16px}
 }
+
+/* Tant que le seuil est là, la page ne défile pas derrière : le voile est
+   plein écran, et un fond qui bouge sous un texte qu'on lit donne le tournis. */
+html.seuil-ouvert,html.seuil-ouvert body{overflow:hidden}
 
 @media (prefers-reduced-motion:reduce){
-  .banniere-olimpia{transition:opacity .3s linear;transform:none}
+  .seuil-olimpia,.seuil-olimpia .feuille{transition:opacity .3s linear}
+  .seuil-olimpia .feuille{transform:none}
 }
 
 /* ── Olimpia : le premier écran ──────────────────────────────────── */

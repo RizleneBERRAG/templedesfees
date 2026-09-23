@@ -69,38 +69,53 @@ class HommageTest extends TestCase
             ->assertSee($fille->nom);
     }
 
-    /* ── la bannière ─────────────────────────────────────────────── */
+    /* ── le seuil ────────────────────────────────────────────────── */
 
     /**
-     * Elle se presente une fois, a l'arrivee sur le site, et se retire d'un
-     * geste. Le souvenir du retrait vit dans le navigateur ; ce qui se teste
-     * ici, c'est ou elle a le droit de paraitre.
+     * Le voile qui se pose par-dessus le site a l'arrivee. Le souvenir de sa
+     * fermeture vit dans le navigateur ; ce qui se teste ici, c'est ou il a le
+     * droit de paraitre, et qu'il propose bien les trois sorties.
      */
-    public function test_la_banniere_parait_sur_le_site(): void
+    public function test_le_seuil_parait_sur_le_site(): void
     {
         $this->seed();
 
         $this->get(route('home'))
             ->assertOk()
-            ->assertSee('banniere-olimpia', escape: false)
-            ->assertSee('Retirer cette bannière');
+            ->assertSee('seuil-olimpia', escape: false)
+            ->assertSee('Entrer sur le site')
+            ->assertSee('Ne plus afficher')
+            ->assertSee('Fermer et entrer sur le site');
+    }
+
+    /** Ses deux phrases viennent d'un reglage, comme le reste de sa parole. */
+    public function test_le_texte_du_seuil_se_modifie_depuis_les_reglages(): void
+    {
+        $this->seed();
+
+        Setting::where('cle', 'hommage.seuil')->firstOrFail()
+            ->update(['valeur' => 'Deux mots, et rien de plus.']);
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee('Deux mots, et rien de plus.');
     }
 
     /** On n'annonce pas a quelqu'un ce qu'il est deja en train de lire. */
-    public function test_la_banniere_ne_parait_pas_sur_sa_propre_page(): void
+    public function test_le_seuil_ne_parait_pas_sur_sa_propre_page(): void
     {
         $this->seed();
 
         $this->get(route('hommage'))
             ->assertOk()
-            ->assertDontSee('banniere-olimpia', escape: false);
+            ->assertDontSee('seuil-olimpia', escape: false);
     }
 
     /**
      * Une famille en train de verser un acompte n'a pas a voir surgir autre
      * chose. C'est la seule page du site ou l'on demande de l'argent.
      */
-    public function test_la_banniere_ne_parait_pas_pendant_un_paiement(): void
+    public function test_le_seuil_ne_parait_pas_pendant_un_paiement(): void
     {
         $this->seed();
 
@@ -117,7 +132,7 @@ class HommageTest extends TestCase
 
         $this->get($reservation->lienPublic())
             ->assertOk()
-            ->assertDontSee('banniere-olimpia', escape: false);
+            ->assertDontSee('seuil-olimpia', escape: false);
     }
 
     /** Elle a une entree depuis la page des chats, et une seule. */
