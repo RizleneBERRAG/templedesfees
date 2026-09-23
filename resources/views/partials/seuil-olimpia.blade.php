@@ -2,19 +2,19 @@
     Le seuil : Olimpia, avant d'entrer.
 
     Un voile plein écran posé par-dessus le site à l'arrivée. On la regarde, on
-    lit deux phrases, et on entre. Rien d'autre n'est demandé.
+    lit deux phrases, et on entre.
 
-    La composition est centrée et tout en courbes : un médaillon ovale plutôt
-    qu'une arche, son nom en italique, une trace dorée dessous. L'arche et le
-    filet droit faisaient temple — c'était juste pour sa page, trop sévère pour
-    un seuil qu'on traverse.
+    TROIS FORMES, le temps de choisir :
 
-    Trois façons d'en sortir, et c'est voulu : la croix, le bouton « Entrer sur
-    le site », et la touche Échap. Aucune n'est cachée, aucune ne piège.
+        ?seuil=a   le faire-part   — une carte d'ivoire posée sur la nuit
+        ?seuil=b   le plein cadre  — sa photo prend tout l'écran, rien autour
+        ?seuil=c   le médaillon    — le panneau sombre, ovale doré (en place)
 
-    « Ne plus afficher » est une case, pas un réglage enfoui : cochée, elle ne
-    se représente jamais ; laissée vide, elle ne revient pas non plus avant la
-    prochaine visite.
+    Le jour du choix, les deux perdantes disparaissent avec ce commutateur : il
+    n'y a aucune raison de garder trois chemins pour un seul seuil.
+
+    Trois façons d'en sortir dans tous les cas, et c'est voulu : la croix, le
+    bouton « Entrer sur le site », et la touche Échap. Aucune n'est cachée.
 
     Elle ne paraît ni sur la page d'Olimpia — on n'annonce pas à quelqu'un ce
     qu'il est déjà en train de lire — ni sur les pages de réservation : une
@@ -25,19 +25,31 @@
 
     $seuilTexte = Setting::get('hommage.seuil');
     $seuilDates = Setting::get('hommage.dates');
+
+    $forme = in_array(request('seuil'), ['a', 'b', 'c'], true) ? request('seuil') : 'c';
 @endphp
 
 @unless(request()->routeIs('hommage') || request()->routeIs('reservation.*'))
-    <div class="seuil-olimpia" id="seuil-olimpia" hidden
+    <div class="seuil-olimpia seuil--{{ $forme }}" id="seuil-olimpia" hidden
          role="dialog" aria-modal="true" aria-labelledby="seuil-olimpia-nom">
 
-        <div class="voile" aria-hidden="true"></div>
+        @if($forme === 'b')
+            {{-- ═══ B — le plein cadre ═══
+                 Sa photo occupe tout l'écran. Pas de carte, pas de cadre : on
+                 ne pose pas un objet par-dessus le site, on le remplace le
+                 temps d'un regard. --}}
+            <x-img class="fond" src="images/hommage/olimpia.webp" alt=""
+                   sizes="100vw" :urgent="true" />
+            <span class="fondu" aria-hidden="true"></span>
+        @else
+            <div class="voile" aria-hidden="true"></div>
+        @endif
 
         <div class="feuille">
 
-            {{-- La lueur chaude derrière le médaillon. C'est elle qui réchauffe
-                 tout le panneau : sans elle, le fond reste une nuit froide. --}}
-            <span class="lueur" aria-hidden="true"></span>
+            @if($forme === 'c')
+                <span class="lueur" aria-hidden="true"></span>
+            @endif
 
             <span class="maison">
                 @if(file_exists(public_path('images/blason-192.png')))
@@ -55,14 +67,24 @@
 
             <div class="dedans">
 
-                {{-- Le médaillon. Un ovale, et une bordure faite d'un dégradé
-                     d'or plutôt que d'un trait : une dorure a des reflets, un
-                     filet n'en a pas. --}}
-                <span class="medaillon">
-                    <x-img src="images/hommage/olimpia.webp"
-                           alt="Olimpia Maryliss Country, femelle Maine Coon blanche"
-                           sizes="240px" :urgent="true" />
-                </span>
+                @if($forme === 'a')
+                    {{-- ═══ A — le faire-part ═══
+                         Une carte d'ivoire, encre sombre, un filet d'or : ce
+                         qu'on garde dans un tiroir. Le site est nuit partout —
+                         une carte claire posée dessus se lit comme un objet,
+                         pas comme une fenêtre de plus. --}}
+                    <span class="photo">
+                        <x-img src="images/hommage/olimpia.webp"
+                               alt="Olimpia Maryliss Country, femelle Maine Coon blanche"
+                               sizes="(max-width:700px) 92vw, 460px" :urgent="true" />
+                    </span>
+                @elseif($forme === 'c')
+                    <span class="medaillon">
+                        <x-img src="images/hommage/olimpia.webp"
+                               alt="Olimpia Maryliss Country, femelle Maine Coon blanche"
+                               sizes="240px" :urgent="true" />
+                    </span>
+                @endif
 
                 <span class="rubrique">En mémoire</span>
 
