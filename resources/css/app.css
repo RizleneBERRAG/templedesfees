@@ -20,32 +20,34 @@
 :root{
   /* la nuit — un souffle de chaud dans les deux fonds secondaires, le
      noir de fond restant neutre pour que la dorure porte */
-  --nuit:#080B0A; --nuit-2:#0B0F0C; --nuit-3:#0E1A15;
+  --nuit:#080B0A; --nuit-2:#0D110E; --nuit-3:#121E18;
   --emeraude:#14302A; --emeraude-2:#1B3F36; --emeraude-3:#24564A;
 
   /* la dorure */
   --or-pale:#FBF3DD; --or-clair:#F6E7BF; --or:#D9B26A; --or-mat:#A8813F; --or-ombre:#6B4F22;
   /* Le ton des petites capitales : le bronze --or-mat les enfonçait dans le
-     fond, l'or plein criait. Celui-ci se voit sans dominer. */
-  --or-tendre:#C4A36B;
+     fond. Celui-ci est franchement doré — c'est ce qui a été demandé — tout
+     en restant sous l'or plein des filets et des boutons. */
+  --or-tendre:#D9B87E;
   --dorure:linear-gradient(180deg,#FBF3DD 0%,#E5C88C 44%,#B48F48 100%);
   --dorure-filet:linear-gradient(180deg,rgba(217,178,106,.55),rgba(217,178,106,.14));
 
   /* le beige — la chaleur de parchemin, posée en voile et jamais en aplat */
   --beige:#D8C9A8; --beige-2:#BFAE8B;
-  --voile-beige:rgba(216,201,168,.05);
+  --voile-beige:rgba(216,201,168,.085);
 
-  /* l'encre, réchauffée d'un cran : même lisibilité, moins de gris */
-  --ivoire:#F7F1E3; --ivoire-2:#D8CDB4; --ivoire-3:#B4A98F; --ivoire-dim:#998D75;
+  /* l'encre, réchauffée : même lisibilité, moins de gris */
+  --ivoire:#F7F1E3; --ivoire-2:#E0D5BA; --ivoire-3:#BEB296; --ivoire-dim:#A4977D;
 
   /* les verdicts */
   --sain:#A9C79A; --sain-2:#7FA06F; --attente:#E0BB78; --alerte:#C9755A;
 
-  /* les filets, un cran plus présents — c'est la dorure la plus visible
-     du site, elle court le long de chaque cadre */
-  --filet:rgba(217,178,106,.27);
-  --filet-2:rgba(217,178,106,.155);
-  --filet-3:rgba(216,201,168,.11);
+  /* les filets — la dorure la plus visible du site : elle court le long de
+     chaque cadre, de chaque arche, de chaque registre. C'est en les montant
+     qu'on dore une page sans jamais poser d'aplat. */
+  --filet:rgba(217,178,106,.34);
+  --filet-2:rgba(217,178,106,.2);
+  --filet-3:rgba(216,201,168,.14);
 
   /* La mesure de page respire avec l'ecran au lieu de se figer : sur un grand
      moniteur, un bloc de 1240 px centre dans 2560 fait ilot. Les colonnes de
@@ -59,23 +61,26 @@
 }
 
 /* ── le dosage de la chaleur ──────────────────────────── */
-/* Le reglage ci-dessus est le dosage discret : c'est celui du site. Un cran
-   plus loin est prevu ici, au cas ou l'eleveur en voudrait davantage — un
-   seul attribut sur <html> fait passer de l'un a l'autre, sans qu'aucune
-   regle de la feuille n'ait a changer.
+/* Le reglage ci-dessus est celui du site : la dorure y est montee d'un cran,
+   comme demande. Le reglage precedent, plus sobre, est garde ici au cas ou il
+   faudrait revenir en arriere — un seul attribut sur <html> fait passer de
+   l'un a l'autre, sans qu'aucune regle de la feuille n'ait a changer.
 
-     document.documentElement.dataset.chaleur = 'plus';
+     document.documentElement.dataset.chaleur = 'doux';
 
-   Tant qu'il n'est pas pose, rien ne s'applique. */
-html[data-chaleur="plus"]{
-  --nuit-2:#0D110E; --nuit-3:#121E18;
-  --or-tendre:#D3B179;
-  --ivoire-2:#E0D5BA; --ivoire-3:#BEB296; --ivoire-dim:#A4977D;
-  --voile-beige:rgba(216,201,168,.085);
-  --filet:rgba(217,178,106,.34);
-  --filet-2:rgba(217,178,106,.2);
-  --filet-3:rgba(216,201,168,.15);
+   Tant qu'il n'est pas pose, c'est la version doree qui s'applique. */
+html[data-chaleur="doux"]{
+  --nuit-2:#0B0F0C; --nuit-3:#0E1A15;
+  --or-tendre:#C4A36B;
+  --ivoire-2:#D8CDB4; --ivoire-3:#B4A98F; --ivoire-dim:#998D75;
+  --voile-beige:rgba(216,201,168,.05);
+  --filet:rgba(217,178,106,.27);
+  --filet-2:rgba(217,178,106,.155);
+  --filet-3:rgba(216,201,168,.11);
 }
+html[data-chaleur="doux"] .bande.creuse::after,
+html[data-chaleur="doux"] .vue::before,
+html[data-chaleur="doux"] .vue::after{display:none}
 
 /* ── base ────────────────────────────────────────────────────────── */
 *{box-sizing:border-box}
@@ -121,14 +126,40 @@ em{font-style:italic}
   border-block:1px solid var(--filet)}
 .bande.foret{background:radial-gradient(120% 80% at 50% 0%,var(--emeraude) 0%,var(--nuit-3) 46%,var(--nuit) 82%)}
 
+/* ── les tracés dorés ────────────────────────────────────────────── */
+/* Deux ornements, pas davantage : un site doré partout n'est plus doré, il
+   est jaune. Ils ne se posent que là où il y a déjà une bordure — le haut
+   d'une bande creuse, le cadre d'une photo — pour souligner un trait qui
+   existe plutôt que d'en ajouter un. */
+
+/* Le peigne : une file de petits traits d'or le long du filet supérieur
+   d'une bande creuse, éteinte à ses deux bouts. Une seule bande sur deux
+   la porte, donc elle ponctue la page au lieu de la cadrer. */
+.bande.creuse::after{content:"";position:absolute;inset:0 0 auto 0;height:7px;
+  pointer-events:none;z-index:1;
+  background:repeating-linear-gradient(90deg,
+    rgba(217,178,106,.72) 0 2px, transparent 2px 16px);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent)}
+
+/* Les équerres : deux angles d'or en diagonale sur une photo. Deux et non
+   quatre — l'encadrement complet appartient au registre, qui est un
+   document ; une photo, elle, se pose. */
+.vue::before,.vue::after{content:"";position:absolute;width:22px;height:22px;
+  z-index:3;pointer-events:none;opacity:.85}
+.vue::before{left:9px;top:9px;
+  border-left:1px solid var(--or);border-top:1px solid var(--or)}
+.vue::after{right:9px;bottom:9px;
+  border-right:1px solid var(--or);border-bottom:1px solid var(--or)}
+
 /* ── rubrique et frises ──────────────────────────────────────────── */
 .rubrique{display:block;font-size:10.5px;font-weight:400;letter-spacing:.42em;
   text-transform:uppercase;color:var(--or-tendre)}
 
 .frise{display:flex;align-items:center;justify-content:center;gap:clamp(10px,2vw,22px)}
 .frise::before,.frise::after{content:"";height:1px;flex:1;max-width:340px;
-  background:linear-gradient(90deg,transparent,rgba(217,178,106,.5))}
-.frise::after{background:linear-gradient(90deg,rgba(217,178,106,.5),transparent)}
+  background:linear-gradient(90deg,transparent,rgba(217,178,106,.66))}
+.frise::after{background:linear-gradient(90deg,rgba(217,178,106,.66),transparent)}
 .frise svg{flex:none;color:var(--or)}
 
 /* ── titre de chapitre ───────────────────────────────────────────── */
@@ -241,11 +272,11 @@ em{font-style:italic}
 /* Le format unique de tous les cadres. Les photos sont recadrees a l'identique
    (voir le script de recadrage) : cadre et photo ont donc exactement le meme
    rapport, et rien n'est jamais rogne ni deforme. */
-.arche{--format:7/10;aspect-ratio:var(--format);position:relative;padding:9px;border:1px solid rgba(217,178,106,.55);
+.arche{--format:7/10;aspect-ratio:var(--format);position:relative;padding:9px;border:1px solid rgba(217,178,106,.68);
   border-radius:50% 50% 4px 4px / 35% 35% 4px 4px;
-  background:linear-gradient(180deg,rgba(217,178,106,.14),rgba(217,178,106,.02) 60%)}
+  background:linear-gradient(180deg,rgba(217,178,106,.18),rgba(217,178,106,.03) 60%)}
 .arche > i{display:block;width:100%;height:100%;padding:5px;
-  border:1px solid rgba(242,223,174,.38);
+  border:1px solid rgba(242,223,174,.46);
   border-radius:50% 50% 3px 3px / 35% 35% 3px 3px}
 .arche > i > u{display:block;width:100%;height:100%;overflow:hidden;background:var(--nuit-3);
   border-radius:50% 50% 2px 2px / 35% 35% 2px 2px;box-shadow:0 40px 120px rgba(0,0,0,.7)}
@@ -338,7 +369,7 @@ em{font-style:italic}
 /* Les équerres d'angle sont quatre <span> plutôt qu'un cadre unique :
    un border-image suffirait mais ne laisse pas régler chaque angle, et
    le coin doit mordre d'un pixel sur le filet pour paraître posé dessus. */
-.registre{position:relative;border:1px solid rgba(217,178,106,.38);
+.registre{position:relative;border:1px solid rgba(217,178,106,.46);
   background:
     linear-gradient(180deg,rgba(216,201,168,.035),transparent 38%),
     rgba(9,13,11,.58);
@@ -566,7 +597,7 @@ footer{view-transition-name:pied}
   background:var(--filet-2);border:1px solid var(--filet-2)}
 .cellule{background:var(--nuit-2);padding:clamp(22px,3vw,30px) clamp(20px,2.4vw,26px);
   display:flex;flex-direction:column;gap:11px}
-.cellule .n{font-family:var(--pierre);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--or-mat)}
+.cellule .n{font-family:var(--pierre);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--or-tendre)}
 .cellule h3{font-size:clamp(1.25rem,1.9vw,1.5rem);color:var(--ivoire)}
 .cellule p{font-size:14.5px;line-height:1.7;color:var(--ivoire-3)}
 
