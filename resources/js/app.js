@@ -835,6 +835,12 @@ const banniere = document.getElementById('banniere-olimpia');
 if (banniere) {
     const CLEF = 'olimpia.banniere';
 
+    /* Une adresse en ?banniere=1 la fait paraitre tout de suite, sans tenir
+       compte de ce que le navigateur a retenu. C'est le lien qu'on envoie a
+       quelqu'un pour la lui montrer, et c'est ce qui permet de la revoir sans
+       aller vider le stockage a la main. */
+    const forcee = new URLSearchParams(window.location.search).has('banniere');
+
     const dejaVue = () => {
         try {
             return localStorage.getItem(CLEF) === 'retiree';
@@ -860,7 +866,7 @@ if (banniere) {
         window.setTimeout(() => { banniere.hidden = true; }, reduit() ? 0 : 800);
     };
 
-    if (!dejaVue()) {
+    if (forcee || !dejaVue()) {
         /* Neuf dixièmes de seconde : le temps que la page se soit posée, sans
            qu'on se demande s'il se passe quelque chose. Arriver en même temps
            que le contenu ferait d'elle une pop-up de plus. */
@@ -872,7 +878,7 @@ if (banniere) {
                arrière-plan, requestAnimationFrame ne se déclenche pas, et la
                bannière resterait invisible en attendant qu'on revienne. */
             window.setTimeout(() => banniere.classList.add('vue'), 40);
-        }, 900);
+        }, forcee ? 0 : 900);
     }
 
     banniere.querySelector('.fermer')?.addEventListener('click', retirer);
