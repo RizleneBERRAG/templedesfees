@@ -787,3 +787,24 @@ document.querySelectorAll('[data-livre]').forEach((bloc) => {
     etroit.addEventListener('change', relire);
     window.addEventListener('resize', relire);
 });
+
+/* ---------- les questions, une à la fois ----------
+
+   L'attribut name sur <details> rend un groupe exclusif : le navigateur
+   referme la question précédente tout seul. Les versions antérieures à
+   Chrome 120, Safari 17.2 et Firefox 130 l'ignorent — pour elles, et pour
+   elles seules, on refait le travail à la main. */
+if (!('name' in document.createElement('details'))) {
+    document.querySelectorAll('.questions').forEach((groupe) => {
+        const volets = [...groupe.querySelectorAll('details')];
+
+        volets.forEach((volet) => {
+            volet.addEventListener('toggle', () => {
+                if (!volet.open) return;
+                volets.forEach((autre) => {
+                    if (autre !== volet) autre.open = false;
+                });
+            });
+        });
+    });
+}

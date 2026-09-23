@@ -41,9 +41,13 @@
 
         <div class="duo-texte haut colonne-aside monte">
             <div>
+                {{-- L'attribut name rend le groupe exclusif : ouvrir une
+                     question referme la precedente, sans une ligne de script.
+                     Un repli de secours existe dans app.js pour les
+                     navigateurs qui ne connaissent pas encore ce comportement. --}}
                 <div class="questions">
                     @foreach($faqs as $faq)
-                        <details @if($loop->first) open @endif>
+                        <details name="questions" @if($loop->first) open @endif>
                             <summary>{{ $faq->question }}</summary>
                             <div class="reponse">{!! $faq->reponse !!}</div>
                         </details>
