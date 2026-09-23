@@ -3,11 +3,13 @@
 namespace App\Filament\Widgets;
 
 use App\Enums\HealthTestType;
+use App\Enums\ReservationStatus;
 use App\Models\AdoptionRequest;
 use App\Models\Cat;
 use App\Models\ContactMessage;
 use App\Models\HealthTest;
 use App\Models\Kitten;
+use App\Models\Reservation;
 use App\Models\Review;
 use App\Models\Setting;
 use Filament\Widgets\Widget;
@@ -47,6 +49,7 @@ class CeQuiAttend extends Widget
     {
         return collect([
             $this->chatonsEnBrouillon(),
+            $this->reservationsEnAttente(),
             $this->demandesNouvelles(),
             $this->messagesNonTraites(),
             $this->avisEnAttente(),
@@ -88,6 +91,36 @@ class CeQuiAttend extends Widget
             'nombre' => $chatons->count(),
             'url'    => route('filament.admin.resources.kittens.index'),
             'ton'    => 'attention',
+        ];
+    }
+
+
+    /**
+     * Les reservations dont l'acompte n'est pas arrive.
+     *
+     * Celles dont le delai est passe sont signalees a part : le menage du
+     * matin les libere, mais entre-temps l'eleveuse doit savoir qu'une
+     * famille n'a pas donne suite — c'est un coup de telephone a passer, pas
+     * une ligne a laisser filer.
+     */
+    private function reservationsEnAttente(): ?array
+    {
+        $attente = Reservation::where('statut', ReservationStatus::EnAttente)->with('kitten')->get();
+
+        if ($attente->isEmpty()) {
+            return null;
+        }
+
+        $perimees = $attente->filter->estPerimee();
+
+        return [
+            'titre'  => $attente->count() > 1 ? 'Acomptes en attente' : 'Acompte en attente',
+            'detail' => $perimees->isNotEmpty()
+                ? $perimees->count().' a dépassé le délai — '.$perimees->pluck('kitten.nom')->filter()->implode(', ').'. Le chaton sera remis en vente demain matin.'
+                : 'Le lien de paiement est parti, l’acompte n’est pas encore arrivé. Le chaton reste proposable en attendant.',
+            'nombre' => $attente->count(),
+            'url'    => route('filament.admin.resources.reservations.index'),
+            'ton'    => $perimees->isNotEmpty() ? 'urgent' : 'attention',
         ];
     }
 

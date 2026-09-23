@@ -207,6 +207,65 @@ Le fond de plan précédent venait des tuiles sombres de CARTO, qui réclament
 désormais une clé : la carte s'affichait barrée de « API KEY REQUIRED ».
 Leaflet a été retiré du projet à cette occasion (160 ko de moins).
 
+## La réservation et l'acompte
+
+Une réservation **naît d'une décision de l'éleveuse**, après la visite : ce n'est
+pas un panier qu'un inconnu remplit. C'est ce que dit le parcours d'adoption sur
+le site, et c'est ce que le code applique.
+
+Le circuit tient en quatre temps :
+
+1. L'éleveuse crée la réservation dans **Ce qu'on reçoit › Réservations** : le
+   chaton, la famille, le montant, une échéance.
+2. Le site fabrique un **lien privé** — quarante caractères tirés au hasard, pas
+   de compte à créer. Le bouton « Voir le lien de paiement » le donne à copier.
+3. La famille paie par carte **sur le domaine de Stripe**. Aucun numéro de carte
+   ne touche ce site ni n'y est conservé.
+4. La notification de Stripe marque l'acompte reçu et **le chaton passe en
+   « réservé »**.
+
+**Tant que rien n'est payé, le chaton reste proposable.** Une réservation en
+attente ne réserve rien. Passé l'échéance, `reservations:menage` — planifiée
+tous les matins à 6 h — la fait expirer et rend le chaton.
+
+L'acompte reçu autrement — un chèque remis à la visite, un virement — s'enregistre
+par le bouton « Acompte reçu (hors ligne) » : c'est le cas le plus fréquent chez
+un éleveur.
+
+### Les clefs
+
+Elles vivent dans `.env`, jamais dans le dépôt :
+
+```
+ACOMPTE_CENTIMES=30000          # 300 €, en centimes : un montant en flottant
+ACOMPTE_DELAI_JOURS=7           # finit toujours par produire un 199,99
+STRIPE_KEY=pk_test_...
+STRIPE_SECRET=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+```
+
+**Les clefs de test suffisent pour montrer le parcours** : elles sont gratuites
+et immédiates, et font tourner exactement le même circuit avec la carte
+`4242 4242 4242 4242`. Le webhook se branche sur `/paiement/notification`, et
+`stripe listen --forward-to localhost:8000/paiement/notification` le fait
+remonter en local.
+
+Sans compte Stripe du tout, `PAIEMENT_DEMONSTRATION=true` remplace le paiement
+par un bouton qui marque la réservation payée. Il sert à montrer le parcours et
+à rien d'autre : **il refuse de s'activer dès qu'une clef secrète existe**, et la
+page l'annonce en toutes lettres.
+
+### Ce qui reste bloquant
+
+Encaisser exige le **SIREN** et le **certificat de capacité** dans les mentions
+légales. Ils s'affichent « à compléter » sur le site en attendant, ce qui est
+volontaire — mais ils ne sont pas optionnels le jour où l'on prend de l'argent.
+Le tableau de bord les réclame.
+
+Restent à écrire avec l'éleveuse : les **conditions de l'acompte** (déductible,
+acquis en cas de renoncement, délai de rétractation). La page de paiement les
+résume aujourd'hui en trois lignes qu'il faudra faire valider.
+
 ## Les outils de mise au point
 
 `scripts/` contient de quoi fabriquer et regarder :

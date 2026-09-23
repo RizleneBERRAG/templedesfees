@@ -6,6 +6,7 @@ use App\Http\Controllers\CatController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\KittenController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
@@ -59,3 +60,29 @@ Route::get('/adopter',                 [AdoptionController::class, 'create'])->n
 Route::post('/adopter', [AdoptionController::class, 'store'])
     ->middleware('throttle:5,60')   // 5 demandes par heure et par IP
     ->name('adoption.store');
+
+/*
+ * La reservation d'un chaton.
+ *
+ * Ces adresses ne sont dans aucun menu et ne s'indexent pas : on y arrive par
+ * un lien envoye a une famille precise, apres la visite. Le jeton de quarante
+ * caracteres tient lieu de clef — demander la creation d'un compte pour verser
+ * un acompte ferait perdre la moitie des familles.
+ */
+Route::get('/reservation/{jeton}', [ReservationController::class, 'montrer'])
+    ->name('reservation.montrer');
+
+Route::post('/reservation/{jeton}/payer', [ReservationController::class, 'payer'])
+    ->middleware('throttle:10,60')
+    ->name('reservation.payer');
+
+Route::get('/reservation/{jeton}/merci', [ReservationController::class, 'merci'])
+    ->name('reservation.merci');
+
+/*
+ * La notification de paiement, appelee par Stripe de serveur a serveur. Elle
+ * fait foi : c'est elle qui marque l'acompte recu, et non le retour du
+ * navigateur, qu'une famille peut fermer avant qu'il arrive.
+ */
+Route::post('/paiement/notification', [ReservationController::class, 'webhook'])
+    ->name('paiement.notification');

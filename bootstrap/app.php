@@ -13,6 +13,16 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->append(EntetesSecurite::class);
+
+        /*
+         * Stripe appelle le webhook de serveur a serveur : il n'a pas de
+         * session, donc pas de jeton CSRF a presenter. La route est protegee
+         * autrement, et bien mieux : chaque notification porte une signature
+         * cryptographique verifiee dans la Caisse.
+         */
+        $middleware->validateCsrfTokens(except: [
+            'paiement/notification',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

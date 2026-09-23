@@ -227,6 +227,49 @@ return [
     ],
 
     /*
+     * L'acompte.
+     *
+     * Une reservation nait d'une decision de l'eleveuse, apres la visite : ce
+     * n'est pas un panier qu'un inconnu remplit. Elle envoie un lien, la
+     * famille paie, le chaton est bloque. Tant que rien n'est paye, le chaton
+     * reste proposable — c'est exactement ce que le site promet.
+     *
+     * Le montant est en centimes, en entier : un acompte en flottant finit
+     * toujours par produire un 199,99 la ou on avait tape 200.
+     */
+    'paiement' => [
+        'acompte_defaut_centimes' => (int) env('ACOMPTE_CENTIMES', 30000),
+        'delai_jours'             => (int) env('ACOMPTE_DELAI_JOURS', 7),
+
+        /*
+         * Les clefs Stripe. Elles n'ont rien a faire dans le depot : elles
+         * vivent dans .env, qui n'est pas versionne.
+         *
+         * Stripe fournit des clefs de TEST, gratuites et immediates, qui font
+         * tourner exactement le meme circuit avec la carte 4242 4242 4242 4242.
+         * C'est avec elles qu'on montre le parcours a la cliente.
+         */
+        'stripe' => [
+            'cle_publique' => env('STRIPE_KEY'),
+            'cle_secrete'  => env('STRIPE_SECRET'),
+            'webhook'      => env('STRIPE_WEBHOOK_SECRET'),
+        ],
+
+        /*
+         * Le mode demonstration.
+         *
+         * Sans compte Stripe, il remplace la page de paiement par un bouton
+         * qui marque la reservation payee. Il sert a montrer le parcours
+         * complet a la cliente avant d'ouvrir un compte, et a rien d'autre.
+         *
+         * Il refuse de s'activer des qu'une clef secrete est renseignee : on
+         * ne veut surtout pas d'un bouton « payer sans payer » a cote d'un
+         * paiement reel. La page le dit en toutes lettres quand il est actif.
+         */
+        'demonstration' => (bool) env('PAIEMENT_DEMONSTRATION', false),
+    ],
+
+    /*
      * Apercu statique.
      *
      * L'export (php artisan site:export) rejoue le site en HTML pur, pour
