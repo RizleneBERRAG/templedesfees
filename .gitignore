@@ -29,3 +29,8 @@ Thumbs.db
 # Les bancs d essai : des pages de mise au point, regenerees a la demande
 /public/apercus-banc
 /public/apercus-livre
+
+# Les originaux d'Olimpia : pesants (4 Mo la piece), et deja dans le depot
+# sous leur forme publiee, en WebP. On garde le dossier et sa notice.
+/storage/app/olimpia/*
+!/storage/app/olimpia/LISEZ-MOI.txt

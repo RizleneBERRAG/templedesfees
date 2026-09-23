@@ -38,6 +38,11 @@ foreach (glob("$dossier/olimpia-[0-9]*.webp") as $vieux) {
     unlink($vieux);
 }
 
+/* Le manifeste dit au site ce que chaque photo mesure : il sert à ne pas
+   ouvrir cinq fichiers à chaque page, et à trier — une photo de sept cents
+   pixels de large tient dans une planche de tirages, pas en plein écran. */
+$manifeste = [];
+
 $rang = 0;
 
 foreach ($sources as $source) {
@@ -85,8 +90,21 @@ foreach ($sources as $source) {
             filesize("$dossier/$nom") / 1024);
     }
 
+    $manifeste[] = [
+        'fichier' => "olimpia-$rang.webp",
+        'largeur' => $largeurs[0],
+        'hauteur' => (int) round($largeurs[0] * $h / $l),
+    ];
+
     imagedestroy($image);
 }
+
+/* Le manifeste, pour que le site n'ait pas à ouvrir cinq fichiers à chaque
+   page : le seuil est inclus dans la mise en page, donc présent partout. */
+file_put_contents(
+    "$dossier/olimpia.json",
+    json_encode($manifeste, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES).PHP_EOL,
+);
 
 echo "\n$rang photo(s) en place dans public/images/hommage/.\n";
 

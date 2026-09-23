@@ -27,7 +27,9 @@
     $seuilTexte = Setting::get('hommage.seuil');
     $seuilDates = Setting::get('hommage.dates');
 
-    $photos     = PhotosOlimpia::toutes();
+    // Seules celles qui tiennent le plein écran passent en fondu ; les plus
+    // petites restent à la planche de tirages, sur sa page.
+    $photos     = PhotosOlimpia::pourLeSeuil();
     $principale = PhotosOlimpia::principale();
 
     $forme = in_array(request('seuil'), ['a', 'b', 'c'], true) ? request('seuil') : 'b';
