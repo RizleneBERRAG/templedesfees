@@ -862,8 +862,10 @@ if (seuil) {
 
     const jamais = seuil.querySelector('#seuil-olimpia-jamais');
     let rendu = null;                       // à qui rendre le focus en sortant
+    let relais = null;                      // le minuteur qui fait tourner ses photos
 
     const refermer = () => {
+        if (relais) window.clearInterval(relais);
         seuil.classList.remove('ouvert');
         document.documentElement.classList.remove('seuil-ouvert');
 
@@ -895,6 +897,25 @@ if (seuil) {
         /* Tout de suite : un seuil qui arrive après coup n'est plus un seuil,
            c'est une fenêtre qui surgit au milieu de la lecture. */
         ouvrir();
+    }
+
+    /* ── ses photos se relaient ──
+
+       Six secondes de pose, le temps de la regarder ; le fondu dure deux
+       secondes et demie et se fait tout seul, en CSS. On s'arrête dès que le
+       seuil est refermé : une boucle qui tourne sur un écran que personne ne
+       regarde ne sert qu'à chauffer la machine. */
+
+    const fonds = [...seuil.querySelectorAll('.fond')];
+
+    if (fonds.length > 1 && !reduit()) {
+        let courante = 0;
+
+        relais = window.setInterval(() => {
+            fonds[courante].classList.remove('vue');
+            courante = (courante + 1) % fonds.length;
+            fonds[courante].classList.add('vue');
+        }, 6000);
     }
 
     seuil.querySelector('.fermer')?.addEventListener('click', refermer);

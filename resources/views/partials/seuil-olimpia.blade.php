@@ -22,14 +22,18 @@
 --}}
 @php
     use App\Models\Setting;
+    use App\Support\PhotosOlimpia;
 
     $seuilTexte = Setting::get('hommage.seuil');
     $seuilDates = Setting::get('hommage.dates');
 
-    $forme = in_array(request('seuil'), ['a', 'b', 'c'], true) ? request('seuil') : 'c';
+    $photos     = PhotosOlimpia::toutes();
+    $principale = PhotosOlimpia::principale();
+
+    $forme = in_array(request('seuil'), ['a', 'b', 'c'], true) ? request('seuil') : 'b';
 @endphp
 
-@unless(request()->routeIs('hommage') || request()->routeIs('reservation.*'))
+@unless(! $principale || request()->routeIs('hommage') || request()->routeIs('reservation.*'))
     <div class="seuil-olimpia seuil--{{ $forme }}" id="seuil-olimpia" hidden
          role="dialog" aria-modal="true" aria-labelledby="seuil-olimpia-nom">
 
@@ -38,10 +42,21 @@
                  Sa photo occupe tout l'écran. Pas de carte, pas de cadre : on
                  ne pose pas un objet par-dessus le site, on le remplace le
                  temps d'un regard. --}}
-            {{-- La photo entière, à sa taille native : le seuil l'étale sur
-                 tout l'écran, et chaque recadrage intermédiaire s'y voit. --}}
-            <x-img class="fond" src="images/hommage/olimpia-plein.webp" alt=""
-                   sizes="100vw" :urgent="true" />
+            {{-- Toutes ses photos, l'une après l'autre, en fondu très lent.
+                 La principale ouvre et reste la plus vue ; les autres passent
+                 derrière le texte sans qu'on les attende. Rien ne clignote :
+                 six secondes de pose, deux secondes et demie de fondu. --}}
+            <div class="fonds" aria-hidden="true">
+                @foreach($photos as $i => $photo)
+                    {{-- La classe se calcule en PHP : une directive Blade dans
+                         l'attribut d'un composant n'est pas compilée. --}}
+                    {{-- Toutes chargées d'emblée, pas seulement la première :
+                         une photo qui arrive pendant son propre fondu laisse un
+                         trou noir au milieu du passage. --}}
+                    <x-img :class="$i === 0 ? 'fond vue' : 'fond'" :src="$photo" alt=""
+                           sizes="100vw" :urgent="true" />
+                @endforeach
+            </div>
             <span class="fondu" aria-hidden="true"></span>
             {{-- Le grain de la maison, posé sur elle. Il donne à la photo la
                  matière qu'elle a perdue en passant par la messagerie, et il
@@ -80,13 +95,13 @@
                          une carte claire posée dessus se lit comme un objet,
                          pas comme une fenêtre de plus. --}}
                     <span class="photo">
-                        <x-img src="images/hommage/olimpia.webp"
+                        <x-img :src="$principale"
                                alt="Olimpia Maryliss Country, femelle Maine Coon blanche"
                                sizes="(max-width:700px) 92vw, 460px" :urgent="true" />
                     </span>
                 @elseif($forme === 'c')
                     <span class="medaillon">
-                        <x-img src="images/hommage/olimpia.webp"
+                        <x-img :src="$principale"
                                alt="Olimpia Maryliss Country, femelle Maine Coon blanche"
                                sizes="240px" :urgent="true" />
                     </span>

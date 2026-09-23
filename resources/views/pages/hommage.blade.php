@@ -14,7 +14,7 @@
 
 @section('title', "En mémoire d'Olimpia")
 @section('description', "Olimpia Maryliss Country. Elle a brillé sur les podiums, elle arrivait en courant à un seul mot, et elle a laissé une fille qui lui ressemble en tout.")
-@section('og_image', asset('images/hommage/olimpia.webp'))
+@section('og_image', asset(\App\Support\PhotosOlimpia::principale() ?? 'images/cats/karrington.webp'))
 
 @section('content')
 
@@ -27,7 +27,7 @@
      ici, entier dans l'arche plus bas. Une affiche, puis une planche. --}}
 <section class="olimpia-ouverture">
 
-    <x-img class="fond" src="images/hommage/olimpia.webp" alt=""
+    <x-img class="fond" :src="$principale" alt=""
            sizes="100vw" :urgent="true" />
 
     <div class="voile" aria-hidden="true"></div>
@@ -76,7 +76,7 @@
 
                     <div class="arche">
                         <i><u>
-                            <x-img src="images/hommage/olimpia.webp"
+                            <x-img :src="$principale"
                                    alt="Olimpia Maryliss Country, femelle Maine Coon blanche"
                                    sizes="(max-width:900px) 84vw, 38vw" :urgent="true" />
                         </u></i>
@@ -95,6 +95,19 @@
                 @if(filled($texte))
                     <div class="recit monte">
                         <x-texte-riche :texte="$texte" />
+                    </div>
+                @endif
+
+                {{-- Ses autres photos. Elles viennent après le récit, pas
+                     avant : on la lit d'abord, on la regarde ensuite. Petites
+                     et alignées — une planche de tirages, pas une galerie. --}}
+                @if($suivantes)
+                    <div class="planche-olimpia monte" data-lightbox>
+                        @foreach($suivantes as $photo)
+                            <figure data-full="{{ asset($photo) }}" data-legende="Olimpia">
+                                <x-img :src="$photo" alt="Olimpia" sizes="150px" />
+                            </figure>
+                        @endforeach
                     </div>
                 @endif
 

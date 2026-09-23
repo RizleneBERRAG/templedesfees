@@ -99,7 +99,7 @@
              bloc, en fin de page, qui ne crie pas. --}}
         <a class="entree-hommage monte" href="{{ route('hommage') }}">
             <span class="portrait">
-                <x-img src="images/hommage/olimpia.webp" alt="Olimpia" sizes="104px" />
+                <x-img :src="\App\Support\PhotosOlimpia::principale()" alt="Olimpia" sizes="104px" />
             </span>
             <span class="dit">
                 <span class="rubrique">En mémoire</span>

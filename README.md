@@ -276,9 +276,16 @@ Et par deux liens permanents : un bloc en fin de page « Nos chats », et le pie
 de page. **Pas dans le menu** — la place y manquait pour une neuvième rubrique,
 et une page qui rend hommage n'est pas une rubrique comme les autres.
 
-Le portrait se regénère avec `php scripts/portrait-olimpia.php <photo.jpg>` :
-recadrage en 7/10 pour l'arche, trois tailles, et un ré-encodage complet qui
-supprime les métadonnées EXIF du cliché.
+Ses photos se posent avec `php scripts/photos-olimpia.php <photo1> <photo2> …`.
+**La première est la principale** : c'est elle qui ouvre le seuil, qui tient
+l'arche de sa page, et qui part en aperçu quand on partage le lien. Les autres
+se relaient derrière le texte du seuil, en fondu de deux secondes et demie
+toutes les six secondes, et s'alignent en planche de tirages sous son récit.
+
+Aucune n'est jamais agrandie : si le fichier d'origine fait 1080 px de large,
+la plus grande fera 1080 px. Le ré-encodage supprime au passage les métadonnées
+EXIF, donc la géolocalisation des clichés — l'adresse de l'élevage n'est pas
+publique.
 
 ## La réservation et l'acompte
 
