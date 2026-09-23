@@ -29,45 +29,15 @@
 {{-- Un sommaire plutôt qu'un fil d'Ariane : la page est longue, et chacun n'y
      cherche pas la même chose.
 
-     Il est posé ICI, hors de la section précédente, et c'est essentiel : un
-     élément collant ne colle que dans les limites de son parent. Enfermé dans
-     la première section, il se décrochait au bout de quelques centaines de
-     pixels. En frère des sections, son parent est la page entière — il suit
-     donc jusqu'en bas. --}}
-@php
-    /*
-        Trois traitements du sommaire, le temps que la cliente choisisse.
+     Il se range derrière le bandeau et n'en sort qu'une fois l'introduction
+     passée, puis y remonte dès qu'on revient en haut : une seule barre à
+     l'écran, jamais deux. Le détail est dans la charte, .sommaire.
 
-            ?sommaire=a  le rail dans la marge   (celui en place)
-            ?sommaire=b  la pastille flottante
-            ?sommaire=c  fondu dans le bandeau
-
-        Le jour du choix, les deux perdants disparaissent avec ce bloc : il
-        n'y a aucune raison de garder trois chemins pour un seul sommaire.
-    */
-    $variante = in_array(request('sommaire'), ['a', 'b', 'c'], true)
-        ? request('sommaire')
-        : 'a';
-@endphp
-
-<nav class="sommaire sommaire--{{ $variante }}" data-sommaire="{{ $variante }}"
-     aria-label="Sommaire de la page">
-
-    @if($variante === 'b')
-        {{-- La pastille n'existe que pour la variante B : partout ailleurs
-             elle n'aurait rien à ouvrir. --}}
-        <button class="sommaire-pastille" type="button"
-                aria-expanded="false" aria-controls="sommaire-liste">
-            <span class="ou">Sommaire</span>
-            <svg viewBox="0 0 24 24" aria-hidden="true"
-                 fill="none" stroke="currentColor" stroke-width="1.4"
-                 stroke-linecap="round" stroke-linejoin="round">
-                <path d="m6 15 6-6 6 6"/>
-            </svg>
-        </button>
-    @endif
-
-    <div class="wrap sommaire-in" id="sommaire-liste">
+     Il reste posé ICI, hors de la section précédente. Il est aujourd'hui fixe
+     et pourrait vivre n'importe où, mais une barre qui surplombe toute la page
+     est frère des sections, pas enfant de la première. --}}
+<nav class="sommaire" aria-label="Sommaire de la page">
+    <div class="wrap sommaire-in">
         <a href="#origines">Origines</a>
         <a href="#morphologie">Le lire</a>
         <a href="#robe">La robe</a>

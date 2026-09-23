@@ -1351,119 +1351,28 @@ footer > *{position:relative}
 .sommaire a:hover::after{transform:scaleX(.5)}
 .sommaire a[aria-current="true"]{background:none;color:var(--or-clair)}
 
-/* ── le sommaire en rail, à partir de 1400 px ────────────────────── */
-/* Deux barres collées l'une sous l'autre mangent cent trente pixels de
-   hauteur sur une page qu'on lit en descendant. Dès qu'il y a une marge —
-   au-delà de 1400 px, elle fait plus de cent dix pixels — le sommaire sort
-   du flux et va s'y tenir, en colonne, à mi-hauteur.
+/* ── il se range derrière le bandeau ─────────────────────────────── */
+/* Deux barres empilées mangent cent trente pixels de hauteur sur une page
+   qu'on lit en descendant. Celle-ci se range donc derrière le bandeau et n'en
+   sort qu'une fois l'introduction passée ; elle y remonte dès qu'on revient en
+   haut. Même fond, pas de filet au-dessus : on doit croire à une deuxième
+   ligne du bandeau, pas à une deuxième barre.
 
-   La page récupère toute sa hauteur, rien ne passe plus sous une barre, et
-   la section en cours se marque par un tiret d'or qui s'allonge. En dessous
-   de 1400 px il n'y a pas de marge où le mettre : la barre horizontale
-   reprend sa place, telle quelle. */
-
-@media (min-width:1400px){
-
-  /* On le sort du flux plutôt que de le laisser collant : collé, il garderait
-     sa hauteur de barre dans la page et le décalage d'ancre avec. */
-  .sommaire--a{position:fixed;top:50%;transform:translateY(-50%);
-    left:max(10px,calc((100vw - var(--maxw)) / 2 - 116px));
-    padding:0;background:none;border:0;box-shadow:none;
-    backdrop-filter:none;-webkit-backdrop-filter:none}
-
-  .sommaire--a .sommaire-in{display:block;width:auto;max-width:none;margin:0;
-    padding:0;overflow:visible}
-
-  .sommaire--a a{display:flex;align-items:center;gap:9px;
-    padding:7px 0;border:0;background:none;
-    font-size:9px;letter-spacing:.16em;color:var(--ivoire-dim);
-    transition:color .35s var(--ease)}
-
-  /* Le tiret. C'est lui qui porte l'information : il s'allonge et s'éclaire
-     sur la section en cours, il reste court et mat partout ailleurs. */
-  .sommaire--a a::before{content:"";flex:none;
-    width:14px;height:1px;background:var(--filet);
-    transition:width .45s var(--ease),background .45s var(--ease)}
-
-  /* Le soulignement de la barre horizontale n'a plus de sens en colonne. */
-  .sommaire--a a::after{display:none}
-
-  .sommaire--a a:hover{color:var(--ivoire)}
-  .sommaire--a a:hover::before{width:22px;background:var(--or-mat)}
-
-  .sommaire--a a[aria-current="true"]{color:var(--or-clair)}
-  .sommaire--a a[aria-current="true"]::before{width:30px;background:var(--or)}
-
-  /* Le sommaire ne surplombe plus rien : une ancre n'a plus à se décaler que
-     de la hauteur du bandeau. */
-  /* :has() plutot qu'une classe posee sur le corps : la regle suit la
-     variante presente dans la page, sans rien avoir a declarer ailleurs. */
-  body:has(.sommaire--a) [id]{scroll-margin-top:calc(var(--h-bandeau,74px) + 22px)}
-}
-
-/* ── B : la pastille flottante ───────────────────────────────────── */
-/* Pas de barre du tout. Une pastille en bas à droite qui n'affiche que la
-   section en cours ; on clique, la liste se déplie vers le haut ; on choisit,
-   elle se referme. Encombrement identique sur téléphone et sur grand écran —
-   c'est son seul argument, et c'en est un. */
-
-.sommaire--b{position:fixed;top:auto;left:auto;right:clamp(14px,2vw,26px);
-  bottom:clamp(14px,2vw,26px);z-index:60;
-  width:auto;padding:0;border:0;background:none;box-shadow:none;
-  backdrop-filter:none;-webkit-backdrop-filter:none}
-
-.sommaire-pastille{display:inline-flex;align-items:center;gap:10px;
-  padding:12px 18px;border:1px solid var(--filet);border-radius:2px;
-  background:rgba(8,11,10,.96);
-  backdrop-filter:blur(14px) saturate(140%);
-  -webkit-backdrop-filter:blur(14px) saturate(140%);
-  box-shadow:0 16px 40px rgba(0,0,0,.55);
-  font-family:var(--pierre);font-size:10px;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--ivoire-2);cursor:pointer;
-  transition:border-color .35s var(--ease),color .35s var(--ease)}
-
-.sommaire-pastille:hover{border-color:var(--or-mat);color:var(--ivoire)}
-.sommaire-pastille .ou{white-space:nowrap}
-.sommaire-pastille svg{width:14px;height:14px;flex:none;color:var(--or-mat);
-  transition:transform .4s var(--ease)}
-.sommaire--b.ouvert .sommaire-pastille svg{transform:rotate(180deg)}
-
-.sommaire--b .sommaire-in{position:absolute;right:0;bottom:calc(100% + 9px);
-  display:block;width:max-content;min-width:206px;max-width:none;margin:0;
-  padding:7px;overflow:visible;
-  background:rgba(8,11,10,.97);border:1px solid var(--filet);border-radius:2px;
-  box-shadow:0 22px 56px rgba(0,0,0,.6);
-  opacity:0;transform:translateY(8px);pointer-events:none;
-  transition:opacity .3s var(--ease),transform .3s var(--ease)}
-
-.sommaire--b.ouvert .sommaire-in{opacity:1;transform:none;pointer-events:auto}
-
-.sommaire--b a{display:block;width:100%;padding:11px 14px;border:0;
-  background:none;text-align:left;
-  font-size:10px;letter-spacing:.16em;color:var(--ivoire-3);
-  transition:color .3s,background .3s}
-.sommaire--b a::after{display:none}
-.sommaire--b a:hover{color:var(--ivoire);background:var(--voile-beige)}
-.sommaire--b a[aria-current="true"]{color:var(--or-clair);background:rgba(217,178,106,.1)}
-
-/* ── C : fondu dans le bandeau ───────────────────────────────────── */
-/* Une seule barre à l'écran. Le sommaire se range derrière le bandeau et n'en
-   sort que lorsqu'on a quitté l'introduction ; il y remonte dès qu'on revient.
-   Même fond, pas de filet en haut : on doit croire à une deuxième ligne du
-   bandeau, pas à une deuxième barre. */
-
-.sommaire--c{position:fixed;top:var(--h-bandeau,74px);left:0;right:0;z-index:29;
+   Fixe et non plus collante : collante, elle garderait sa hauteur dans le
+   flux, et la page ouvrirait sur soixante pixels de vide sous le bandeau. */
+.sommaire{position:fixed;top:var(--h-bandeau,74px);left:0;right:0;z-index:29;
   border-top:0;box-shadow:0 12px 30px rgba(0,0,0,.42);
   transform:translateY(-101%);opacity:0;
   transition:transform .5s var(--ease),opacity .35s var(--ease)}
 
-/* Le bandeau est translucide : rangé derrière lui, le sommaire s'y verrait
-   en fantôme. Il s'efface aussi, et l'illusion tient. */
-.sommaire--c.deplie{transform:none;opacity:1}
+/* Le bandeau est translucide : rangée derrière lui, elle s'y verrait en
+   fantôme. Elle s'efface aussi, et l'illusion tient. */
+.sommaire.deplie{transform:none;opacity:1}
 
 @media (prefers-reduced-motion:reduce){
-  .sommaire--c{transition:none}
+  .sommaire{transition:none}
 }
+
 .sommaire a[aria-current="true"]::after{transform:scaleX(1)}
 
 /* ── le lecteur ──────────────────────────────────────────────────── */
