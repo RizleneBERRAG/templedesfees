@@ -861,9 +861,9 @@ if (banniere) {
     };
 
     if (!dejaVue()) {
-        /* Une seconde et demie : le temps que la page se soit posée et que le
-           regard ait fait le tour. Arriver en même temps que le contenu ferait
-           d'elle une pop-up de plus. */
+        /* Neuf dixièmes de seconde : le temps que la page se soit posée, sans
+           qu'on se demande s'il se passe quelque chose. Arriver en même temps
+           que le contenu ferait d'elle une pop-up de plus. */
         window.setTimeout(() => {
             banniere.hidden = false;
             /* Un souffle pour que le navigateur prenne l'état de départ avant
@@ -872,7 +872,7 @@ if (banniere) {
                arrière-plan, requestAnimationFrame ne se déclenche pas, et la
                bannière resterait invisible en attendant qu'on revienne. */
             window.setTimeout(() => banniere.classList.add('vue'), 40);
-        }, 1500);
+        }, 900);
     }
 
     banniere.querySelector('.fermer')?.addEventListener('click', retirer);
