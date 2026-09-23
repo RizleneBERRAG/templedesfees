@@ -15,7 +15,7 @@
     <div class="liasse-scene">{{ $slot }}</div>
 
     <nav class="liasse-barre" aria-label="Fiches de ce chat" hidden>
-        <button class="feuillet" type="button" data-pas="-1" aria-label="Fiche précédente">
+        <button class="feuillet-bouton" type="button" data-pas="-1" aria-label="Fiche précédente">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"
                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M15 5 8 12l7 7"/>
@@ -24,7 +24,7 @@
 
         <ol class="jalons"></ol>
 
-        <button class="feuillet" type="button" data-pas="1" aria-label="Fiche suivante">
+        <button class="feuillet-bouton" type="button" data-pas="1" aria-label="Fiche suivante">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"
                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="m9 5 7 7-7 7"/>

@@ -163,12 +163,29 @@ $reduire = function (int $taille, string $nom, ?array $fond = null) use ($blason
     imagecopyresampled($im, $blason, 0, 0, 0, 0, $taille, $taille, $N, $N);
     imagesavealpha($im, true);
 
-    imagepng($im, "$dossier/$nom", 9);
+    if (str_ends_with($nom, '.webp')) {
+        imagewebp($im, "$dossier/$nom", 92);
+    } else {
+        imagepng($im, "$dossier/$nom", 9);
+    }
+
     imagedestroy($im);
 
     printf("  %-20s %4d x %-4d %6.1f ko%s", $nom, $taille, $taille,
         filesize("$dossier/$nom") / 1024, PHP_EOL);
 };
+
+/*
+    Deux familles de fichiers.
+
+    Le WebP sert dans les pages : a taille egale il pese trois fois moins que
+    le PNG, et le blason du bandeau est charge des le premier ecran. Le PNG
+    reste pour les icones, que les navigateurs et les systemes ne lisent pas
+    tous en WebP.
+*/
+$reduire(512, 'blason.webp');
+$reduire(192, 'blason-192.webp');
+$reduire(96,  'blason-96.webp');
 
 $reduire(512, 'blason.png');
 $reduire(192, 'blason-192.png');

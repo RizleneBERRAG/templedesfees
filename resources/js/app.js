@@ -639,6 +639,14 @@ document.querySelectorAll('[data-livre]').forEach((bloc) => {
 
     const bornes = () => (simple ? faces.length - 1 : feuillets.length);
 
+    /* L'étagement des feuillets : le dernier tourné couvre la pile de
+       gauche, le prochain à tourner couvre celle de droite. */
+    const etager = () => {
+        feuillets.forEach((f, i) => {
+            f.style.zIndex = i < etat ? i + 1 : feuillets.length - i;
+        });
+    };
+
     const peindre = (precedent = null) => {
         if (simple) {
             faces.forEach((f, i) => {
@@ -661,10 +669,36 @@ document.querySelectorAll('[data-livre]').forEach((bloc) => {
             feuillets.forEach((f, i) => {
                 const tourne = i < etat;
                 f.toggleAttribute('data-tourne', tourne);
-                /* Le dernier feuillet tourné doit couvrir la pile de gauche,
-                   le prochain à tourner doit couvrir celle de droite. */
-                f.style.zIndex = tourne ? i + 1 : feuillets.length - i;
             });
+
+            etager();
+
+            /* La page qui tourne prend son élan au-dessus des deux piles.
+
+               Sans cela elle recevait son étage d'arrivée dès le premier
+               instant : elle passait donc SOUS la page suivante alors qu'elle
+               survolait encore la moitié droite, disparaissait, puis
+               réapparaissait à gauche. C'est ce saut qu'on voyait, pas le
+               tour de page. */
+            if (precedent !== null && precedent !== etat && !reduit()) {
+                const i = Math.min(precedent, etat);
+                const f = feuillets[i];
+                if (f) {
+                    f.style.zIndex = '60';
+                    f.dataset.anime = etat > precedent ? 'avant' : 'arriere';
+
+                    const reposer = () => {
+                        delete f.dataset.anime;
+                        if (!bloc.querySelector('.feuillet[data-anime]')) etager();
+                    };
+
+                    /* Le filet de sécurité : une animation lancée dans un
+                       onglet qu'on quitte aussitôt peut ne jamais annoncer sa
+                       fin, et la page resterait alors au-dessus de tout. */
+                    f.addEventListener('animationend', reposer, { once: true });
+                    setTimeout(reposer, 1500);
+                }
+            }
 
             faces.forEach((f, i) => {
                 const feuillet = Math.floor(i / 2);
