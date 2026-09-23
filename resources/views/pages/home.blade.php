@@ -313,7 +313,7 @@
         </div>
 
         <x-livre :pages="config('chatterie.livre')"
-                 legende="Le livre de la maison — six pages"
+                 legende="Le livre de la maison"
                  class="monte" />
     </div>
 </section>

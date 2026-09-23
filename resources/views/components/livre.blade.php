@@ -23,6 +23,21 @@
              première page, et à droite une fois le livre fini. --}}
         <span class="plat" aria-hidden="true"><i class="dos"></i></span>
 
+        {{-- Les pages de garde, sous toutes les autres : on ne les voit qu'aux
+             deux bouts du livre, la ou il n'y a plus de feuillet pour les
+             couvrir. Sans elles, le livre s'ouvrait sur une moitie vide. --}}
+        <div class="garde tete" aria-hidden="true">
+            <x-blason :taille="132" />
+            <span>Chatterie du Temple des Fées</span>
+            <span class="filet"></span>
+            <em>{{ $legende ?? 'Le livre de la maison' }}</em>
+        </div>
+
+        <div class="garde queue" aria-hidden="true">
+            <x-fleuron taille="petit" style="color:var(--or-ombre)" />
+            <em>Voilà ce qui ne se négocie pas ici.</em>
+        </div>
+
         <div class="pages">
             @foreach($feuillets as $i => $duo)
                 @php $duo = $duo->values(); @endphp
@@ -32,12 +47,14 @@
                         <article @class(['face', 'recto' => $j === 0, 'verso' => $j === 1, 'blanche' => ! $page])>
                             @if($page)
                                 <span class="folio">{{ str_pad((string) $numero, 2, '0', STR_PAD_LEFT) }}</span>
-                                <h3>{{ $page['titre'] }}</h3>
-                                <span class="filet" aria-hidden="true"></span>
-                                <p>{{ $page['texte'] }}</p>
-                                @if(! empty($page['chapitre']))
-                                    <span class="chapitre-nom">Chapitre {{ $romain($numero) }}</span>
-                                @endif
+
+                                <div class="corps">
+                                    <h3>{{ $page['titre'] }}</h3>
+                                    <span class="filet" aria-hidden="true"></span>
+                                    <p>{{ $page['texte'] }}</p>
+                                </div>
+
+                                <span class="fin" aria-hidden="true"><i></i><i></i><i></i></span>
                             @else
                                 <x-fleuron taille="petit" style="color:var(--or-ombre);margin:auto" />
                             @endif
