@@ -1267,21 +1267,31 @@ footer > *{position:relative}
 
 
 /* ── les articles ────────────────────────────────────────────────── */
-.articles{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-  gap:clamp(22px,3vw,34px)}
+/* Les billets etaient en grille de 300 px, avec la vignette a gauche : la
+   colonne de texte tombait a deux cents pixels et les titres se cassaient
+   sur six lignes, en bandes verticales illisibles.
 
-.billet{display:grid;grid-template-columns:118px minmax(0,1fr);gap:clamp(16px,2vw,22px);
-  align-items:start;border:1px solid var(--filet-2);background:var(--nuit-2);
-  padding:clamp(16px,2vw,20px);transition:border-color .4s,background .4s,transform .4s var(--ease)}
+   Un billet prend donc toute la largeur. La vignette grandit, le titre
+   respire, et le chapeau garde sa propre mesure — c'est la mise en page
+   d'un sommaire de revue, qui est exactement ce que cette page est. */
+.articles{display:flex;flex-direction:column;gap:clamp(18px,2.4vw,26px)}
+
+.billet{display:grid;grid-template-columns:clamp(124px,15vw,200px) minmax(0,1fr);
+  gap:clamp(20px,2.8vw,36px);
+  align-items:center;border:1px solid var(--filet-2);background:var(--nuit-2);
+  padding:clamp(18px,2.2vw,26px);
+  transition:border-color .4s,background .4s,transform .4s var(--ease)}
 .billet:hover{border-color:var(--or-ombre);background:var(--nuit-3);transform:translateY(-3px)}
 .billet .arche{width:100%}
-.billet .bd{display:flex;flex-direction:column;gap:9px;min-width:0}
-.billet h2{font-size:clamp(1.25rem,1.9vw,1.55rem);line-height:1.14;color:var(--ivoire)}
+.billet .bd{display:flex;flex-direction:column;gap:11px;min-width:0}
+.billet h2{font-size:clamp(1.35rem,2.2vw,1.85rem);line-height:1.12;color:var(--ivoire)}
 .billet h2 a{transition:color .3s}
 .billet:hover h2 a{color:var(--or-clair)}
-.billet p{font-size:14.5px;line-height:1.68;color:var(--ivoire-3)}
-@media(max-width:520px){.billet{grid-template-columns:92px minmax(0,1fr)}}
-
+.billet p{font-size:15px;line-height:1.72;color:var(--ivoire-3);max-width:74ch}
+@media(max-width:560px){
+  .billet{grid-template-columns:96px minmax(0,1fr);gap:18px;align-items:start}
+  .billet h2{font-size:1.25rem}
+}
 .signe{font-family:var(--pierre);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
   color:var(--ivoire-dim)}
 
