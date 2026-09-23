@@ -139,7 +139,7 @@
                           class="demande">
                         @csrf
 
-                        <label class="consent">
+                        <label class="consent plein">
                             <input type="checkbox" name="conditions" value="1" required
                                    @checked(old('conditions'))>
                             <span>
@@ -151,10 +151,10 @@
                         </label>
 
                         @error('conditions')
-                            <p class="erreur">{{ $message }}</p>
+                            <p class="erreur plein">{{ $message }}</p>
                         @enderror
 
-                        <div class="btnrow" style="margin-top:6px">
+                        <div class="btnrow plein" style="margin-top:6px">
                             <button class="btn" type="submit">
                                 @if(Caisse::enDemonstration())
                                     Simuler le versement de {{ $reservation->acompteFormate() }}
@@ -165,7 +165,7 @@
                         </div>
 
                         @unless(Caisse::enDemonstration())
-                            <p class="petit" style="margin-top:4px">
+                            <p class="petit plein" style="margin-top:4px">
                                 Paiement par carte, traité par Stripe. Aucun numéro de carte
                                 ne transite par ce site ni n’y est conservé.
                             </p>
