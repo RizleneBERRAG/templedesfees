@@ -1,16 +1,20 @@
 {{--
     Le seuil : Olimpia, avant d'entrer.
 
-    Un voile plein écran qui se pose par-dessus le site à l'arrivée. On la
-    regarde, on lit deux phrases, et on entre. Rien d'autre n'est demandé.
+    Un voile plein écran posé par-dessus le site à l'arrivée. On la regarde, on
+    lit deux phrases, et on entre. Rien d'autre n'est demandé.
+
+    La composition est centrée et tout en courbes : un médaillon ovale plutôt
+    qu'une arche, son nom en italique, une trace dorée dessous. L'arche et le
+    filet droit faisaient temple — c'était juste pour sa page, trop sévère pour
+    un seuil qu'on traverse.
 
     Trois façons d'en sortir, et c'est voulu : la croix, le bouton « Entrer sur
     le site », et la touche Échap. Aucune n'est cachée, aucune ne piège.
 
     « Ne plus afficher » est une case, pas un réglage enfoui : cochée, elle ne
     se représente jamais ; laissée vide, elle ne revient pas non plus avant la
-    prochaine visite. On ne fait pas redemander deux fois la même attention à
-    quelqu'un dans la même heure.
+    prochaine visite.
 
     Elle ne paraît ni sur la page d'Olimpia — on n'annonce pas à quelqu'un ce
     qu'il est déjà en train de lire — ni sur les pages de réservation : une
@@ -31,69 +35,70 @@
 
         <div class="feuille">
 
-            <header class="entete">
-                <span class="maison">
-                    @if(file_exists(public_path('images/blason-192.png')))
-                        <img src="{{ asset('images/blason-192.png') }}" alt="" width="34" height="34">
-                    @endif
-                    <b>Temple des Fées</b>
+            {{-- La lueur chaude derrière le médaillon. C'est elle qui réchauffe
+                 tout le panneau : sans elle, le fond reste une nuit froide. --}}
+            <span class="lueur" aria-hidden="true"></span>
+
+            <span class="maison">
+                @if(file_exists(public_path('images/blason-192.png')))
+                    <img src="{{ asset('images/blason-192.png') }}" alt="" width="28" height="28">
+                @endif
+                <b>Temple des Fées</b>
+            </span>
+
+            <button class="fermer" type="button" aria-label="Fermer et entrer sur le site">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor"
+                     stroke-width="1.3" stroke-linecap="round">
+                    <path d="M6 6l12 12M18 6L6 18"/>
+                </svg>
+            </button>
+
+            <div class="dedans">
+
+                {{-- Le médaillon. Un ovale, et une bordure faite d'un dégradé
+                     d'or plutôt que d'un trait : une dorure a des reflets, un
+                     filet n'en a pas. --}}
+                <span class="medaillon">
+                    <x-img src="images/hommage/olimpia.webp"
+                           alt="Olimpia Maryliss Country, femelle Maine Coon blanche"
+                           sizes="240px" :urgent="true" />
                 </span>
 
-                <button class="fermer" type="button" aria-label="Fermer et entrer sur le site">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor"
-                         stroke-width="1.3" stroke-linecap="round">
-                        <path d="M6 6l12 12M18 6L6 18"/>
-                    </svg>
-                </button>
-            </header>
+                <span class="rubrique">En mémoire</span>
 
-            <div class="corps">
+                <h2 class="nom" id="seuil-olimpia-nom">
+                    <span class="sous-pinceau">Olimpia<x-pinceau /></span>
+                </h2>
 
-                <div class="portrait">
-                    <div class="arche">
-                        <i><u>
-                            <x-img src="images/hommage/olimpia.webp"
-                                   alt="Olimpia Maryliss Country, femelle Maine Coon blanche"
-                                   sizes="(max-width:880px) 62vw, 34vw" :urgent="true" />
-                        </u></i>
+                <p class="complet">Olimpia Maryliss&nbsp;Country</p>
+
+                @if($seuilDates)
+                    <p class="dates">{{ $seuilDates }}</p>
+                @endif
+
+                @if(filled($seuilTexte))
+                    <x-texte-riche class="mots" :texte="$seuilTexte" />
+                @endif
+
+                <div class="pied">
+                    <button class="btn entrer" type="button">
+                        Entrer sur le site
+                        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor"
+                             stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14m0 0-6-6m6 6-6 6"/>
+                        </svg>
+                    </button>
+
+                    <div class="menus">
+                        <a class="lire" href="{{ route('hommage') }}">Lire son histoire</a>
+                        <span class="sep" aria-hidden="true">·</span>
+                        <label class="plus">
+                            <input type="checkbox" id="seuil-olimpia-jamais">
+                            <span>Ne plus afficher</span>
+                        </label>
                     </div>
                 </div>
-
-                <div class="dit">
-                    <span class="rubrique">En mémoire</span>
-
-                    <h2 class="nom" id="seuil-olimpia-nom">
-                        <span class="sous-pinceau">Olimpia<x-pinceau /></span>
-                    </h2>
-
-                    <p class="complet">Olimpia Maryliss&nbsp;Country</p>
-
-                    @if(filled($seuilTexte))
-                        <x-texte-riche class="mots" :texte="$seuilTexte" />
-                    @endif
-
-                    @if($seuilDates)
-                        <p class="dates">{{ $seuilDates }}</p>
-                    @endif
-                </div>
             </div>
-
-            <footer class="pied">
-                <button class="btn entrer" type="button">
-                    Entrer sur le site
-                    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor"
-                         stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M5 12h14m0 0-6-6m6 6-6 6"/>
-                    </svg>
-                </button>
-
-                <a class="lire" href="{{ route('hommage') }}">Lire son histoire</a>
-
-                <label class="plus">
-                    <input type="checkbox" id="seuil-olimpia-jamais">
-                    <span>Ne plus afficher</span>
-                </label>
-            </footer>
         </div>
     </div>
 @endunless
