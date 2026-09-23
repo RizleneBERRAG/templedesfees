@@ -38,9 +38,15 @@
                  Sa photo occupe tout l'écran. Pas de carte, pas de cadre : on
                  ne pose pas un objet par-dessus le site, on le remplace le
                  temps d'un regard. --}}
-            <x-img class="fond" src="images/hommage/olimpia.webp" alt=""
+            {{-- La photo entière, à sa taille native : le seuil l'étale sur
+                 tout l'écran, et chaque recadrage intermédiaire s'y voit. --}}
+            <x-img class="fond" src="images/hommage/olimpia-plein.webp" alt=""
                    sizes="100vw" :urgent="true" />
             <span class="fondu" aria-hidden="true"></span>
+            {{-- Le grain de la maison, posé sur elle. Il donne à la photo la
+                 matière qu'elle a perdue en passant par la messagerie, et il
+                 la raccorde au reste du site. --}}
+            <span class="grain" aria-hidden="true"></span>
         @else
             <div class="voile" aria-hidden="true"></div>
         @endif

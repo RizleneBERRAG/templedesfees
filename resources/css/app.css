@@ -2186,7 +2186,17 @@ html.seuil-ouvert,html.seuil-ouvert body{overflow:hidden}
   /* Sur un écran large, elle va à droite : sa photo est en hauteur, son corps
      occupe le bas, et c'est exactement là que le texte se pose. Centrée, le
      nom lui tombait sur les yeux. */
-  object-position:74% 12%}
+  object-position:74% 12%;
+  /* Le cliché fait 1172 px de large : étalé sur un écran de 1920, il est
+     forcément agrandi. Un peu de contraste et de densité rattrapent le
+     manque de piqué — le grain posé par-dessus fait le reste. */
+  filter:contrast(1.07) saturate(1.05) brightness(.97)}
+
+/* Le grain de la maison, sur elle. Même tuile que le grain du site, plus
+   dense : c'est lui qui redonne de la matière à une photo agrandie. */
+.seuil--b .grain{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background-image:url("../images/grain.png");background-size:104px 104px;
+  opacity:.42;mix-blend-mode:overlay}
 
 /* Deux dégradés : l'un noie le bas pour que le texte porte, l'autre assombrit
    les bords pour que rien ne fuie par les coins. */
@@ -2226,11 +2236,16 @@ html.seuil-ouvert,html.seuil-ouvert body{overflow:hidden}
 
 .seuil--b .rubrique{margin-bottom:8px}
 
+/* À cette taille, le coup de pinceau de la charte devient une tache qui barre
+   les jambages. On le rétrécit, on le descend sous la ligne de base, et on
+   l'allège : il doit souligner, pas rayer. */
+.seuil--b .nom .pinceau{left:0;width:56%;height:.26em;bottom:-.1em;opacity:.7}
+
 .seuil--b .nom{margin:0;font-family:var(--titre);font-weight:300;font-style:italic;
-  font-size:clamp(56px,9vw,124px);line-height:.96;letter-spacing:.01em;
+  font-size:clamp(52px,7.4vw,104px);line-height:1;letter-spacing:.012em;
   color:var(--ivoire);text-shadow:0 10px 60px rgba(6,5,4,.9)}
 
-.seuil--b .complet{margin:18px 0 0;
+.seuil--b .complet{margin:26px 0 0;
   font-family:var(--corps);font-weight:400;font-size:clamp(10px,1vw,12px);
   letter-spacing:.3em;text-transform:uppercase;color:var(--or-tendre)}
 
@@ -2264,11 +2279,19 @@ html.seuil-ouvert,html.seuil-ouvert body{overflow:hidden}
 /* En portrait, la photo se recadre toute seule sur la hauteur et on la voit
    presque entière : le texte peut alors revenir au centre, en bas. */
 @media (max-width:880px){
-  .seuil--b .fond{object-position:52% 12%}
+  /* En portrait, la photo tient pile dans l'écran : elle ne peut pas monter
+     plus haut, et sa tête reste forcément vers le milieu. Le texte ne peut pas
+     monter non plus — il y a deux phrases et un bouton à loger.
+
+     On ne les fait donc pas cohabiter : sa tête garde le tiers haut, et le
+     voile se ferme net juste en dessous. Le texte porte sur du noir franc, pas
+     sur de la fourrure blanche à moitié voilée. */
+  .seuil--b .fond{object-position:50% 0}
   .seuil--b .fondu{background:
     linear-gradient(180deg,
-      rgba(6,5,4,.58) 0%, rgba(6,5,4,.08) 20%,
-      rgba(6,5,4,.46) 50%, rgba(6,5,4,.93) 76%, rgba(6,5,4,.99) 100%)}
+      rgba(6,5,4,.48) 0%, rgba(6,5,4,.04) 13%,
+      rgba(6,5,4,.34) 24%, rgba(6,5,4,.82) 32%,
+      rgba(6,5,4,.96) 40%, rgba(6,5,4,1) 52%)}
   .seuil--b .feuille{justify-content:flex-end}
   .seuil--b .dedans{width:100%;align-items:center;text-align:center;
     padding-inline:22px}
@@ -2278,10 +2301,21 @@ html.seuil-ouvert,html.seuil-ouvert body{overflow:hidden}
   .seuil--b .entrer{max-width:none}
 }
 
+/* Le bloc de texte doit laisser sa tête respirer : il descend sous la moitié
+   de l'écran, donc il se resserre. */
+@media (max-width:880px){
+  .seuil--b .nom{font-size:clamp(44px,12vw,58px)}
+  .seuil--b .complet{margin-top:18px;font-size:10px;letter-spacing:.24em}
+  .seuil--b .mots{margin-top:16px;max-width:40ch}
+  .seuil--b .mots p{margin-bottom:8px;font-size:16px;line-height:1.55}
+  .seuil--b .pied{margin-top:20px;gap:11px}
+  .seuil--b .dedans{padding-bottom:clamp(22px,3.4vh,32px)}
+}
+
 @media (max-width:880px) and (max-height:780px){
-  .seuil--b .nom{font-size:clamp(46px,13vw,68px)}
-  .seuil--b .mots p{font-size:16px;line-height:1.55}
-  .seuil--b .pied{margin-top:18px}
+  .seuil--b .nom{font-size:clamp(40px,11vw,52px)}
+  .seuil--b .mots p{font-size:15.5px;line-height:1.5}
+  .seuil--b .pied{margin-top:16px}
 }
 
 /* ── Olimpia : le premier écran ──────────────────────────────────── */
