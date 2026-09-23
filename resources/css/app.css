@@ -1837,3 +1837,10 @@ footer > *{position:relative}
 @media(max-width:1180px){
   .barre-droite > .blason-lien{display:none}
 }
+
+/* ── un texte de réglage ─────────────────────────────────────────── */
+/* Les conditions de l'acompte et les textes du même ordre, écrits par
+   l'éleveuse depuis le back-office. Mesure de lecture, et rien d'autre. */
+.texte-reglage{display:flex;flex-direction:column;gap:13px;padding-top:16px}
+.texte-reglage p{margin:0;font-size:15px;line-height:1.76;color:var(--ivoire-3);max-width:68ch}
+.texte-reglage strong{font-weight:400;color:var(--ivoire)}

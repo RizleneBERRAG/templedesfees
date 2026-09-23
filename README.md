@@ -255,6 +255,32 @@ par un bouton qui marque la réservation payée. Il sert à montrer le parcours 
 à rien d'autre : **il refuse de s'activer dès qu'une clef secrète existe**, et la
 page l'annonce en toutes lettres.
 
+### Montrer le parcours aujourd'hui
+
+```bash
+php artisan demo:numeros        # publie les fiches chatons
+php artisan demo:reservation    # crée une réservation et donne le lien
+```
+
+Avec `PAIEMENT_DEMONSTRATION=true`, le bouton marque la réservation payée sans
+carte ni prélèvement, et le chaton passe en « réservé » sur le site. La page
+l'annonce en rouge, en toutes lettres. `demo:reservation --reset` efface tout et
+rend les chatons.
+
+Les **conditions de l'acompte** sont écrites et affichées — sur la page de
+réservation, juste au-dessus de la case à cocher, et sur les mentions légales.
+C'est un **texte de départ**, dans `seeders/data/acompte.php`, modifiable depuis
+Le site › Réglages. Deux points méritent une relecture par un professionnel :
+l'acompte acquis en cas de renoncement, et le droit de rétractation d'une vente
+à distance — le parcours du site impose une visite avant toute réservation,
+précisément pour que celle-ci ne soit pas conclue à distance.
+
+En revanche, **aucun numéro SIREN ni certificat de capacité n'est inventé**.
+Un numéro d'immatriculation fabriqué, publié sur un site, est une fausse mention
+légale, même provisoire. Ces champs restent vides et s'affichent « À compléter »
+en or, ce que la charte a prévu : c'est honnête, ça se montre, et le tableau de
+bord les réclame.
+
 ### Ce qui reste bloquant
 
 Encaisser exige le **SIREN** et le **certificat de capacité** dans les mentions

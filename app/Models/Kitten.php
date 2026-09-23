@@ -47,6 +47,12 @@ class Kitten extends Model
         return 'slug';
     }
 
+    /** Les reservations portant sur ce chaton, payees ou non. */
+    public function reservations(): HasMany
+    {
+        return $this->hasMany(Reservation::class);
+    }
+
     public function litter(): BelongsTo
     {
         return $this->belongsTo(Litter::class);

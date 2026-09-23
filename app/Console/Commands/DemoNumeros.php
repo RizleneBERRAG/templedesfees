@@ -45,14 +45,20 @@ class DemoNumeros extends Command
             $publies += $chaton->est_publie ? 1 : 0;
         }
 
-        foreach (['legal.siren' => '000 000 000 00000',
-                  'legal.certificat' => 'CCAD-26-DEMO',
-                  'legal.directeur' => 'Chatterie du Temple des Fées',
-                  'legal.hebergeur' => 'À renseigner'] as $cle => $valeur) {
-            // Passer par le modele et non par une mise a jour de masse : c'est
-            // l'evenement d'enregistrement qui vide le cache des reglages.
-            Setting::where('cle', $cle)->first()?->update(['valeur' => $reset ? null : $valeur]);
-        }
+        /*
+         * Les mentions obligatoires ne sont PAS remplies ici.
+         *
+         * Une version precedente y posait « 000 000 000 00000 » et
+         * « CCAD-26-DEMO ». C'etait deux fois mauvais : ca se voyait comme un
+         * site inacheve, et un numero d'immatriculation invente, publie sur
+         * un site, est une fausse mention legale — meme illisible, meme
+         * provisoire.
+         *
+         * Vides, elles s'affichent « A completer » en or sur la page des
+         * mentions : c'est le comportement prevu par la charte, c'est honnete,
+         * et le tableau de bord les reclame. Devant une cliente, cela se
+         * montre plutot que cela se cache.
+         */
 
         Setting::all_cached();
 

@@ -40,6 +40,18 @@
                 </table>
             </x-record>
 
+            @php($acompte = \App\Models\Setting::get('legal.acompte'))
+
+            @if(filled($acompte))
+                {{-- Les conditions de l'acompte figurent aussi sur la page de
+                     reservation, juste au-dessus de la case a cocher. Ici
+                     elles sont consultables par n'importe qui, avant meme
+                     d'avoir recu un lien. --}}
+                <x-record titre="L’acompte et la réservation">
+                    <x-texte-riche :texte="$acompte" />
+                </x-record>
+            @endif
+
             <x-record titre="Données personnelles"
                       note="Les statuts « réservé » et « adopté » sont affichés sans aucune donnée nominative sur la famille concernée. Les témoignages ne sont publiés qu'avec accord écrit, sous le prénom seul.">
                 <table>

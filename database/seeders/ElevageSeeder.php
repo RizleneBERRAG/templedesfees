@@ -129,6 +129,15 @@ class ElevageSeeder extends Seeder
             ['cle' => 'legal.certificat',     'libelle' => 'N° de certificat de capacité', 'valeur' => null, 'groupe' => 'legal', 'est_obligatoire' => true],
             ['cle' => 'legal.directeur',      'libelle' => 'Directeur de la publication',  'valeur' => null, 'groupe' => 'legal', 'est_obligatoire' => true],
             ['cle' => 'legal.hebergeur',      'libelle' => 'Hébergeur',                'valeur' => null, 'groupe' => 'legal', 'est_obligatoire' => true],
+
+            /*
+             * Les conditions de l'acompte. Elles vivent en reglage et non dans
+             * une vue : l'eleveuse doit pouvoir les reprendre avec son conseil
+             * sans demander une intervention. Le texte de depart est dans
+             * seeders/data/acompte.php, avec les deux points a faire relire.
+             */
+            ['cle' => 'legal.acompte', 'libelle' => 'Conditions de l’acompte (texte de départ, à faire valider)',
+             'valeur' => require database_path('seeders/data/acompte.php'), 'groupe' => 'legal'],
         ];
 
         foreach ($reglages as $r) {

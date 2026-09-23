@@ -134,6 +134,17 @@
                     </table>
                 </x-record>
 
+                @php($conditions = \App\Models\Setting::get('legal.acompte'))
+
+                @if(filled($conditions))
+                    {{-- Les conditions sont sur la page, pas derriere un lien :
+                         on ne fait pas cocher « j'ai lu » a quelqu'un qui
+                         devrait ouvrir un autre onglet pour lire. --}}
+                    <x-record titre="Les conditions" meta="À lire avant de valider">
+                        <x-texte-riche :texte="$conditions" />
+                    </x-record>
+                @endif
+
                 @if($reservation->peutEtrePayee())
                     <form method="POST" action="{{ route('reservation.payer', ['jeton' => $reservation->jeton]) }}"
                           class="demande">
@@ -143,9 +154,7 @@
                             <input type="checkbox" name="conditions" value="1" required
                                    @checked(old('conditions'))>
                             <span>
-                                J’ai lu et j’accepte les conditions de l’acompte : il réserve le chaton
-                                à mon nom, il est déduit du prix au départ, et il reste acquis à
-                                l’élevage si je renonce sans motif.
+                                J’ai lu et j’accepte les conditions de l’acompte ci-dessus.
                                 <a href="{{ route('legal') }}">Mentions légales</a>
                             </span>
                         </label>
