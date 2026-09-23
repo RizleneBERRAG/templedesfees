@@ -4,9 +4,12 @@ namespace App\Models;
 
 use App\Enums\KittenStatus;
 use App\Enums\ReservationStatus;
+use App\Services\Caisse;
+use App\Support\Monnaie;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 /**
@@ -43,8 +46,11 @@ class Reservation extends Model
         return [
             'statut'           => ReservationStatus::class,
             'acompte_centimes' => 'integer',
+            'prix_centimes'    => 'integer',
             'expire_le'        => 'datetime',
+            'depart_prevu_le'  => 'date',
             'paye_le'          => 'datetime',
+            'facture_le'       => 'datetime',
         ];
     }
 
@@ -77,9 +83,52 @@ class Reservation extends Model
     /** Le montant en euros, tel qu'on l'ecrit : « 300 € » ou « 299,50 € ». */
     public function acompteFormate(): string
     {
-        $euros = $this->acompte_centimes / 100;
+        return Monnaie::euros($this->acompte_centimes);
+    }
 
-        return number_format($euros, fmod($euros, 1) === 0.0 ? 0 : 2, ',', ' ').' €';
+    public function prixFormate(): string
+    {
+        return Monnaie::euros($this->prix_centimes);
+    }
+
+    /**
+     * Ce qui restera a regler le jour du depart.
+     *
+     * Nul tant qu'aucun prix n'a ete convenu : mieux vaut un tiret sur le
+     * contrat qu'un solde calcule a partir d'un prix qu'on a oublie de saisir.
+     */
+    public function soldeCentimes(): ?int
+    {
+        return $this->prix_centimes === null
+            ? null
+            : max(0, $this->prix_centimes - $this->acompte_centimes);
+    }
+
+    public function soldeFormate(): string
+    {
+        return Monnaie::euros($this->soldeCentimes());
+    }
+
+    /**
+     * La reference du dossier, celle qu'on cite au telephone.
+     *
+     * Elle n'a rien a voir avec le numero de facture : elle existe des la
+     * creation, elle sert a se retrouver, et elle n'engage rien.
+     */
+    public function reference(): string
+    {
+        return 'R-'.$this->created_at?->format('Y').'-'.str_pad((string) $this->id, 4, '0', STR_PAD_LEFT);
+    }
+
+    /** La date de depart ecrite au contrat : celle qu'on a fixee, sinon celle de la portee. */
+    public function departPrevu(): ?\Illuminate\Support\Carbon
+    {
+        return $this->depart_prevu_le ?? $this->kitten?->litter?->date_disponibilite;
+    }
+
+    public function aUneFacture(): bool
+    {
+        return filled($this->facture_numero);
     }
 
     /** L'adresse publique ou la famille vient payer. */
@@ -129,6 +178,58 @@ class Reservation extends Model
         ])->save();
 
         $this->bloquerLeChaton();
+        $this->emettreLaFacture();
+    }
+
+    /**
+     * Numeroter la facture d'acompte.
+     *
+     * Le numero est alloue a l'encaissement, jamais a la creation : une facture
+     * numerotee pour une reservation qui n'a jamais ete payee laisserait un
+     * trou dans la suite, et une numerotation a trous est precisement ce qu'un
+     * controle ne veut pas voir.
+     *
+     * La suite est chronologique, continue, remise a un chaque annee :
+     * 2026-0001, 2026-0002. L'allocation se fait dans une transaction, avec le
+     * verrou : deux acomptes encaisses dans la meme seconde — un virement
+     * enregistre a la main pendant qu'un paiement en ligne arrive — ne doivent
+     * pas repartir avec le meme numero.
+     *
+     * Sans effet si la facture existe deja : le webhook Stripe rejoue ses
+     * notifications, et une facture ne se renumerote pas.
+     *
+     * Les acomptes simules en mode demonstration prennent un prefixe a eux.
+     * Sans cela, montrer le parcours a la cliente consommerait les premiers
+     * numeros de l'annee, et les effacer ensuite laisserait le trou que toute
+     * cette methode cherche a eviter.
+     */
+    public function emettreLaFacture(): void
+    {
+        if ($this->aUneFacture()) {
+            return;
+        }
+
+        $serie = Caisse::enDemonstration() ? 'DEMO' : now()->format('Y');
+
+        DB::transaction(function () use ($serie) {
+            $dernier = self::query()
+                ->where('facture_numero', 'like', $serie.'-%')
+                ->lockForUpdate()
+                ->max('facture_numero');
+
+            $rang = $dernier ? ((int) substr($dernier, strlen($serie) + 1)) + 1 : 1;
+
+            $this->forceFill([
+                'facture_numero' => $serie.'-'.str_pad((string) $rang, 4, '0', STR_PAD_LEFT),
+                'facture_le'     => now(),
+            ])->save();
+        });
+    }
+
+    /** Une facture de demonstration, qui ne compte dans aucune comptabilite. */
+    public function factureEstFictive(): bool
+    {
+        return str_starts_with((string) $this->facture_numero, 'DEMO-');
     }
 
     public function annuler(?string $note = null): void

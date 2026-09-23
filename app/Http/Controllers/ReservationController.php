@@ -82,6 +82,47 @@ class ReservationController extends Controller
     }
 
     /**
+     * Le contrat de reservation.
+     *
+     * Il existe des la creation de la reservation : c'est lui que l'eleveuse
+     * joint au lien qu'elle envoie, et c'est sur lui que la famille se decide.
+     * Il s'ecrit tout seul a partir de la fiche — aucune saisie a recopier,
+     * donc aucune faute de frappe sur un nom ou un montant.
+     */
+    public function contrat(string $jeton)
+    {
+        $reservation = $this->trouver($jeton);
+
+        return view('documents.contrat', [
+            'reservation' => $reservation,
+            'chaton'      => $reservation->kitten,
+        ]);
+    }
+
+    /**
+     * La facture d'acompte.
+     *
+     * Elle n'existe qu'une fois l'acompte encaisse : une facture d'acompte
+     * atteste un versement recu, elle ne l'annonce pas. Avant, il n'y a rien a
+     * montrer, et le lien renvoie vers la page de reservation.
+     */
+    public function facture(string $jeton)
+    {
+        $reservation = $this->trouver($jeton);
+
+        if (! $reservation->aUneFacture()) {
+            return redirect()
+                ->route('reservation.montrer', ['jeton' => $jeton])
+                ->with('erreur', 'La facture sera disponible dès que l’acompte sera arrivé.');
+        }
+
+        return view('documents.facture', [
+            'reservation' => $reservation,
+            'chaton'      => $reservation->kitten,
+        ]);
+    }
+
+    /**
      * La notification de Stripe.
      *
      * C'est elle qui fait foi, et non le retour du navigateur : une famille

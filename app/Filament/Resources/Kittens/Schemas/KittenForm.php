@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Kittens\Schemas;
 use App\Enums\KittenStatus;
 use App\Filament\Champs\ChampPhoto;
 use App\Models\Litter;
+use App\Support\Monnaie;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -96,6 +97,21 @@ class KittenForm
                             ->default('disponible')
                             ->required()
                             ->helperText('Porte sur le chaton, jamais sur la famille : aucun nom d’adoptant n’est publié.'),
+
+                        /*
+                         * Le prix ne parait sur aucune page du site : la
+                         * chatterie n'affiche pas ses tarifs en vitrine, et ce
+                         * n'est pas a une refonte d'en decider. Il sert au
+                         * contrat de reservation et a la facture, qui ont
+                         * besoin du prix pour ecrire le solde restant du.
+                         */
+                        TextInput::make('prix_centimes')
+                            ->label('Prix')
+                            ->numeric()
+                            ->suffix('€')
+                            ->formatStateUsing(fn (?int $state) => $state === null ? null : $state / 100)
+                            ->dehydrateStateUsing(fn ($state) => filled($state) ? Monnaie::centimes($state) : null)
+                            ->helperText('Jamais affiché sur le site. Repris au contrat de réservation.'),
 
                         TextInput::make('poids_g')
                             ->label('Poids')

@@ -82,6 +82,26 @@ class ReservationResource extends Resource
     public static function actionsDeFiche(): array
     {
         return [
+            /*
+             * Les deux documents. Ils s'ouvrent a la meme adresse que celle
+             * que verra la famille : un seul document, jamais une copie
+             * d'eleveuse qui finirait par diverger de celle du client.
+             */
+            Action::make('contrat')
+                ->label('Le contrat')
+                ->icon(Heroicon::OutlinedDocumentText)
+                ->color('gray')
+                ->url(fn (Reservation $record) => route('reservation.contrat', ['jeton' => $record->jeton]))
+                ->openUrlInNewTab(),
+
+            Action::make('facture')
+                ->label('La facture')
+                ->icon(Heroicon::OutlinedReceiptPercent)
+                ->color('gray')
+                ->visible(fn (Reservation $record) => $record->aUneFacture())
+                ->url(fn (Reservation $record) => route('reservation.facture', ['jeton' => $record->jeton]))
+                ->openUrlInNewTab(),
+
             Action::make('lien')
                 ->label('Voir le lien de paiement')
                 ->icon(Heroicon::OutlinedLink)

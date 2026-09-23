@@ -3,11 +3,14 @@
 namespace Tests\Feature;
 
 use App\Enums\KittenStatus;
+use App\Filament\Resources\AdoptionRequests\Pages\EditAdoptionRequest;
+use App\Models\AdoptionRequest;
 use App\Enums\ReservationStatus;
 use App\Models\Kitten;
 use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 /**
@@ -161,7 +164,9 @@ class ReservationTest extends TestCase
         $this->get($reservation->lienPublic())
             ->assertOk()
             ->assertSee($chaton->nom)
-            ->assertSee('300 €')
+            // L'espace avant l'euro est insecable : un prix coupe en fin de
+            // ligne, sur un contrat comme sur une page, fait desordre.
+            ->assertSee("300\u{00A0}€")
             ->assertSee('noindex', escape: false);
     }
 
@@ -211,6 +216,194 @@ class ReservationTest extends TestCase
 
         $this->postJson(route('paiement.notification'), ['type' => 'checkout.session.completed'])
             ->assertStatus(400);
+    }
+
+    /* ── le contrat et la facture ────────────────────────────────── */
+
+    public function test_le_contrat_existe_des_la_creation_et_porte_les_bons_montants(): void
+    {
+        $chaton = $this->chatonDisponible();
+        $chaton->forceFill(['prix_centimes' => 150000])->save();
+
+        $reservation = $this->reservationPour($chaton, ['prix_centimes' => 150000]);
+
+        $this->get(route('reservation.contrat', ['jeton' => $reservation->jeton]))
+            ->assertOk()
+            ->assertSee($chaton->nom)
+            ->assertSee('Camille Dupuis')
+            ->assertSee("1 500\u{00A0}€")           // le prix
+            ->assertSee("300\u{00A0}€")             // l'acompte
+            ->assertSee("1 200\u{00A0}€")           // le solde, calcule tout seul
+            ->assertSee('noindex', escape: false);
+    }
+
+    /**
+     * Une facture d'acompte atteste un versement recu. Tant qu'il n'est pas
+     * arrive, il n'y a rien a montrer — et surtout rien a numeroter.
+     */
+    public function test_la_facture_n_existe_pas_avant_l_encaissement(): void
+    {
+        $chaton = $this->chatonDisponible();
+        $reservation = $this->reservationPour($chaton);
+
+        $this->assertNull($reservation->facture_numero);
+
+        $this->get(route('reservation.facture', ['jeton' => $reservation->jeton]))
+            ->assertRedirect(route('reservation.montrer', ['jeton' => $reservation->jeton]));
+    }
+
+    public function test_l_encaissement_emet_la_facture(): void
+    {
+        $chaton = $this->chatonDisponible();
+        $reservation = $this->reservationPour($chaton, ['prix_centimes' => 150000]);
+
+        $reservation->payer('pi_essai');
+        $reservation->refresh();
+
+        $this->assertSame(now()->format('Y').'-0001', $reservation->facture_numero);
+        $this->assertNotNull($reservation->facture_le);
+
+        $this->get(route('reservation.facture', ['jeton' => $reservation->jeton]))
+            ->assertOk()
+            ->assertSee($reservation->facture_numero)
+            ->assertSee('Facture acquittée')
+            ->assertSee("300\u{00A0}€");
+    }
+
+    /**
+     * Stripe rejoue ses notifications jusqu'a recevoir un accuse : une facture
+     * qui se renumerote a chaque rejeu n'est plus une facture.
+     */
+    public function test_la_facture_ne_se_renumerote_pas(): void
+    {
+        $chaton = $this->chatonDisponible();
+        $reservation = $this->reservationPour($chaton);
+
+        $reservation->payer('pi_essai');
+        $numero = $reservation->fresh()->facture_numero;
+
+        $reservation->payer('pi_essai');
+        $reservation->emettreLaFacture();
+
+        $this->assertSame($numero, $reservation->fresh()->facture_numero);
+    }
+
+    /** Une numerotation a trous est precisement ce qu'un controle ne veut pas voir. */
+    public function test_les_numeros_de_facture_se_suivent(): void
+    {
+        $this->seed();
+
+        $numeros = Kitten::where('statut', KittenStatus::Disponible)
+            ->take(2)
+            ->get()
+            ->map(function (Kitten $chaton) {
+                $reservation = $this->reservationPour($chaton);
+                $reservation->payer();
+
+                return $reservation->fresh()->facture_numero;
+            });
+
+        $annee = now()->format('Y');
+        $this->assertSame([$annee.'-0001', $annee.'-0002'], $numeros->all());
+    }
+
+    /**
+     * Le mode demonstration sert a montrer le parcours avant l'ouverture du
+     * compte. Ses acomptes simules ne doivent pas consommer les premiers
+     * numeros de l'annee, ni laisser un trou le jour ou on les efface.
+     */
+    public function test_une_facture_de_demonstration_prend_une_serie_a_part(): void
+    {
+        config([
+            'chatterie.paiement.demonstration'   => true,
+            'chatterie.paiement.stripe.cle_secrete' => null,
+        ]);
+
+        $chaton = $this->chatonDisponible();
+        $reservation = $this->reservationPour($chaton);
+        $reservation->payer();
+        $reservation->refresh();
+
+        $this->assertSame('DEMO-0001', $reservation->facture_numero);
+        $this->assertTrue($reservation->factureEstFictive());
+
+        $this->get(route('reservation.facture', ['jeton' => $reservation->jeton]))
+            ->assertOk()
+            ->assertSee('Document de démonstration');
+    }
+
+    /* ── du dossier a la reservation ─────────────────────────────── */
+
+    /**
+     * Le parcours voulu : la famille remplit le formulaire de pre-adoption,
+     * l'eleveuse appelle, puis prepare la reservation depuis le dossier. Rien
+     * de ce que la famille a deja ecrit ne doit etre retape.
+     */
+    public function test_la_reservation_se_prepare_depuis_le_dossier(): void
+    {
+        $chaton = $this->chatonDisponible();
+        $chaton->forceFill(['prix_centimes' => 150000])->save();
+
+        $dossier = AdoptionRequest::create([
+            'prenom'      => 'Camille',
+            'nom'         => 'Dupuis',
+            'email'       => 'camille@example.test',
+            'telephone'   => '06 12 34 56 78',
+            'code_postal' => '69007',
+            'kitten_id'   => $chaton->id,
+        ]);
+
+        $eleveuse = User::where('email', 'letempledesfees@outlook.fr')->firstOrFail();
+
+        Livewire::actingAs($eleveuse)
+            ->test(EditAdoptionRequest::class, ['record' => $dossier->getKey()])
+            ->assertActionVisible('preparer_reservation')
+            ->callAction('preparer_reservation', [
+                'kitten_id'   => $chaton->id,
+                'adresse'     => '12 rue des Lilas',
+                'code_postal' => '69007',
+                'ville'       => 'Lyon',
+                'prix'        => 1500,
+                'acompte'     => 300,
+            ]);
+
+        $reservation = Reservation::where('adoption_request_id', $dossier->id)->firstOrFail();
+
+        $this->assertSame('Camille', $reservation->prenom);
+        $this->assertSame('camille@example.test', $reservation->email);
+        $this->assertSame('06 12 34 56 78', $reservation->telephone);
+        $this->assertSame('Lyon', $reservation->ville);
+        $this->assertSame(150000, $reservation->prix_centimes);
+        $this->assertSame(30000, $reservation->acompte_centimes);
+
+        // Le dossier a abouti : il le dit tout seul, sinon la liste des
+        // demandes ne veut plus rien dire au bout de trois mois.
+        $this->assertSame('accepte', $dossier->fresh()->statut);
+
+        // Et le chaton reste proposable : rien n'est encore paye.
+        $this->assertSame(KittenStatus::Disponible, $chaton->fresh()->statut);
+    }
+
+    /**
+     * Deux acomptes sur le meme chaton, ce sont deux familles a qui on a
+     * promis la meme chose.
+     */
+    public function test_un_dossier_deja_reserve_ne_propose_plus_le_bouton(): void
+    {
+        $chaton = $this->chatonDisponible();
+
+        $dossier = AdoptionRequest::create([
+            'prenom' => 'Camille',
+            'email'  => 'camille@example.test',
+        ]);
+
+        $this->reservationPour($chaton, ['adoption_request_id' => $dossier->id]);
+
+        $eleveuse = User::where('email', 'letempledesfees@outlook.fr')->firstOrFail();
+
+        Livewire::actingAs($eleveuse)
+            ->test(EditAdoptionRequest::class, ['record' => $dossier->getKey()])
+            ->assertActionHidden('preparer_reservation');
     }
 
     /* ── le back-office ──────────────────────────────────────────── */

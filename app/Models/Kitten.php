@@ -37,6 +37,7 @@ class Kitten extends Model
     {
         return [
             'statut'          => KittenStatus::class,
+            'prix_centimes'   => 'integer',
             'poids_releve_le' => 'date',
             'est_publie'      => 'boolean',
         ];
@@ -45,6 +46,18 @@ class Kitten extends Model
     public function getRouteKeyName(): string
     {
         return 'slug';
+    }
+
+    /**
+     * Le prix convenu, tel qu'on l'ecrit.
+     *
+     * Il ne parait sur aucune page du site : la chatterie n'affiche pas ses
+     * tarifs en vitrine. Il sert au contrat de reservation et a la facture,
+     * qui ont besoin du prix pour ecrire le solde restant du au depart.
+     */
+    public function prixFormate(): string
+    {
+        return \App\Support\Monnaie::euros($this->prix_centimes);
     }
 
     /** Les reservations portant sur ce chaton, payees ou non. */

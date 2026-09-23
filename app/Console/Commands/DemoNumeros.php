@@ -38,6 +38,14 @@ class DemoNumeros extends Command
         foreach (Kitten::with('litter')->get() as $chaton) {
             $chaton->icad_numero = $reset ? null : '250 269 '.str_pad((string) $chaton->id, 9, '0', STR_PAD_LEFT);
 
+            /*
+             * Un prix, pour que le contrat et la facture aient un solde a
+             * ecrire. Il ne parait sur aucune page du site — la chatterie
+             * n'affiche pas ses tarifs en vitrine — et c'est a l'eleveuse de
+             * poser le vrai, fiche par fiche, dans le back-office.
+             */
+            $chaton->prix_centimes = $reset ? null : 150000;
+
             // Les chatons deja adoptes de la portee archivee restent hors ligne.
             $chaton->est_publie = ! $reset && $chaton->litter?->slug === 'portee-b-2026';
             $chaton->save();

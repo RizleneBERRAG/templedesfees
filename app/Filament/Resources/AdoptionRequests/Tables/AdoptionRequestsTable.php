@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AdoptionRequests\Tables;
 
+use App\Filament\Resources\AdoptionRequests\Actions\PreparerLaReservation;
 use App\Filament\Resources\AdoptionRequests\Schemas\AdoptionRequestForm;
 use App\Models\AdoptionRequest;
 use Filament\Actions\BulkActionGroup;
@@ -70,7 +71,10 @@ class AdoptionRequestsTable
                     ->label('Suivi')
                     ->options(AdoptionRequestForm::STATUTS),
             ])
-            ->recordActions([EditAction::make()->label('Ouvrir')])
+            ->recordActions([
+                EditAction::make()->label('Ouvrir'),
+                PreparerLaReservation::make()->button()->outlined()->label('Réserver'),
+            ])
             ->toolbarActions([
                 BulkActionGroup::make([DeleteBulkAction::make()]),
             ]);

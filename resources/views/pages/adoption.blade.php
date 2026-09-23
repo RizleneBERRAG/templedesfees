@@ -17,7 +17,7 @@
         <div class="cellules">
             <div class="cellule"><span class="n">ÉTAPE 01</span><h3>Vous nous écrivez</h3><p>Le formulaire plus bas, ou un appel. Parlez-nous de votre foyer, de vos autres animaux, de votre rythme de vie. Réponse sous 48 heures.</p></div>
             <div class="cellule"><span class="n">ÉTAPE 02</span><h3>Vous venez les voir</h3><p>Visite sur rendez-vous à Lapeyrouse-Mornay. Vous rencontrez la mère, la fratrie complète, et vous voyez l'endroit où ils grandissent.</p></div>
-            <div class="cellule"><span class="n">ÉTAPE 03</span><h3>Réservation et contrat</h3><p>Contrat de cession signé, acompte, puis des nouvelles régulières en photo et en vidéo jusqu'au départ.</p></div>
+            <div class="cellule"><span class="n">ÉTAPE 03</span><h3>Réservation et contrat</h3><p>Nous vous envoyons le contrat de réservation et un lien privé pour l'acompte. Dès qu'il est réglé, le chaton est retiré de la vente — et vous recevez des nouvelles chaque semaine jusqu'au départ.</p></div>
             <div class="cellule"><span class="n">ÉTAPE 04</span><h3>Le grand jour</h3><p>À {{ \App\Models\Litter::SEMAINES_AVANT_CESSION }} semaines minimum : pedigree LOOF, carnet de santé, certificat vétérinaire, puce ICAD, contrat et kit d'alimentation.</p></div>
         </div>
     </div>

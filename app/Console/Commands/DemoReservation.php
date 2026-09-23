@@ -51,8 +51,15 @@ class DemoReservation extends Command
             'nom'              => 'Dupuis',
             'email'            => 'camille.dupuis@example.fr',
             'telephone'        => '06 12 34 56 78',
+            // Une adresse complete : un contrat identifie ses parties, et une
+            // demonstration sans adresse montrerait un contrat troue.
+            'adresse'          => '12 rue des Lilas',
+            'code_postal'      => '69007',
+            'ville'            => 'Lyon',
+            'prix_centimes'    => $chaton->prix_centimes,
             'acompte_centimes' => config('chatterie.paiement.acompte_defaut_centimes'),
             'expire_le'        => now()->addDays(config('chatterie.paiement.delai_jours'))->endOfDay(),
+            'depart_prevu_le'  => $chaton->litter?->date_disponibilite,
             'note_interne'     => 'Réservation de démonstration — à supprimer avant la mise en ligne.',
         ]);
 
@@ -64,6 +71,7 @@ class DemoReservation extends Command
             .' · à régler avant le '.$reservation->expire_le->translatedFormat('j F Y'));
         $this->newLine();
         $this->line('  '.$reservation->lienPublic());
+        $this->line('  Contrat : '.route('reservation.contrat', ['jeton' => $reservation->jeton]));
         $this->newLine();
 
         if (Caisse::enDemonstration()) {

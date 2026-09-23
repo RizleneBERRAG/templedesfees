@@ -213,16 +213,20 @@ Une réservation **naît d'une décision de l'éleveuse**, après la visite : ce
 pas un panier qu'un inconnu remplit. C'est ce que dit le parcours d'adoption sur
 le site, et c'est ce que le code applique.
 
-Le circuit tient en quatre temps :
+Le circuit suit le parcours annoncé sur le site, dans cet ordre :
 
-1. L'éleveuse crée la réservation dans **Ce qu'on reçoit › Réservations** : le
-   chaton, la famille, le montant, une échéance.
-2. Le site fabrique un **lien privé** — quarante caractères tirés au hasard, pas
-   de compte à créer. Le bouton « Voir le lien de paiement » le donne à copier.
-3. La famille paie par carte **sur le domaine de Stripe**. Aucun numéro de carte
-   ne touche ce site ni n'y est conservé.
-4. La notification de Stripe marque l'acompte reçu et **le chaton passe en
-   « réservé »**.
+1. La famille remplit le **formulaire de pré-adoption**. C'est la seule porte
+   d'entrée publique : nulle part sur le site on ne peut réserver un chaton.
+2. L'éleveuse appelle, reçoit la famille, et décide.
+3. Depuis le dossier, le bouton **« Préparer la réservation »** ouvre une fenêtre
+   déjà remplie de ce que la famille a écrit. Il reste l'adresse postale, le prix,
+   l'acompte et les deux dates. Le dossier passe en « acceptée » tout seul.
+4. Le site produit d'un coup le **contrat de réservation** et un **lien privé** —
+   quarante caractères tirés au hasard, pas de compte à créer.
+5. La famille lit le contrat, coche, et paie par carte **sur le domaine de
+   Stripe**. Aucun numéro de carte ne touche ce site ni n'y est conservé.
+6. La notification de Stripe marque l'acompte reçu, **le chaton passe en
+   « réservé »**, et la **facture d'acompte** est numérotée.
 
 **Tant que rien n'est payé, le chaton reste proposable.** Une réservation en
 attente ne réserve rien. Passé l'échéance, `reservations:menage` — planifiée
@@ -231,6 +235,44 @@ tous les matins à 6 h — la fait expirer et rend le chaton.
 L'acompte reçu autrement — un chèque remis à la visite, un virement — s'enregistre
 par le bouton « Acompte reçu (hors ligne) » : c'est le cas le plus fréquent chez
 un éleveur.
+
+### Le contrat et la facture
+
+Les deux documents **s'écrivent tout seuls** à partir de la fiche : le chaton et
+ses numéros, la portée et ses parents, la famille, les montants, les dates. Rien
+ne se retape, donc rien ne peut diverger entre ce qui est signé et ce qui est
+facturé.
+
+Seul le texte des clauses vient d'un réglage (`legal.contrat`, `legal.acompte`),
+modifiable dans **Le site › Réglages** : l'éleveuse doit pouvoir le reprendre
+avec son conseil sans demander une intervention.
+
+- **Le contrat de réservation** existe dès la création. C'est lui qu'on joint au
+  lien. Les conditions de l'acompte y figurent en annexe, pas derrière un lien.
+- **La facture d'acompte** n'existe qu'une fois l'acompte encaissé : une facture
+  d'acompte atteste un versement, elle ne l'annonce pas.
+
+Les deux s'ouvrent derrière le **même jeton** que la page de paiement — la
+famille depuis son lien, l'éleveuse depuis sa fiche. Une seule adresse, un seul
+document, jamais une copie qui diverge.
+
+**Pas de PDF côté serveur** : la page *est* le document, imprimable en A4 et
+enregistrable en PDF depuis le navigateur. Le fichier qui en sort reste
+sélectionnable et cherchable, ce qu'une image collée dans un PDF ne serait pas.
+La feuille de style est à part (`resources/css/document.css`) : le site est nuit
+et or, un contrat s'imprime sur du papier blanc.
+
+**La numérotation** est chronologique, continue, remise à un chaque année —
+`2026-0001`, `2026-0002`. Le numéro est alloué à l'encaissement et jamais avant :
+une facture numérotée pour un acompte jamais versé laisserait un trou, et une
+numérotation à trous est exactement ce qu'un contrôle ne veut pas voir. Les
+acomptes simulés en mode démonstration prennent une série `DEMO-` qui ne
+consomme rien.
+
+Le **prix** vit sur la fiche du chaton et n'apparaît sur aucune page publique :
+la chatterie n'affiche pas ses tarifs en vitrine. Il sert au contrat et au calcul
+du solde. De même pour l'**adresse postale** de l'élevage (`elevage.adresse`) :
+un contrat identifie ses parties, la carte de la page Contact pointe la commune.
 
 ### Les clefs
 
@@ -283,8 +325,9 @@ bord les réclame.
 
 ### Ce qui reste bloquant
 
-Encaisser exige le **SIREN** et le **certificat de capacité** dans les mentions
-légales. Ils s'affichent « à compléter » sur le site en attendant, ce qui est
+Encaisser exige le **SIREN**, le **certificat de capacité** et la **mention de
+TVA** qui va sur les factures (`legal.tva`, laissée vide : le régime fiscal de
+l'élevage ne s'invente pas). Ils s'affichent « à compléter » sur le site en attendant, ce qui est
 volontaire — mais ils ne sont pas optionnels le jour où l'on prend de l'argent.
 Le tableau de bord les réclame.
 

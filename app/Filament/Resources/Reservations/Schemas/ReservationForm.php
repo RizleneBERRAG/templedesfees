@@ -6,6 +6,7 @@ use App\Enums\KittenStatus;
 use App\Models\AdoptionRequest;
 use App\Models\Kitten;
 use App\Models\Reservation;
+use App\Support\Monnaie;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
@@ -46,6 +47,25 @@ class ReservationForm
                             ->mapWithKeys(fn (Kitten $c) => [
                                 $c->id => $c->nom.' — '.$c->robe.' ('.$c->statut->libelle().')',
                             ]))
+                        /*
+                         * Le prix et la date de depart suivent le chaton : ils
+                         * sont deja sur sa fiche et sur celle de sa portee.
+                         * On ne les repose que s'ils sont vides — sur une fiche
+                         * qu'on rouvre, ce qui a ete convenu l'emporte sur ce
+                         * que dit le tarif du jour.
+                         */
+                        ->live()
+                        ->afterStateUpdated(function ($state, Get $get, Set $set) {
+                            $chaton = Kitten::with('litter')->find($state);
+
+                            if ($chaton?->prix_centimes && blank($get('prix_centimes'))) {
+                                $set('prix_centimes', $chaton->prix_centimes / 100);
+                            }
+
+                            if ($chaton?->litter?->date_disponibilite && blank($get('depart_prevu_le'))) {
+                                $set('depart_prevu_le', $chaton->litter->date_disponibilite);
+                            }
+                        })
                         ->helperText('Le chaton n’est bloqué qu’une fois l’acompte encaissé, pas à la création.'),
 
                     Select::make('adoption_request_id')
@@ -75,6 +95,7 @@ class ReservationForm
                             $set('nom', $dossier->nom);
                             $set('email', $dossier->email);
                             $set('telephone', $dossier->telephone);
+                            $set('code_postal', $dossier->code_postal);
                         })
                         ->live()
                         ->helperText('Facultatif. Le choisir remplit les coordonnées ci-dessous.'),
@@ -88,11 +109,40 @@ class ReservationForm
                         ->maxLength(180)
                         ->helperText('C’est à cette adresse que part le lien de paiement.'),
                     TextInput::make('telephone')->label('Téléphone')->tel()->maxLength(30),
+
+                    /*
+                     * L'adresse ne sert pas au paiement : elle sert au contrat,
+                     * qui identifie ses parties. Une reservation sans adresse
+                     * marche, son contrat est incomplet — le document le
+                     * signale a l'ecran plutot que de le taire.
+                     */
+                    TextInput::make('adresse')
+                        ->label('Adresse')
+                        ->maxLength(180)
+                        ->columnSpanFull()
+                        ->helperText('Portée au contrat de réservation. Jamais affichée sur le site.'),
+
+                    TextInput::make('code_postal')->label('Code postal')->maxLength(10),
+                    TextInput::make('ville')->label('Ville')->maxLength(80),
                 ])
                 ->columns(2),
 
-            Section::make('L’acompte')
+            Section::make('Le prix et l’acompte')
+                ->description('Ces montants sont écrits au contrat et à la facture. Le prix n’apparaît sur aucune page du site.')
                 ->schema([
+
+                    /*
+                     * Le prix est recopie depuis la fiche du chaton a la
+                     * creation, puis fige : un tarif peut changer d'une portee
+                     * a l'autre, un contrat deja signe ne change pas.
+                     */
+                    TextInput::make('prix_centimes')
+                        ->label('Prix convenu du chaton')
+                        ->numeric()
+                        ->suffix('€')
+                        ->formatStateUsing(fn (?int $state) => $state === null ? null : $state / 100)
+                        ->dehydrateStateUsing(fn ($state) => filled($state) ? Monnaie::centimes($state) : null)
+                        ->helperText('Sert à calculer le solde restant dû au départ.'),
 
                     /*
                      * Le montant est stocke en centimes et saisi en euros. La
@@ -108,7 +158,7 @@ class ReservationForm
                         ->suffix('€')
                         ->default(fn () => config('chatterie.paiement.acompte_defaut_centimes') / 100)
                         ->formatStateUsing(fn (?int $state) => $state === null ? null : $state / 100)
-                        ->dehydrateStateUsing(fn ($state) => (int) round(((float) str_replace(',', '.', (string) $state)) * 100))
+                        ->dehydrateStateUsing(fn ($state) => Monnaie::centimes($state))
                         ->helperText('Déduit du prix du chaton au moment du départ.'),
 
                     DatePicker::make('expire_le')
@@ -117,6 +167,12 @@ class ReservationForm
                         ->displayFormat('j F Y')
                         ->default(fn () => now()->addDays(config('chatterie.paiement.delai_jours'))->endOfDay())
                         ->helperText('Passé ce délai, le chaton est automatiquement remis en vente.'),
+
+                    DatePicker::make('depart_prevu_le')
+                        ->label('Départ prévu le')
+                        ->native(false)
+                        ->displayFormat('j F Y')
+                        ->helperText('Douze semaines révolues au plus tôt. Écrit au contrat ; vide, c’est la date de la portée qui sert.'),
 
                     Placeholder::make('statut_affiche')
                         ->label('Statut')

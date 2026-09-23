@@ -14,6 +14,7 @@ use App\Models\LitterEvent;
 use App\Models\Photo;
 use App\Models\Setting;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
@@ -117,6 +118,15 @@ class ElevageSeeder extends Seeder
             ['cle' => 'elevage.ville',        'libelle' => 'Ville',                    'valeur' => 'Lapeyrouse-Mornay',            'groupe' => 'general'],
             ['cle' => 'elevage.code_postal',  'libelle' => 'Code postal',              'valeur' => '26210',                        'groupe' => 'general'],
             ['cle' => 'elevage.departement',  'libelle' => 'Département',              'valeur' => 'Drôme',                        'groupe' => 'general'],
+
+            /*
+             * L'adresse postale complete. Elle ne s'affiche nulle part sur le
+             * site — la carte de la page Contact pointe la commune, pas le
+             * portail — mais un contrat et une facture identifient leurs
+             * parties : ils ont besoin d'une adresse, et c'est leur seul usage.
+             */
+            ['cle' => 'elevage.adresse',      'libelle' => 'Adresse postale (contrats et factures uniquement, jamais affichée sur le site)',
+             'valeur' => '24 chemin Saint-Charles', 'groupe' => 'general'],
             ['cle' => 'contact.telephone',    'libelle' => 'Téléphone',                'valeur' => '06 77 35 45 87',               'groupe' => 'contact'],
             ['cle' => 'contact.itineraire_google', 'libelle' => 'Lien d’itinéraire Google Maps (vide = vers la commune)', 'valeur' => null, 'groupe' => 'contact'],
             ['cle' => 'contact.itineraire_waze',   'libelle' => 'Lien d’itinéraire Waze (vide = vers la commune)',        'valeur' => null, 'groupe' => 'contact'],
@@ -138,10 +148,41 @@ class ElevageSeeder extends Seeder
              */
             ['cle' => 'legal.acompte', 'libelle' => 'Conditions de l’acompte (texte de départ, à faire valider)',
              'valeur' => require database_path('seeders/data/acompte.php'), 'groupe' => 'legal'],
+
+            /*
+             * Les clauses du contrat de reservation, meme principe. Le
+             * document ecrit le reste tout seul a partir de la fiche.
+             */
+            ['cle' => 'legal.contrat', 'libelle' => 'Clauses du contrat de réservation (texte de départ, à faire valider)',
+             'valeur' => require database_path('seeders/data/contrat.php'), 'groupe' => 'legal'],
+
+            /*
+             * La mention de TVA d'une facture depend du regime fiscal de
+             * l'elevage, que le site n'a aucun moyen de connaitre. Vide, la
+             * ligne ne s'imprime pas et le tableau de bord la reclame des
+             * qu'une facture est emise.
+             */
+            ['cle' => 'legal.tva', 'libelle' => 'Mention de TVA sur les factures (par exemple : « TVA non applicable, article 293 B du CGI »)',
+             'valeur' => null, 'groupe' => 'legal'],
         ];
 
         foreach ($reglages as $r) {
-            Setting::updateOrCreate(['cle' => $r['cle']], $r);
+            $existant = Setting::where('cle', $r['cle'])->first();
+
+            /*
+             * Le seeder repose le cadre, jamais le contenu. Les conditions de
+             * l'acompte et les clauses du contrat sont faites pour etre
+             * reecrites depuis le back-office : rejouer le seeder ne doit pas
+             * effacer ce que l'eleveuse a mis des heures a relire avec son
+             * conseil. Seul le libelle et le groupe se mettent a jour.
+             */
+            if ($existant) {
+                $existant->update(Arr::except($r, ['valeur']));
+
+                continue;
+            }
+
+            Setting::create($r);
         }
     }
 

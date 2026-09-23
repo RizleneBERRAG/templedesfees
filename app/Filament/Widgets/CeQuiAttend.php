@@ -54,6 +54,7 @@ class CeQuiAttend extends Widget
             $this->messagesNonTraites(),
             $this->avisEnAttente(),
             $this->mentionsIncompletes(),
+            $this->facturesIncompletes(),
             $this->echographiesPerimees(),
             $this->fichesSansPhoto(),
         ])->filter(fn (?array $t) => $t !== null && $t['nombre'] > 0)->values()->all();
@@ -183,6 +184,40 @@ class CeQuiAttend extends Widget
         return $manquantes->isEmpty() ? null : [
             'titre'  => 'Mentions légales à compléter',
             'detail' => 'Il manque : '.$manquantes->implode(', ').'. Elles s’affichent « à compléter » sur le site en attendant.',
+            'nombre' => $manquantes->count(),
+            'url'    => route('filament.admin.resources.settings.index'),
+            'ton'    => 'attention',
+        ];
+    }
+
+    /**
+     * Ce qui manque aux factures deja emises.
+     *
+     * Ces deux mentions n'ont aucune importance tant qu'aucun acompte n'a ete
+     * encaisse — d'ou le comptage des factures avant tout le reste. Le jour ou
+     * une facture est partie sans elles, en revanche, il est trop tard pour la
+     * corriger : on le dit des la premiere.
+     */
+    private function facturesIncompletes(): ?array
+    {
+        $factures = Reservation::whereNotNull('facture_numero')
+            ->where('facture_numero', 'not like', 'DEMO-%')
+            ->count();
+
+        if ($factures === 0) {
+            return null;
+        }
+
+        $manquantes = collect([
+            'legal.tva'       => 'la mention de TVA',
+            'elevage.adresse' => 'l’adresse postale',
+        ])->reject(fn ($libelle, $cle) => filled(Setting::get($cle)));
+
+        return $manquantes->isEmpty() ? null : [
+            'titre'  => 'Mentions manquantes sur les factures',
+            'detail' => 'Il manque '.$manquantes->implode(' et ')
+                .' — '.$factures.' facture'.($factures > 1 ? 's' : '').' déjà émise'
+                .($factures > 1 ? 's' : '').'. À compléter dans Le site › Réglages.',
             'nombre' => $manquantes->count(),
             'url'    => route('filament.admin.resources.settings.index'),
             'ton'    => 'attention',

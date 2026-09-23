@@ -8,6 +8,15 @@
       "app.css"
     ]
   },
+  "resources/css/document.css": {
+    "file": "assets/document-B8hMyOI6.css",
+    "src": "resources/css/document.css",
+    "isEntry": true,
+    "name": "document",
+    "names": [
+      "document.css"
+    ]
+  },
   "resources/images/grain.png": {
     "file": "assets/grain-DV8ptsxN.png",
     "src": "resources/images/grain.png"

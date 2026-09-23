@@ -145,6 +145,23 @@
                     </x-record>
                 @endif
 
+                {{-- Les documents. Le contrat existe dès la création : c'est sur
+                     lui que la famille se décide. La facture n'apparaît qu'une
+                     fois l'acompte arrivé — elle atteste un versement reçu. --}}
+                <x-record titre="Vos documents" meta="{{ $reservation->reference() }}"
+                          note="Chaque document s'imprime, ou s'enregistre en PDF depuis la fenêtre d'impression de votre navigateur.">
+                    <div class="btnrow">
+                        <a class="btn creux" href="{{ route('reservation.contrat', ['jeton' => $reservation->jeton]) }}">
+                            Le contrat de réservation
+                        </a>
+                        @if($reservation->aUneFacture())
+                            <a class="btn creux" href="{{ route('reservation.facture', ['jeton' => $reservation->jeton]) }}">
+                                La facture d’acompte n° {{ $reservation->facture_numero }}
+                            </a>
+                        @endif
+                    </div>
+                </x-record>
+
                 @if($reservation->peutEtrePayee())
                     <form method="POST" action="{{ route('reservation.payer', ['jeton' => $reservation->jeton]) }}"
                           class="demande">

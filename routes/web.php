@@ -80,6 +80,24 @@ Route::get('/reservation/{jeton}/merci', [ReservationController::class, 'merci']
     ->name('reservation.merci');
 
 /*
+ * Les deux documents de la reservation.
+ *
+ * Le contrat existe des que la reservation est creee ; la facture n'existe
+ * qu'une fois l'acompte encaisse — une facture d'acompte atteste un versement,
+ * elle ne l'annonce pas.
+ *
+ * Ils sont derriere le meme jeton que la page de paiement, et pas derriere une
+ * connexion : la famille les ouvre depuis le lien qu'elle a recu, l'eleveuse
+ * depuis sa fiche. Une seule adresse, un seul document, aucune copie qui
+ * diverge.
+ */
+Route::get('/reservation/{jeton}/contrat', [ReservationController::class, 'contrat'])
+    ->name('reservation.contrat');
+
+Route::get('/reservation/{jeton}/facture', [ReservationController::class, 'facture'])
+    ->name('reservation.facture');
+
+/*
  * La notification de paiement, appelee par Stripe de serveur a serveur. Elle
  * fait foi : c'est elle qui marque l'acompte recu, et non le retour du
  * navigateur, qu'une famille peut fermer avant qu'il arrive.

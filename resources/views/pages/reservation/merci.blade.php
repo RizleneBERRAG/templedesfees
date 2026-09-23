@@ -74,6 +74,19 @@
             </table>
         </x-record>
 
+        {{-- La facture est là dès que l'acompte est encaissé. On ne la fait pas
+             réclamer : c'est la pièce que la famille va ranger. --}}
+        @if($reservation->aUneFacture())
+            <div class="btnrow monte" style="justify-content:center;margin-top:clamp(20px,2.4vw,28px)">
+                <a class="btn creux" href="{{ route('reservation.facture', ['jeton' => $reservation->jeton]) }}">
+                    Votre facture d’acompte n° {{ $reservation->facture_numero }}
+                </a>
+                <a class="btn creux" href="{{ route('reservation.contrat', ['jeton' => $reservation->jeton]) }}">
+                    Le contrat de réservation
+                </a>
+            </div>
+        @endif
+
         <div class="btnrow monte" style="justify-content:center;margin-top:clamp(28px,3.4vw,40px)">
             <a class="btn" href="{{ route('kittens.show', $chaton) }}">La fiche de {{ $chaton?->nom }}</a>
             <a class="btn creux" href="{{ route('contact') }}">Nous joindre</a>
