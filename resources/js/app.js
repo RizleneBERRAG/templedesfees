@@ -908,13 +908,32 @@ if (seuil) {
 
     const fonds = [...seuil.querySelectorAll('.fond')];
 
+    /* Aller chercher une photo differee. On le fait un tour a l'avance : elle
+       a six secondes pour arriver, ce qui est large, et rien n'est telecharge
+       pour une photo qu'on ne verra pas si le seuil se referme avant. */
+    const charger = (img) => {
+        if (!img || !img.dataset.src) return;
+
+        if (img.dataset.srcset) {
+            img.sizes = img.dataset.sizes ?? '100vw';
+            img.srcset = img.dataset.srcset;
+        }
+
+        img.src = img.dataset.src;
+        delete img.dataset.src;
+    };
+
     if (fonds.length > 1 && !reduit()) {
         let courante = 0;
+
+        charger(fonds[1]);                  // la suivante, des maintenant
 
         relais = window.setInterval(() => {
             fonds[courante].classList.remove('vue');
             courante = (courante + 1) % fonds.length;
             fonds[courante].classList.add('vue');
+
+            charger(fonds[(courante + 1) % fonds.length]);
         }, 6000);
     }
 

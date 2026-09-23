@@ -2256,7 +2256,11 @@ html.seuil-ouvert,html.seuil-ouvert body{overflow:hidden}
    l'allège : il doit souligner, pas rayer. */
 .seuil--b .nom .pinceau{left:0;width:56%;height:.26em;bottom:-.1em;opacity:.7}
 
-.seuil--b .nom{margin:0;font-family:var(--titre);font-weight:300;font-style:italic;
+/* Il déborde de la colonne, d'un demi-mot sur la gauche. Un nom qui commence
+   exactement où commence le texte n'ouvre rien ; celui-ci part avant, comme
+   un titre de chapitre qui sort dans la marge. */
+.seuil--b .nom{margin:0 0 0 -.055em;
+  font-family:var(--titre);font-weight:300;font-style:italic;
   font-size:clamp(52px,7.4vw,104px);line-height:1;letter-spacing:.012em;
   color:var(--ivoire);text-shadow:0 10px 60px rgba(6,5,4,.9)}
 
@@ -2267,7 +2271,21 @@ html.seuil-ouvert,html.seuil-ouvert body{overflow:hidden}
 .seuil--b .dates{margin:8px 0 0;font-family:var(--titre);font-style:italic;
   font-size:17px;color:var(--ivoire-dim)}
 
-.seuil--b .mots{margin-top:clamp(16px,2.4vh,24px);max-width:40ch}
+/* La lettrine. C'est le début d'une histoire : le O de son nom tombe en or
+   dans la marge, et le texte se range autour. On réutilise la dorure de la
+   charte — celle des lettrines du site — plutôt qu'un or à part. */
+.seuil--b .mots p:first-of-type::first-letter{
+  float:left;font-family:var(--titre);font-style:normal;font-weight:400;
+  font-size:3.5em;line-height:.76;
+  padding:.04em .1em 0 0;margin-left:-.06em;
+  background:var(--dorure);-webkit-background-clip:text;background-clip:text;
+  color:transparent}
+
+@supports not ((-webkit-background-clip:text) or (background-clip:text)){
+  .seuil--b .mots p:first-of-type::first-letter{background:none;color:var(--or-clair)}
+}
+
+.seuil--b .mots{margin-top:clamp(20px,2.8vh,30px);max-width:40ch}
 .seuil--b .mots p{margin:0 0 9px;font-family:var(--titre);font-weight:300;
   font-size:clamp(17px,1.45vw,20px);line-height:1.62;color:var(--ivoire-2);
   text-shadow:0 2px 20px rgba(6,5,4,.9)}

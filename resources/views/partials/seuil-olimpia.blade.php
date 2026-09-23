@@ -53,11 +53,14 @@
                 @foreach($photos as $i => $photo)
                     {{-- La classe se calcule en PHP : une directive Blade dans
                          l'attribut d'un composant n'est pas compilée. --}}
-                    {{-- Toutes chargées d'emblée, pas seulement la première :
-                         une photo qui arrive pendant son propre fondu laisse un
-                         trou noir au milieu du passage. --}}
+                    {{-- Seule la première part avec la page : les cinq d'un
+                         coup faisaient un mégaoctet avant le premier écran.
+                         Les autres sont différées, et le script va chercher la
+                         suivante pendant qu'on regarde la courante — elle est
+                         donc toujours prête quand son tour vient, sans jamais
+                         peser sur l'arrivée. --}}
                     <x-img :class="$i === 0 ? 'fond vue' : 'fond'" :src="$photo" alt=""
-                           sizes="100vw" :urgent="true" />
+                           sizes="100vw" :urgent="$i === 0" :differe="$i > 0" />
                 @endforeach
             </div>
             <span class="fondu" aria-hidden="true"></span>

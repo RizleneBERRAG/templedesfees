@@ -5,6 +5,7 @@
     'largeur' => null,
     'hauteur' => null,
     'urgent'  => false,
+    'differe' => false,
 ])
 
 {{--
@@ -23,6 +24,12 @@
 
     Quand les réductions n'existent pas — une photo qu'on vient de déposer —
     le composant sert simplement l'original. Rien ne casse.
+
+    differe : l'adresse part en data-src plutôt qu'en src, et rien n'est
+    téléchargé tant que du script ne l'a pas demandé. C'est pour les images
+    qui sont DANS l'écran mais qu'on ne regarde pas encore — le fondu du seuil
+    d'Olimpia. loading="lazy" n'y suffit pas : il ne diffère que ce qui est
+    hors de l'écran, et ces images-là y sont déjà, simplement transparentes.
 --}}
 @php
     $base = preg_replace('/\.webp$/', '', $src);
@@ -38,10 +45,18 @@
 @endphp
 
 <img {{ $attributes }}
-     src="{{ asset($src) }}"
-     @if($srcset->isNotEmpty())
-         srcset="{{ $srcset->implode(', ') }}"
-         sizes="{{ $sizes }}"
+     @if($differe)
+         data-src="{{ asset($src) }}"
+         @if($srcset->isNotEmpty())
+             data-srcset="{{ $srcset->implode(', ') }}"
+             data-sizes="{{ $sizes }}"
+         @endif
+     @else
+         src="{{ asset($src) }}"
+         @if($srcset->isNotEmpty())
+             srcset="{{ $srcset->implode(', ') }}"
+             sizes="{{ $sizes }}"
+         @endif
      @endif
      alt="{{ $alt }}"
      @if($largeur) width="{{ $largeur }}" @endif
