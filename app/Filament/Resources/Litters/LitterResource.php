@@ -24,6 +24,8 @@ class LitterResource extends Resource
 
     protected static ?string $navigationLabel = 'Portées';
 
+    protected static string|\UnitEnum|null $navigationGroup = 'La chatterie';
+
     protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'code';

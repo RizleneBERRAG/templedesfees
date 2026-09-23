@@ -24,7 +24,9 @@ class ReviewResource extends Resource
 
     protected static ?string $navigationLabel = 'Avis';
 
-    protected static ?int $navigationSort = 5;
+    protected static string|\UnitEnum|null $navigationGroup = 'Ce qu’on reçoit';
+
+    protected static ?int $navigationSort = 3;
 
     protected static ?string $recordTitleAttribute = 'prenom';
 

@@ -24,7 +24,9 @@ class SettingResource extends Resource
 
     protected static ?string $navigationLabel = 'Réglages';
 
-    protected static ?int $navigationSort = 8;
+    protected static string|\UnitEnum|null $navigationGroup = 'Le site';
+
+    protected static ?int $navigationSort = 3;
 
     protected static ?string $recordTitleAttribute = 'libelle';
 

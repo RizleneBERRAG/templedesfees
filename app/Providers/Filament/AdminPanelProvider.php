@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Widgets\CeQuiAttend;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -51,7 +52,15 @@ class AdminPanelProvider extends PanelProvider
             // Pas de FilamentInfoWidget : il affiche la version de Filament et des
             // liens vers sa documentation. C'est de la promotion de l'outil, pas
             // une information utile a l'elevage.
+            // L'ordre des groupes dans la barre laterale : on travaille sur
+            // les chats, on repond a ce qu'on recoit, on s'occupe du site.
+            ->navigationGroups([
+                'La chatterie',
+                'Ce qu’on reçoit',
+                'Le site',
+            ])
             ->widgets([
+                CeQuiAttend::class,
                 AccountWidget::class,
             ])
             ->middleware([

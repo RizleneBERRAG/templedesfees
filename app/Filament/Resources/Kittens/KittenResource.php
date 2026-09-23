@@ -24,6 +24,8 @@ class KittenResource extends Resource
 
     protected static ?string $navigationLabel = 'Chatons';
 
+    protected static string|\UnitEnum|null $navigationGroup = 'La chatterie';
+
     protected static ?int $navigationSort = 2;
 
     protected static ?string $recordTitleAttribute = 'nom';

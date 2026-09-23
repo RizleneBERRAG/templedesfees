@@ -24,6 +24,8 @@ class CatResource extends Resource
 
     protected static ?string $navigationLabel = 'L’élevage';
 
+    protected static string|\UnitEnum|null $navigationGroup = 'La chatterie';
+
     protected static ?int $navigationSort = 3;
 
     protected static ?string $recordTitleAttribute = 'nom';

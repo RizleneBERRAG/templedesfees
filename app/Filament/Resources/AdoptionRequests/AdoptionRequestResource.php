@@ -23,7 +23,9 @@ class AdoptionRequestResource extends Resource
 
     protected static ?string $navigationLabel = 'Demandes d’adoption';
 
-    protected static ?int $navigationSort = 6;
+    protected static string|\UnitEnum|null $navigationGroup = 'Ce qu’on reçoit';
+
+    protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'prenom';
 

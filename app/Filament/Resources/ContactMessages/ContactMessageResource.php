@@ -23,7 +23,9 @@ class ContactMessageResource extends Resource
 
     protected static ?string $navigationLabel = 'Messages';
 
-    protected static ?int $navigationSort = 7;
+    protected static string|\UnitEnum|null $navigationGroup = 'Ce qu’on reçoit';
+
+    protected static ?int $navigationSort = 2;
 
     protected static ?string $recordTitleAttribute = 'prenom';
 

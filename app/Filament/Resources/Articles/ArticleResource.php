@@ -24,7 +24,9 @@ class ArticleResource extends Resource
 
     protected static ?string $navigationLabel = 'Articles';
 
-    protected static ?int $navigationSort = 6;
+    protected static string|\UnitEnum|null $navigationGroup = 'Le site';
+
+    protected static ?int $navigationSort = 2;
 
     protected static ?string $recordTitleAttribute = 'titre';
 

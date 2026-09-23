@@ -1,0 +1,195 @@
+<?php
+
+namespace App\Filament\Widgets;
+
+use App\Enums\HealthTestType;
+use App\Models\AdoptionRequest;
+use App\Models\Cat;
+use App\Models\ContactMessage;
+use App\Models\HealthTest;
+use App\Models\Kitten;
+use App\Models\Review;
+use App\Models\Setting;
+use Filament\Widgets\Widget;
+
+/**
+ * Ce qui attend.
+ *
+ * Le premier ecran du back-office ne doit pas demander « que voulez-vous
+ * faire ? » mais repondre « voila ce qui attend ». Une eleveuse ouvre son
+ * administration entre deux biberons : elle n'a pas le temps de parcourir
+ * neuf rubriques pour verifier qu'aucune ne reclame quelque chose.
+ *
+ * Chaque ligne dit ce qui manque, combien, et mene directement au bon
+ * endroit. Quand tout est en ordre, la liste le dit aussi — un ecran vide
+ * laisserait croire a une panne.
+ */
+class CeQuiAttend extends Widget
+{
+    protected string $view = 'filament.widgets.ce-qui-attend';
+
+    protected int|string|array $columnSpan = 'full';
+
+    protected static ?int $sort = -3;
+
+    /*
+     * Filament charge ses encarts en differe, au moment ou ils entrent dans le
+     * champ. C'est bon pour un tableau lourd ; c'est mauvais ici. Cet encart
+     * est la premiere chose que l'eleveuse doit lire en arrivant, et il ne
+     * coute que sept comptages : il s'affiche avec la page.
+     */
+    protected static bool $isLazy = false;
+
+    /**
+     * @return array<int, array{titre: string, detail: string, nombre: int, url: string, ton: string}>
+     */
+    public function getTaches(): array
+    {
+        return collect([
+            $this->chatonsEnBrouillon(),
+            $this->demandesNouvelles(),
+            $this->messagesNonTraites(),
+            $this->avisEnAttente(),
+            $this->mentionsIncompletes(),
+            $this->echographiesPerimees(),
+            $this->fichesSansPhoto(),
+        ])->filter(fn (?array $t) => $t !== null && $t['nombre'] > 0)->values()->all();
+    }
+
+    /**
+     * Un chaton sans numero d'identification ou sans numero de portee LOOF ne
+     * peut pas etre publie : c'est la loi sur les annonces de cession. La
+     * regle est appliquee ailleurs, silencieusement — ici on la rend visible,
+     * sans quoi l'eleveuse cherche pourquoi sa fiche n'apparait pas.
+     */
+    private function chatonsEnBrouillon(): ?array
+    {
+        $chatons = Kitten::with('litter')->get()->reject->estPubliable();
+
+        if ($chatons->isEmpty()) {
+            return null;
+        }
+
+        $manques = $chatons->flatMap(function (Kitten $k) {
+            $m = [];
+            if (blank($k->icad_numero)) {
+                $m[] = 'numéro ICAD';
+            }
+            if (blank($k->litter?->loof_portee_numero)) {
+                $m[] = 'numéro de portée LOOF';
+            }
+
+            return $m;
+        })->unique()->implode(' et ');
+
+        return [
+            'titre'  => $chatons->count() > 1 ? 'Fiches chaton en brouillon' : 'Fiche chaton en brouillon',
+            'detail' => "Il manque le $manques. Tant qu'il manque, la fiche n'apparaît pas sur le site — c'est une obligation légale, pas un réglage.",
+            'nombre' => $chatons->count(),
+            'url'    => route('filament.admin.resources.kittens.index'),
+            'ton'    => 'attention',
+        ];
+    }
+
+    private function demandesNouvelles(): ?array
+    {
+        $n = AdoptionRequest::where('statut', 'nouveau')->count();
+
+        return $n === 0 ? null : [
+            'titre'  => $n > 1 ? 'Demandes d’adoption à lire' : 'Demande d’adoption à lire',
+            'detail' => 'Personne n’a encore ouvert ces dossiers. Le site annonce une réponse sous 48 heures.',
+            'nombre' => $n,
+            'url'    => route('filament.admin.resources.adoption-requests.index'),
+            'ton'    => 'urgent',
+        ];
+    }
+
+    private function messagesNonTraites(): ?array
+    {
+        $n = ContactMessage::where('est_traite', false)->count();
+
+        return $n === 0 ? null : [
+            'titre'  => $n > 1 ? 'Messages sans réponse' : 'Message sans réponse',
+            'detail' => 'Reçus par le formulaire de contact. Cochez « traité » une fois la réponse partie.',
+            'nombre' => $n,
+            'url'    => route('filament.admin.resources.contact-messages.index'),
+            'ton'    => 'urgent',
+        ];
+    }
+
+    private function avisEnAttente(): ?array
+    {
+        $n = Review::where('est_publie', false)->count();
+
+        return $n === 0 ? null : [
+            'titre'  => $n > 1 ? 'Avis à relire' : 'Avis à relire',
+            'detail' => 'Déposés par des adoptants. Rien n’apparaît sur le site avant votre relecture.',
+            'nombre' => $n,
+            'url'    => route('filament.admin.resources.reviews.index'),
+            'ton'    => 'normal',
+        ];
+    }
+
+    /**
+     * Les mentions obligatoires manquantes. Elles s'affichent « À compléter »
+     * en or sur le site, ce qui est volontaire — mais elles deviennent
+     * bloquantes le jour ou l'on encaisse un acompte en ligne.
+     */
+    private function mentionsIncompletes(): ?array
+    {
+        $attendues = [
+            'legal.siren'      => 'SIREN',
+            'legal.certificat' => 'certificat de capacité',
+            'legal.directeur'  => 'directeur de la publication',
+            'legal.hebergeur'  => 'hébergeur',
+        ];
+
+        $manquantes = collect($attendues)
+            ->reject(fn ($libelle, $cle) => filled(Setting::get($cle)));
+
+        return $manquantes->isEmpty() ? null : [
+            'titre'  => 'Mentions légales à compléter',
+            'detail' => 'Il manque : '.$manquantes->implode(', ').'. Elles s’affichent « à compléter » sur le site en attendant.',
+            'nombre' => $manquantes->count(),
+            'url'    => route('filament.admin.resources.settings.index'),
+            'ton'    => 'attention',
+        ];
+    }
+
+    /**
+     * Une echocardiographie ne vaut que pour le jour ou elle a ete faite. Au
+     * dela d'un an sur un reproducteur, le site affiche un resultat que plus
+     * rien ne garantit.
+     */
+    private function echographiesPerimees(): ?array
+    {
+        $n = HealthTest::where('type', HealthTestType::HcmEcho)
+            ->whereNotNull('date_examen')
+            ->where('date_examen', '<', now()->subYear())
+            ->whereHas('cat', fn ($q) => $q->whereIn('role', ['etalon', 'reproductrice']))
+            ->count();
+
+        return $n === 0 ? null : [
+            'titre'  => $n > 1 ? 'Échocardiographies à refaire' : 'Échocardiographie à refaire',
+            'detail' => 'Plus d’un an. Un test ADN vaut pour la vie, une échographie seulement pour le jour où elle a été faite.',
+            'nombre' => $n,
+            'url'    => route('filament.admin.resources.cats.index'),
+            'ton'    => 'attention',
+        ];
+    }
+
+    private function fichesSansPhoto(): ?array
+    {
+        $chats = Cat::whereNull('photo_principale')->orWhere('photo_principale', '')->count();
+        $chatons = Kitten::whereNull('photo_principale')->orWhere('photo_principale', '')->count();
+        $n = $chats + $chatons;
+
+        return $n === 0 ? null : [
+            'titre'  => 'Fiches sans photo',
+            'detail' => 'Une planche gravée tient la place en attendant. Une photo prise au téléphone suffit : elle est redressée et allégée à l’envoi.',
+            'nombre' => $n,
+            'url'    => route('filament.admin.resources.cats.index'),
+            'ton'    => 'normal',
+        ];
+    }
+}

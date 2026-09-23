@@ -24,7 +24,9 @@ class PhotoResource extends Resource
 
     protected static ?string $navigationLabel = 'Photos';
 
-    protected static ?int $navigationSort = 4;
+    protected static string|\UnitEnum|null $navigationGroup = 'Le site';
+
+    protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'alt';
 
