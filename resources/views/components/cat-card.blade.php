@@ -6,9 +6,9 @@
             <span class="pastille adopte">Retraité</span>
         @endif
         <i><u>
-            <img src="{{ asset($chat->photo_principale) }}"
-                 alt="{{ $chat->nom }}, Maine Coon {{ \Illuminate\Support\Str::lower($chat->robe) }}"
-                 loading="lazy" width="1200" height="1500">
+            <x-img :src="$chat->photo_principale"
+                   alt="{{ $chat->nom }}, Maine Coon {{ \Illuminate\Support\Str::lower($chat->robe) }}"
+                   sizes="(max-width:560px) 88vw, (max-width:980px) 42vw, 26vw" :largeur="1200" :hauteur="1500" />
         </u></i>
     </span>
     <span class="bd">

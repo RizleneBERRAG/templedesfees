@@ -66,8 +66,9 @@
                             data-full="{{ asset($photo->chemin) }}"
                             data-legende="{{ $photo->legende }}">
                         <div class="vitre">
-                            <img src="{{ asset($photo->chemin) }}" alt="{{ $photo->alt }}"
-                                 loading="{{ $i < 3 ? 'eager' : 'lazy' }}" decoding="async">
+                            <x-img :src="$photo->chemin" :alt="$photo->alt"
+                                   sizes="(max-width:560px) 88vw, (max-width:900px) 44vw, 30vw"
+                                   :urgent="$i < 3" />
                             <span class="planche-numero" aria-hidden="true">{{ $romain($i + 1) }}</span>
                         </div>
 

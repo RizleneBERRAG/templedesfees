@@ -609,7 +609,10 @@ form.demande .plein{grid-column:1/-1}
 /* ── pied ────────────────────────────────────────────────────────── */
 footer{background:var(--nuit-2);border-top:1px solid var(--filet);
   padding-block:clamp(44px,6vw,68px) 30px;position:relative;z-index:2}
-.fgrille{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:34px}
+/* La derniere colonne porte quatre pastilles de 40 px : elle a besoin de
+   plus de place que les listes de liens, sinon la quatrieme passe seule a
+   la ligne. */
+.fgrille{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.25fr;gap:34px}
 @media(max-width:860px){.fgrille{grid-template-columns:1fr 1fr}}
 @media(max-width:540px){.fgrille{grid-template-columns:1fr}}
 footer h4{margin:0 0 16px;font-family:var(--pierre);font-size:10px;font-weight:500;
