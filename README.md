@@ -279,8 +279,11 @@ et une page qui rend hommage n'est pas une rubrique comme les autres.
 Ses photos se posent avec `php scripts/photos-olimpia.php <photo1> <photo2> …`.
 **La première est la principale** : c'est elle qui ouvre le seuil, qui tient
 l'arche de sa page, et qui part en aperçu quand on partage le lien. Les autres
-se relaient derrière le texte du seuil, en fondu de deux secondes et demie
-toutes les six secondes, et s'alignent en planche de tirages sous son récit.
+se relaient derrière le texte du seuil, **toutes**, en fondu de deux secondes
+et demie toutes les six secondes, et s'alignent en planche de tirages sous son
+récit. Les plus petites y passent aussi : étalées en plein écran elles sont
+moins nettes que les autres, c'est assumé — le grain et le voile en rattrapent
+une bonne part.
 
 Aucune n'est jamais agrandie : si le fichier d'origine fait 1080 px de large,
 la plus grande fera 1080 px. Le ré-encodage supprime au passage les métadonnées

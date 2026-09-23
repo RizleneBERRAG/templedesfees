@@ -27,9 +27,10 @@
     $seuilTexte = Setting::get('hommage.seuil');
     $seuilDates = Setting::get('hommage.dates');
 
-    // Seules celles qui tiennent le plein écran passent en fondu ; les plus
-    // petites restent à la planche de tirages, sur sa page.
-    $photos     = PhotosOlimpia::pourLeSeuil();
+    // Toutes passent au seuil, y compris les deux plus petites : c'est un
+    // choix assumé. Étalées, elles sont moins nettes que les autres — le
+    // grain et le voile en rattrapent une bonne part.
+    $photos     = PhotosOlimpia::toutes();
     $principale = PhotosOlimpia::principale();
 
     $forme = in_array(request('seuil'), ['a', 'b', 'c'], true) ? request('seuil') : 'b';

@@ -20,13 +20,6 @@ final class PhotosOlimpia
 {
     private const DOSSIER = 'images/hommage';
 
-    /**
-     * En dessous de mille pixels de large, une photo tient dans une planche de
-     * tirages mais pas en plein ecran : etalee, elle ne montre plus que son
-     * agrandissement.
-     */
-    private const LARGEUR_PLEIN_ECRAN = 1000;
-
     /** @var array<int, array{chemin: string, largeur: int, hauteur: int}>|null */
     private static ?array $liste = null;
 
@@ -79,28 +72,6 @@ final class PhotosOlimpia
     public static function suivantes(): array
     {
         return array_slice(self::toutes(), 1);
-    }
-
-    /**
-     * Celles qui passent en fondu derriere le seuil.
-     *
-     * La principale y est toujours, meme petite : c'est elle qui ouvre, et on
-     * ne la remplace pas pour une question de pixels. Les autres doivent tenir
-     * le plein ecran.
-     *
-     * @return array<int, string>
-     */
-    public static function pourLeSeuil(): array
-    {
-        $retenues = [];
-
-        foreach (self::manifeste() as $rang => $photo) {
-            if ($rang === 0 || $photo['largeur'] >= self::LARGEUR_PLEIN_ECRAN) {
-                $retenues[] = $photo['chemin'];
-            }
-        }
-
-        return $retenues;
     }
 
     public static function combien(): int
