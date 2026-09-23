@@ -2215,12 +2215,16 @@ html.seuil-ouvert,html.seuil-ouvert body{overflow:hidden}
 
 /* Deux dégradés : l'un noie le bas pour que le texte porte, l'autre assombrit
    les bords pour que rien ne fuie par les coins. */
+/* Le voile s'arrête à mi-chemin et ne fait plus de mur : l'écriture doit se
+   poser SUR la photo, pas dans un panneau noir collé à côté d'elle. Ce qui
+   tient la lisibilité, ce n'est plus l'aplat, c'est l'ombre portée du texte —
+   elle suit les lettres au lieu de barrer l'image. */
 .seuil--b .fondu{position:absolute;inset:0;z-index:1;pointer-events:none;
   background:
-    linear-gradient(95deg,
-      rgba(6,5,4,.96) 0%, rgba(6,5,4,.88) 28%,
-      rgba(6,5,4,.55) 52%, rgba(6,5,4,.18) 74%, rgba(6,5,4,.42) 100%),
-    linear-gradient(180deg, rgba(6,5,4,.5) 0%, transparent 26%, rgba(6,5,4,.42) 100%)}
+    linear-gradient(96deg,
+      rgba(6,5,4,.88) 0%, rgba(6,5,4,.62) 26%,
+      rgba(6,5,4,.3) 48%, rgba(6,5,4,.1) 66%, rgba(6,5,4,.36) 100%),
+    linear-gradient(180deg, rgba(6,5,4,.46) 0%, transparent 24%, rgba(6,5,4,.5) 100%)}
 
 .seuil--b .feuille{position:relative;z-index:2;
   width:100%;max-width:none;max-height:none;height:100%;
@@ -2249,22 +2253,29 @@ html.seuil-ouvert,html.seuil-ouvert body{overflow:hidden}
 .seuil--b .fermer:hover{border-color:var(--or);color:var(--or-clair);
   background:rgba(6,5,4,.6);transform:rotate(90deg)}
 
-.seuil--b .rubrique{margin-bottom:8px}
+.seuil--b .rubrique{margin-bottom:10px;text-shadow:0 2px 12px rgba(6,5,4,.9)}
 
 /* À cette taille, le coup de pinceau de la charte devient une tache qui barre
    les jambages. On le rétrécit, on le descend sous la ligne de base, et on
    l'allège : il doit souligner, pas rayer. */
 .seuil--b .nom .pinceau{left:0;width:56%;height:.26em;bottom:-.1em;opacity:.7}
 
-/* Il déborde de la colonne, d'un demi-mot sur la gauche. Un nom qui commence
-   exactement où commence le texte n'ouvre rien ; celui-ci part avant, comme
-   un titre de chapitre qui sort dans la marge. */
-.seuil--b .nom{margin:0 0 0 -.055em;
-  font-family:var(--titre);font-weight:300;font-style:italic;
-  font-size:clamp(52px,7.4vw,104px);line-height:1;letter-spacing:.012em;
-  color:var(--ivoire);text-shadow:0 10px 60px rgba(6,5,4,.9)}
+/* Il empiète. Il sort de la colonne de texte, traverse la photo, et son
+   dernier jambage arrive sur elle — c'est le seul endroit de la page où
+   quelque chose dépasse, donc c'est là que ça se voit.
 
-.seuil--b .complet{margin:26px 0 0;
+   width:max-content l'autorise à passer la largeur de la colonne ; sans ça il
+   se serait replié sur deux lignes au lieu de sortir. */
+.seuil--b .nom{margin:0 0 0 -.06em;width:max-content;max-width:none;
+  font-family:var(--titre);font-weight:300;font-style:italic;
+  font-size:clamp(58px,10.4vw,168px);line-height:.92;letter-spacing:.008em;
+  color:var(--ivoire);
+  /* Deux ombres : une large et sourde qui décolle le mot du fond, une courte
+     et dense qui tient les pleins et les déliés là où la fourrure est claire.
+     C'est ce qui empêche que « posé sur la photo » veuille dire « sale ». */
+  text-shadow:0 14px 70px rgba(6,5,4,.92), 0 2px 14px rgba(6,5,4,.7)}
+
+.seuil--b .complet{margin:22px 0 0;text-shadow:0 2px 14px rgba(6,5,4,.9);
   font-family:var(--corps);font-weight:400;font-size:clamp(10px,1vw,12px);
   letter-spacing:.3em;text-transform:uppercase;color:var(--or-tendre)}
 
@@ -2276,8 +2287,13 @@ html.seuil-ouvert,html.seuil-ouvert body{overflow:hidden}
    charte — celle des lettrines du site — plutôt qu'un or à part. */
 .seuil--b .mots p:first-of-type::first-letter{
   float:left;font-family:var(--titre);font-style:normal;font-weight:400;
-  font-size:3.5em;line-height:.76;
-  padding:.04em .1em 0 0;margin-left:-.06em;
+  font-size:4.4em;line-height:.74;
+  padding:.04em .11em 0 0;margin-left:-.09em;
+  /* Ni filter, ni ombre portée. Le filter crée un contexte de rendu qui casse
+     le background-clip:text ; et l'ombre du paragraphe, héritée sur une lettre
+     dont la couleur est transparente, se peint en plein à la forme du glyphe —
+     la lettrine devenait un O noir sous l'or. */
+  text-shadow:none;
   background:var(--dorure);-webkit-background-clip:text;background-clip:text;
   color:transparent}
 
@@ -2286,9 +2302,9 @@ html.seuil-ouvert,html.seuil-ouvert body{overflow:hidden}
 }
 
 .seuil--b .mots{margin-top:clamp(20px,2.8vh,30px);max-width:40ch}
-.seuil--b .mots p{margin:0 0 9px;font-family:var(--titre);font-weight:300;
-  font-size:clamp(17px,1.45vw,20px);line-height:1.62;color:var(--ivoire-2);
-  text-shadow:0 2px 20px rgba(6,5,4,.9)}
+.seuil--b .mots p{margin:0 0 9px;font-family:var(--titre);font-weight:400;
+  font-size:clamp(17px,1.45vw,20px);line-height:1.62;color:var(--ivoire);
+  text-shadow:0 2px 16px rgba(6,5,4,.95), 0 1px 3px rgba(6,5,4,.8)}
 .seuil--b .mots p:last-child{margin-bottom:0}
 
 .seuil--b .pied{width:100%;display:flex;flex-direction:column;align-items:flex-start;
@@ -2339,8 +2355,12 @@ html.seuil-ouvert,html.seuil-ouvert body{overflow:hidden}
 @media (max-width:880px){
   .seuil--b .nom{font-size:clamp(44px,12vw,58px)}
   .seuil--b .complet{margin-top:18px;font-size:10px;letter-spacing:.24em}
-  .seuil--b .mots{margin-top:16px;max-width:40ch}
-  .seuil--b .mots p{margin-bottom:8px;font-size:16px;line-height:1.55}
+  /* Le texte passe au fer à gauche : une lettrine flottante au bord d'un
+     paragraphe centré décale la première ligne toute seule, et les deux
+     paragraphes ne s'alignent plus l'un sur l'autre. */
+  .seuil--b .mots{margin-top:16px;margin-inline:auto;max-width:34ch}
+  .seuil--b .mots p{margin-bottom:8px;font-size:16px;line-height:1.55;
+    text-align:left}
   .seuil--b .pied{margin-top:20px;gap:11px}
   .seuil--b .dedans{padding-bottom:clamp(22px,3.4vh,32px)}
 }
