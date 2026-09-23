@@ -385,11 +385,13 @@ if (sommaire) {
             enAttente = false;
 
             /* La ligne de reference : juste sous ce qui surplombe la page.
-               En rail, le sommaire est sorti du flux et ne surplombe plus
-               rien — compter sa hauteur ferait allumer la section suivante
-               trois cents pixels trop tot. */
-            const enRail = getComputedStyle(sommaire).position === 'fixed';
-            const ligne = (bandeau?.offsetHeight ?? 74) + (enRail ? 24 : sommaire.offsetHeight + 8);
+               Le sommaire ne surplombe que lorsqu'il est en haut de l'ecran —
+               la barre dans le flux, et la variante C. En rail dans la marge
+               ou en pastille en bas a droite, compter sa hauteur ferait
+               allumer la section suivante trois cents pixels trop tot. */
+            const boite = sommaire.getBoundingClientRect();
+            const surplombe = getComputedStyle(sommaire).position !== 'fixed' || boite.top < 160;
+            const ligne = (bandeau?.offsetHeight ?? 74) + (surplombe ? boite.height + 8 : 24);
 
             let courante = sections[0];
             for (const s of sections) {
@@ -408,6 +410,11 @@ if (sommaire) {
             sections.forEach(({ lien }) => lien.removeAttribute('aria-current'));
             courante.lien.setAttribute('aria-current', 'true');
 
+            // La pastille n'affiche que la section en cours : c'est tout son
+            // interet, et c'est ici qu'on le tient a jour.
+            const ou = sommaire.querySelector('.sommaire-pastille .ou');
+            if (ou) ou.textContent = courante.lien.textContent.trim();
+
             const rail = sommaire.querySelector('.sommaire-in') ?? sommaire;
             if (rail.scrollWidth > rail.clientWidth) {
                 courante.lien.scrollIntoView({
@@ -422,6 +429,39 @@ if (sommaire) {
             enAttente = true;
             requestAnimationFrame(placer);
         };
+
+        /* ── B : la pastille s'ouvre et se referme ── */
+
+        const pastille = sommaire.querySelector('.sommaire-pastille');
+
+        if (pastille) {
+            const basculer = (ouvert) => {
+                sommaire.classList.toggle('ouvert', ouvert);
+                pastille.setAttribute('aria-expanded', String(ouvert));
+            };
+
+            pastille.addEventListener('click', () => basculer(!sommaire.classList.contains('ouvert')));
+
+            // On choisit, elle se referme : rester ouverte apres un saut
+            // d'ancre masquerait le coin de la page ou l'on vient d'arriver.
+            liens.forEach((a) => a.addEventListener('click', () => basculer(false)));
+
+            document.addEventListener('click', (e) => {
+                if (!sommaire.contains(e.target)) basculer(false);
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') basculer(false);
+            });
+        }
+
+        /* ── C : la deuxieme ligne du bandeau sort passe l'introduction ── */
+
+        if (sommaire.dataset.sommaire === 'c') {
+            const deplier = () => sommaire.classList.toggle('deplie', window.scrollY > 300);
+            deplier();
+            window.addEventListener('scroll', deplier, { passive: true });
+        }
 
         window.addEventListener('scroll', demander, { passive: true });
         window.addEventListener('resize', demander);
