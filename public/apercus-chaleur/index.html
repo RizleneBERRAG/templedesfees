@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beige et doré — avant / après</title>
+<link rel="stylesheet" href="/templedesfees/public/fonts/fonts.css">
+<style>
+/* Le comparateur.
+
+   À gauche de la poignée, le site tel qu'il était ; à droite, la version
+   réchauffée. Les deux pages défilent ensemble, si bien qu'on compare
+   toujours le même endroit. La poignée se tire à la souris ou au doigt. */
+
+:root{
+  --nuit:#080B0A; --or:#D9B26A; --or-clair:#F6E7BF; --beige:#D8C9A8;
+  --pierre:"Cinzel",Georgia,serif;
+  --corps:"Jost",system-ui,sans-serif;
+  --x:50%;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--nuit);color:#F7F1E3;font-family:var(--corps)}
+
+.barre{position:fixed;inset:0 0 auto 0;z-index:10;display:flex;align-items:center;
+  gap:18px;flex-wrap:wrap;padding:12px clamp(14px,2.4vw,26px);
+  background:rgba(8,11,10,.94);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(217,178,106,.3)}
+.barre b{font-family:var(--pierre);font-size:12px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--or-clair);font-weight:500}
+.barre nav{display:flex;gap:2px;flex-wrap:wrap}
+.barre nav button{font:inherit;color:#B4A98F;background:none;border:1px solid transparent;
+  padding:8px 13px;cursor:pointer;font-size:12px;letter-spacing:.08em;transition:.25s}
+.barre nav button:hover{color:#F7F1E3}
+.barre nav button[aria-current]{color:var(--or-clair);border-color:rgba(217,178,106,.4);
+  background:rgba(20,48,42,.5)}
+.barre .dosage{margin-left:auto;display:flex;align-items:center;gap:2px}
+.barre .dosage span{font-family:var(--pierre);font-size:9.5px;letter-spacing:.2em;
+  text-transform:uppercase;color:#8C8471;margin-right:8px}
+.barre .dosage button,.barre .largeurs button{font:inherit;color:#B4A98F;background:none;
+  border:1px solid transparent;padding:8px 13px;cursor:pointer;font-size:12px;
+  letter-spacing:.08em;transition:.25s}
+.barre .dosage button:hover,.barre .largeurs button:hover{color:#F7F1E3}
+.barre .dosage button[aria-current],.barre .largeurs button[aria-current]{
+  color:var(--or-clair);border-color:rgba(217,178,106,.4);background:rgba(20,48,42,.5)}
+.barre .largeurs{display:flex;gap:2px}
+
+.scene{position:absolute;inset:var(--h,58px) 0 0 0;overflow:hidden}
+.scene iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:var(--nuit)}
+.scene .apres{clip-path:inset(0 0 0 var(--x))}
+
+/* La poignée */
+.poignee{position:absolute;top:0;bottom:0;left:var(--x);width:2px;z-index:6;
+  background:linear-gradient(180deg,rgba(246,231,191,.15),var(--or) 22%,var(--or) 78%,rgba(246,231,191,.15));
+  cursor:ew-resize;touch-action:none}
+.poignee::after{content:"";position:absolute;left:50%;top:50%;width:46px;height:46px;
+  transform:translate(-50%,-50%);border:1px solid var(--or);border-radius:50%;
+  background:rgba(8,11,10,.88);backdrop-filter:blur(8px);
+  box-shadow:0 8px 30px rgba(0,0,0,.6)}
+.poignee .fleches{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  z-index:2;display:flex;gap:7px;color:var(--or-clair);pointer-events:none}
+.poignee .fleches svg{width:13px;height:13px}
+
+.etiq{position:absolute;top:86px;z-index:5;font-family:var(--pierre);font-size:10px;
+  letter-spacing:.24em;text-transform:uppercase;padding:7px 13px;
+  background:rgba(8,11,10,.82);border:1px solid rgba(217,178,106,.28);pointer-events:none}
+.etiq.g{left:18px;color:#B4A98F}
+.etiq.d{right:18px;color:var(--or-clair)}
+
+/* Pendant le glissé, cette nappe reçoit le pointeur à la place des cadres. */
+.capteur{position:fixed;inset:0;z-index:8;cursor:ew-resize;display:none}
+.capteur.on{display:block}
+
+@media(max-width:620px){
+  .barre{gap:10px}
+  .barre .largeurs{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="barre" id="barre">
+  <b>Beige et doré</b>
+  <nav id="pages">
+    <button type="button" data-page="" aria-current="true">Accueil</button>
+    <button type="button" data-page="le-maine-coon/">Le Maine Coon</button>
+    <button type="button" data-page="elevage/">Nos chats</button>
+    <button type="button" data-page="elevage/alaska/">Une fiche</button>
+    <button type="button" data-page="galerie/">Galerie</button>
+    <button type="button" data-page="questions/">Questions</button>
+  </nav>
+  <div class="dosage" id="dosage">
+    <span>Dosage</span>
+    <button type="button" data-chaleur="" aria-current="true">Discret</button>
+    <button type="button" data-chaleur="plus">Plus marqué</button>
+  </div>
+
+  <div class="largeurs" id="largeurs">
+    <button type="button" data-l="0" aria-current="true">Plein</button>
+    <button type="button" data-l="1024">1024</button>
+    <button type="button" data-l="420">Téléphone</button>
+  </div>
+</header>
+
+<div class="scene" id="scene">
+  <iframe id="avant" title="Version précédente"></iframe>
+  <iframe id="apres" class="apres" title="Version réchauffée"></iframe>
+
+  <span class="etiq g">Avant</span>
+  <span class="etiq d">Beige et doré</span>
+
+  <div class="poignee" id="poignee" role="slider" tabindex="0"
+       aria-label="Curseur de comparaison" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+    <span class="fleches" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+           stroke-linecap="round" stroke-linejoin="round"><path d="M15 6 9 12l6 6"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+           stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+    </span>
+  </div>
+</div>
+
+<div class="capteur" id="capteur"></div>
+
+<script>
+const AVANT = '/templedesfees/docs/';     // l'export figé, d'avant la chaleur
+const APRES = '/templedesfees/public/';   // le site tel qu'il est maintenant
+
+const avant = document.getElementById('avant');
+const apres = document.getElementById('apres');
+const scene = document.getElementById('scene');
+const poignee = document.getElementById('poignee');
+const capteur = document.getElementById('capteur');
+const barre = document.getElementById('barre');
+
+const poserHauteur = () =>
+  document.documentElement.style.setProperty('--h', barre.offsetHeight + 'px');
+poserHauteur();
+addEventListener('resize', poserHauteur);
+
+/* ---- la page montrée ---- */
+let page = '';
+const charger = () => { avant.src = AVANT + page; apres.src = APRES + page; };
+charger();
+
+document.getElementById('pages').addEventListener('click', (e) => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  [...e.currentTarget.children].forEach((x) => x.removeAttribute('aria-current'));
+  b.setAttribute('aria-current', 'true');
+  page = b.dataset.page;
+  charger();
+});
+
+/* ---- le dosage ----
+   Les deux cadres sont de même origine : on peut poser l'attribut
+   directement sur le <html> de celui de droite. Il faut le remettre à chaque
+   chargement, puisque la page est alors neuve. */
+let dose = '';
+const doser = () => {
+  const d = apres.contentDocument;
+  if (!d) return;
+  if (dose) d.documentElement.dataset.chaleur = dose;
+  else delete d.documentElement.dataset.chaleur;
+};
+
+document.getElementById('dosage').addEventListener('click', (e) => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  [...e.currentTarget.querySelectorAll('button')].forEach((x) => x.removeAttribute('aria-current'));
+  b.setAttribute('aria-current', 'true');
+  dose = b.dataset.chaleur;
+  doser();
+});
+
+apres.addEventListener('load', doser);
+
+/* ---- la largeur simulée ---- */
+document.getElementById('largeurs').addEventListener('click', (e) => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  [...e.currentTarget.children].forEach((x) => x.removeAttribute('aria-current'));
+  b.setAttribute('aria-current', 'true');
+
+  const l = Number(b.dataset.l);
+  [avant, apres].forEach((f) => {
+    f.style.width = l ? l + 'px' : '100%';
+    f.style.left = l ? `calc(50% - ${l / 2}px)` : '0';
+  });
+  scene.style.background = l ? '#050706' : '';
+});
+
+/* ---- le glissé ---- */
+const placer = (x) => {
+  const r = scene.getBoundingClientRect();
+  const p = Math.min(100, Math.max(0, ((x - r.left) / r.width) * 100));
+  document.documentElement.style.setProperty('--x', p + '%');
+  poignee.setAttribute('aria-valuenow', Math.round(p));
+};
+
+poignee.addEventListener('pointerdown', (e) => {
+  e.preventDefault();
+  capteur.classList.add('on');
+  const bouger = (ev) => placer(ev.clientX);
+  const finir = () => {
+    capteur.classList.remove('on');
+    removeEventListener('pointermove', bouger);
+    removeEventListener('pointerup', finir);
+  };
+  addEventListener('pointermove', bouger);
+  addEventListener('pointerup', finir);
+});
+
+poignee.addEventListener('keydown', (e) => {
+  const pas = { ArrowLeft: -4, ArrowRight: 4 }[e.key];
+  if (!pas) return;
+  e.preventDefault();
+  const r = scene.getBoundingClientRect();
+  const actuel = Number(poignee.getAttribute('aria-valuenow'));
+  placer(r.left + (r.width * (actuel + pas)) / 100);
+});
+
+/* ---- les deux pages défilent ensemble ----
+   Même origine des deux côtés, donc on peut lire et poser le défilement de
+   l'un dans l'autre. Le drapeau évite l'aller-retour infini. */
+let miroir = false;
+const accorder = (source, cible) => {
+  const f = source.contentWindow;
+  if (!f) return;
+  f.addEventListener('scroll', () => {
+    if (miroir) { miroir = false; return; }
+    miroir = true;
+    cible.contentWindow?.scrollTo(0, f.scrollY);
+  }, { passive: true });
+};
+
+[avant, apres].forEach((cadre) => {
+  cadre.addEventListener('load', () => {
+    try {
+      accorder(avant, apres);
+      accorder(apres, avant);
+    } catch (err) {
+      /* origines différentes : on laisse les deux défiler chacun de son côté */
+    }
+  });
+});
+</script>
+</body>
+</html>

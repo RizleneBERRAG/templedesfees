@@ -3,7 +3,13 @@
 
    Le site est écrit comme un récit : chaque section est un chapitre
    numéroté, annoncé par une frise. Trois matières seulement — la nuit
-   d'émeraude, la dorure, et l'ivoire du texte.
+   d'émeraude, la dorure, et le beige du texte.
+
+   Le beige est arrivé après coup, à la demande de l'éleveur : il trouvait
+   la nuit un peu froide. Il n'est jamais posé en aplat non plus — c'est une
+   chaleur, réglée en un seul endroit, dans les jetons ci-dessous. Pour en
+   mettre plus ou moins, ce sont ces valeurs-là qu'on touche, et rien
+   d'autre dans la feuille.
 
    Règle de la dorure : l'or n'est JAMAIS un aplat. C'est un dégradé à
    trois tons (clair en haut, plein au milieu, ombré en bas), appliqué
@@ -12,25 +18,34 @@
    ═══════════════════════════════════════════════════════════════════ */
 
 :root{
-  /* la nuit */
-  --nuit:#080B0A; --nuit-2:#0A0F0D; --nuit-3:#0C1A16;
+  /* la nuit — un souffle de chaud dans les deux fonds secondaires, le
+     noir de fond restant neutre pour que la dorure porte */
+  --nuit:#080B0A; --nuit-2:#0B0F0C; --nuit-3:#0E1A15;
   --emeraude:#14302A; --emeraude-2:#1B3F36; --emeraude-3:#24564A;
 
   /* la dorure */
   --or-pale:#FBF3DD; --or-clair:#F6E7BF; --or:#D9B26A; --or-mat:#A8813F; --or-ombre:#6B4F22;
+  /* Le ton des petites capitales : le bronze --or-mat les enfonçait dans le
+     fond, l'or plein criait. Celui-ci se voit sans dominer. */
+  --or-tendre:#C4A36B;
   --dorure:linear-gradient(180deg,#FBF3DD 0%,#E5C88C 44%,#B48F48 100%);
   --dorure-filet:linear-gradient(180deg,rgba(217,178,106,.55),rgba(217,178,106,.14));
 
-  /* l'encre */
-  --ivoire:#F5F0E6; --ivoire-2:#CFC7B5; --ivoire-3:#A9A18F; --ivoire-dim:#8C8471;
+  /* le beige — la chaleur de parchemin, posée en voile et jamais en aplat */
+  --beige:#D8C9A8; --beige-2:#BFAE8B;
+  --voile-beige:rgba(216,201,168,.05);
+
+  /* l'encre, réchauffée d'un cran : même lisibilité, moins de gris */
+  --ivoire:#F7F1E3; --ivoire-2:#D8CDB4; --ivoire-3:#B4A98F; --ivoire-dim:#998D75;
 
   /* les verdicts */
   --sain:#A9C79A; --sain-2:#7FA06F; --attente:#E0BB78; --alerte:#C9755A;
 
-  /* les filets */
-  --filet:rgba(217,178,106,.22);
-  --filet-2:rgba(217,178,106,.12);
-  --filet-3:rgba(245,240,230,.09);
+  /* les filets, un cran plus présents — c'est la dorure la plus visible
+     du site, elle court le long de chaque cadre */
+  --filet:rgba(217,178,106,.27);
+  --filet-2:rgba(217,178,106,.155);
+  --filet-3:rgba(216,201,168,.11);
 
   /* La mesure de page respire avec l'ecran au lieu de se figer : sur un grand
      moniteur, un bloc de 1240 px centre dans 2560 fait ilot. Les colonnes de
@@ -41,6 +56,25 @@
   --pierre:"Cinzel",Georgia,serif;
   --corps:"Jost",system-ui,-apple-system,"Segoe UI",sans-serif;
   --ease:cubic-bezier(.2,.7,.25,1);
+}
+
+/* ── le dosage de la chaleur ──────────────────────────── */
+/* Le reglage ci-dessus est le dosage discret : c'est celui du site. Un cran
+   plus loin est prevu ici, au cas ou l'eleveur en voudrait davantage — un
+   seul attribut sur <html> fait passer de l'un a l'autre, sans qu'aucune
+   regle de la feuille n'ait a changer.
+
+     document.documentElement.dataset.chaleur = 'plus';
+
+   Tant qu'il n'est pas pose, rien ne s'applique. */
+html[data-chaleur="plus"]{
+  --nuit-2:#0D110E; --nuit-3:#121E18;
+  --or-tendre:#D3B179;
+  --ivoire-2:#E0D5BA; --ivoire-3:#BEB296; --ivoire-dim:#A4977D;
+  --voile-beige:rgba(216,201,168,.085);
+  --filet:rgba(217,178,106,.34);
+  --filet-2:rgba(217,178,106,.2);
+  --filet-3:rgba(216,201,168,.15);
 }
 
 /* ── base ────────────────────────────────────────────────────────── */
@@ -79,13 +113,17 @@ em{font-style:italic}
 .wrap.large{max-width:var(--large)}
 .bande{position:relative;padding-block:clamp(56px,8vw,104px)}
 .bande.serree{padding-block:clamp(38px,5vw,66px)}
-.bande.creuse{background:linear-gradient(180deg,var(--nuit-3),#0A1512);
+/* Le voile de parchemin : une lueur beige en haut des bandes creuses.
+   C'est ce qui donne la chaleur sans jamais poser d'aplat clair. */
+.bande.creuse{background:
+    linear-gradient(180deg,var(--voile-beige),transparent 46%),
+    linear-gradient(180deg,var(--nuit-3),#0B1513);
   border-block:1px solid var(--filet)}
 .bande.foret{background:radial-gradient(120% 80% at 50% 0%,var(--emeraude) 0%,var(--nuit-3) 46%,var(--nuit) 82%)}
 
 /* ── rubrique et frises ──────────────────────────────────────────── */
 .rubrique{display:block;font-size:10.5px;font-weight:400;letter-spacing:.42em;
-  text-transform:uppercase;color:var(--or-mat)}
+  text-transform:uppercase;color:var(--or-tendre)}
 
 .frise{display:flex;align-items:center;justify-content:center;gap:clamp(10px,2vw,22px)}
 .frise::before,.frise::after{content:"";height:1px;flex:1;max-width:340px;
@@ -99,7 +137,7 @@ em{font-style:italic}
 .chapitre{display:flex;flex-direction:column;align-items:center;gap:15px;
   text-align:center;margin-bottom:clamp(34px,5vw,54px)}
 .chapitre .numero{font-family:var(--pierre);font-size:12px;font-weight:500;
-  letter-spacing:.34em;text-transform:uppercase;color:var(--or-mat)}
+  letter-spacing:.34em;text-transform:uppercase;color:var(--or-tendre)}
 .chapitre .lede{margin-top:6px}
 .chapitre.gauche{align-items:flex-start;text-align:left}
 
@@ -300,8 +338,11 @@ em{font-style:italic}
 /* Les équerres d'angle sont quatre <span> plutôt qu'un cadre unique :
    un border-image suffirait mais ne laisse pas régler chaque angle, et
    le coin doit mordre d'un pixel sur le filet pour paraître posé dessus. */
-.registre{position:relative;border:1px solid rgba(217,178,106,.34);
-  background:rgba(8,11,10,.55);padding:clamp(24px,4vw,46px)}
+.registre{position:relative;border:1px solid rgba(217,178,106,.38);
+  background:
+    linear-gradient(180deg,rgba(216,201,168,.035),transparent 38%),
+    rgba(9,13,11,.58);
+  padding:clamp(24px,4vw,46px)}
 .registre > .eq{position:absolute;width:26px;height:26px;pointer-events:none}
 .registre > .eq:nth-of-type(1){left:-1px;top:-1px;border-left:2px solid var(--or);border-top:2px solid var(--or)}
 .registre > .eq:nth-of-type(2){right:-1px;top:-1px;border-right:2px solid var(--or);border-top:2px solid var(--or)}
@@ -928,6 +969,7 @@ footer,.hero,.bande,.vivant,.bande-photo,#lb,.barre-chaton{position:relative;z-i
 .bande::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
   background:
     radial-gradient(120% 70% at 50% 0%,rgba(20,48,42,.28),transparent 62%),
+    radial-gradient(90% 55% at 50% 12%,rgba(216,201,168,.035),transparent 70%),
     radial-gradient(100% 60% at 50% 100%,rgba(0,0,0,.34),transparent 68%)}
 .bande > *{position:relative;z-index:1}
 .bande.creuse::before{
