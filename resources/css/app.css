@@ -437,6 +437,56 @@ em{font-style:italic}
   text-transform:uppercase;color:var(--or-clair)}
 .fiche .bd small{font-family:var(--titre);font-style:italic;font-size:16px;color:var(--ivoire-3)}
 
+/* ── la portée en cours, sur un téléphone ────────────────────────── */
+/* La grille tombe à une colonne sous 600 px, et quatre chatons deviennent
+   2 650 px à faire défiler — plus de trois écrans pour une portée. On ne
+   voit jamais deux chatons à la fois, donc on ne les compare jamais.
+
+   Ils passent en bande qu'on fait glisser du pouce. La carte fait 74 % de
+   la largeur : la suivante dépasse d'un tiers, et c'est ce dépassement qui
+   dit qu'il y en a d'autres — une bande qui s'arrête pile au bord a l'air
+   d'être finie. Le calage force chaque carte à s'arrêter sur la gouttière,
+   sinon on termine toujours entre deux.
+
+   La bande sort de la gouttière pour toucher les deux bords : une bande qui
+   défile en s'arrêtant à vingt pixels du bord a l'air coincée dans une
+   boîte. Elle reprend la même valeur en remplissage, donc la première carte
+   reste alignée sur le titre au-dessus.
+
+   Réservé à l'accueil, par la classe : sur la page des chatons, la liste
+   EST la page, et cacher la moitié de la portée derrière un geste y serait
+   une faute. */
+
+@media(max-width:600px){
+  .fiches.defilante{
+    display:flex;gap:14px;
+    overflow-x:auto;overscroll-behavior-x:contain;
+    scroll-snap-type:x mandatory;
+    scroll-padding-inline:clamp(20px,4vw,60px);
+    margin-inline:calc(clamp(20px,4vw,60px) * -1);
+    padding-inline:clamp(20px,4vw,60px);
+    /* La carte se souleve au survol : sans cette marge, l'ombre du haut se
+       fait couper par le bord de la bande. */
+    padding-block:6px;
+    scrollbar-width:none}
+
+  .fiches.defilante::-webkit-scrollbar{display:none}
+
+  .fiches.defilante > .fiche{
+    flex:0 0 clamp(200px,74%,300px);
+    scroll-snap-align:start}
+
+  /* Au doigt, le survol reste colle sur la derniere carte touchee. */
+  .fiches.defilante > .fiche:hover{transform:none}
+  .fiches.defilante > .fiche:hover .arche{border-color:var(--filet)}
+  .fiches.defilante > .fiche:hover img{transform:none}
+}
+
+/* La mention ne vaut que la ou la bande existe. */
+.glisser{display:none;text-align:center}
+@media(max-width:600px){.glisser{display:block}}
+
+
 /* ── le registre ─────────────────────────────────────────────────── */
 /* Les équerres d'angle sont quatre <span> plutôt qu'un cadre unique :
    un border-image suffirait mais ne laisse pas régler chaque angle, et

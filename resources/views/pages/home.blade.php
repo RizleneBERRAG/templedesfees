@@ -261,7 +261,7 @@
             </p>
         </div>
 
-        <div class="fiches">
+        <div class="fiches defilante">
             @foreach($chatons as $chaton)
                 <a class="fiche monte @if($chaton->statut === \App\Enums\KittenStatus::Adopte) partie @endif"
                    href="{{ route('kittens.show', $chaton) }}">
@@ -280,6 +280,10 @@
                 </a>
             @endforeach
         </div>
+
+        @if($chatons->count() > 1)
+            <p class="souffle glisser">Faites glisser pour les voir tous.</p>
+        @endif
     </div>
 </section>
 @endif
