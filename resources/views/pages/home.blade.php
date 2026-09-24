@@ -60,7 +60,45 @@
 @section('content')
 
 {{-- ═══ ouverture ═══ --}}
-<section class="hero">
+{{-- ═══ Olimpia, en tête de l'accueil ═══
+
+     La troisième piste du seuil : rien ne s'ouvre par-dessus le site, elle est
+     simplement le premier écran, et on descend. Aucune fenêtre à refermer,
+     aucun geste demandé — c'est la différence, et c'est tout le sujet.
+
+     Pour l'instant sur ?seuil=c seulement, le temps de comparer. --}}
+@if(request('seuil') === 'c' && \App\Support\PhotosOlimpia::principale())
+    @php($olimpia = \App\Support\PhotosOlimpia::principale())
+    @php($olimpiaDates = \App\Models\Setting::get('hommage.dates'))
+
+    <section class="olimpia-ouverture">
+        <x-img class="fond" :src="$olimpia" alt="" sizes="100vw" :urgent="true" />
+        <div class="voile" aria-hidden="true"></div>
+
+        <div class="dit">
+            <span class="rubrique">En mémoire</span>
+            <h2>Olimpia</h2>
+            <p class="complet">Olimpia Maryliss&nbsp;Country</p>
+            @if($olimpiaDates)
+                <p class="dates">{{ $olimpiaDates }}</p>
+            @endif
+
+            <div class="btnrow" style="margin-top:clamp(20px,3vh,30px)">
+                <a class="btn creux" href="{{ route('hommage') }}">Lire son histoire</a>
+            </div>
+        </div>
+
+        <a class="descendre" href="#la-maison">
+            <span class="mot">Entrer sur le site</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor"
+                 stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 5v14m0 0-6-6m6 6 6-6"/>
+            </svg>
+        </a>
+    </section>
+@endif
+
+<section class="hero" id="la-maison">
     <div class="halo" aria-hidden="true"></div>
 
     <div class="frise"><x-fleuron taille="moyen" /></div>

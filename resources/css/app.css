@@ -2078,112 +2078,91 @@ html.seuil-ouvert,html.seuil-ouvert body{overflow:hidden}
   .seuil-olimpia .fermer:hover{transform:none}
 }
 
-/* ══ A — le faire-part ═══════════════════════════════════════════════ */
-/* Une carte d'ivoire posée sur la nuit. Le site est sombre partout : une carte
-   claire ne se lit pas comme une fenêtre de plus, elle se lit comme un objet
-   qu'on vient de poser dessus — un faire-part qu'on garde dans un tiroir.
+/* ══ A — le mot ══════════════════════════════════════════════════════ */
+/* Presque tout noir. Ce qu'on voit, c'est le mot — celui qui la faisait
+   accourir — et rien d'autre. Elle est là, mais à peine : sa photo passe à
+   dix pour cent, floutée, comme un souvenir plutôt qu'une image.
 
-   Encre sombre sur papier chaud, un seul filet d'or, et la photo en haut,
-   bord à bord, sans cadre autour : c'est le papier qui fait le cadre. */
+   C'est le contraire de tout ce qu'on a essayé jusqu'ici : au lieu de montrer
+   la plus belle photo le plus grand possible, on n'en montre presque rien et
+   on laisse trois mots faire le travail. */
 
-.seuil--a .voile{background:rgba(6,5,4,.86)}
+/* Opaque, et pas par goût : sans fond plein, le dégradé du dessus ne couvre
+   qu'en partie et la page d'accueil se lit au travers — exactement le défaut
+   qu'on vient de corriger sur le plein cadre. */
+.seuil--a{padding:0;align-items:stretch;justify-content:stretch;
+  background:#040302}
 
-.seuil--a .feuille{
-  width:min(100%,520px);
-  background:linear-gradient(176deg,#FFFCF4 0%,#F7F0E0 58%,#F1E8D4 100%);
-  border:1px solid rgba(120,90,36,.3);border-radius:2px;
-  box-shadow:0 50px 120px -28px rgba(0,0,0,.9),
-             0 0 0 7px rgba(255,253,246,.05)}
+.seuil--a .ombre{position:absolute;inset:0;z-index:0;
+  width:100%;height:100%;object-fit:cover;object-position:50% 14%;
+  opacity:.1;filter:blur(3px) grayscale(.5) contrast(1.1)}
 
-.seuil--a .dedans{padding:0 0 clamp(20px,3vh,28px);
-  display:flex;flex-direction:column;align-items:center;text-align:center}
+.seuil--a .fondu{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(90% 58% at 50% 50%, rgba(6,5,4,.2) 0%, rgba(6,5,4,.86) 58%,
+      #040302 100%)}
 
-.seuil--a .maison{position:absolute;left:18px;top:16px;z-index:4;
-  display:inline-flex;align-items:center;gap:8px}
-.seuil--a .maison img{width:24px;height:24px;object-fit:contain;
-  filter:drop-shadow(0 1px 3px rgba(0,0,0,.6))}
-.seuil--a .maison b{font-family:var(--pierre);font-weight:500;font-size:9px;
-  letter-spacing:.22em;text-transform:uppercase;color:rgba(255,252,244,.9);
-  text-shadow:0 1px 6px rgba(0,0,0,.7)}
+.seuil--a .feuille{position:relative;z-index:2;
+  width:100%;max-width:none;max-height:none;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  background:none;border:0;border-radius:0;box-shadow:none;overflow:visible}
 
-.seuil--a .fermer{position:absolute;right:14px;top:14px;z-index:4;
-  width:36px;height:36px;border-radius:50%;
-  border:1px solid rgba(255,252,244,.4);background:rgba(20,16,11,.4);
-  color:#FFFCF4;
-  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
-.seuil--a .fermer:hover{background:rgba(20,16,11,.65);border-color:#FFFCF4;
-  color:#FFFCF4;transform:rotate(90deg)}
+.seuil--a .dedans{display:flex;flex-direction:column;align-items:center;
+  text-align:center;padding:clamp(70px,10vh,120px) clamp(20px,5vw,60px)}
 
-/* La photo, bord à bord en haut de la carte. */
-.seuil--a .photo{display:block;width:100%;aspect-ratio:3/2;overflow:hidden;
-  border-bottom:1px solid rgba(120,90,36,.28)}
-.seuil--a .photo img{width:100%;height:100%;object-fit:cover;object-position:50% 18%}
+.seuil--a .maison{position:absolute;left:clamp(18px,3vw,34px);top:clamp(16px,2.6vw,26px);
+  z-index:4;display:inline-flex;align-items:center;gap:9px}
+.seuil--a .maison img{width:28px;height:28px;object-fit:contain;opacity:.8}
+.seuil--a .maison b{font-family:var(--pierre);font-weight:500;font-size:9.5px;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--ivoire-dim)}
 
-.seuil--a .rubrique{margin:clamp(18px,2.6vh,26px) 0 8px;color:#9C7629}
+.seuil--a .fermer{position:absolute;right:clamp(14px,2.6vw,26px);top:clamp(14px,2.6vw,26px);
+  z-index:4;width:40px;height:40px;border-radius:50%;
+  border:1px solid rgba(247,241,227,.22);background:none;color:var(--ivoire-dim);
+  transition:color .35s var(--ease),border-color .35s var(--ease),
+    transform .35s var(--ease)}
+.seuil--a .fermer:hover{border-color:var(--or-mat);color:var(--or-clair);
+  transform:rotate(90deg)}
 
-/* Sur du papier, la trace dorée ne se lit plus : l'or clair sur l'ivoire fait
-   une tache, pas un trait. Un double filet à la place — c'est le vocabulaire
-   du faire-part, et il tient à l'impression comme à l'écran. */
-.seuil--a .nom .pinceau{display:none}
+.seuil--a .dedans > .rubrique{margin-bottom:clamp(30px,6vh,64px);opacity:.7}
 
-.seuil--a .nom{position:relative;margin:0;
+.seuil--a .avant,
+.seuil--a .apres{margin:0;
+  font-family:var(--corps);font-weight:300;
+  font-size:clamp(13px,1.1vw,16px);letter-spacing:.16em;color:var(--ivoire-dim)}
+
+/* Le mot. C'est lui, toute la page. */
+.seuil--a .le-mot{margin:clamp(22px,4vh,42px) 0;
   font-family:var(--titre);font-weight:300;font-style:italic;
-  font-size:clamp(42px,5.4vw,60px);line-height:1.02;color:#17130E;
-  padding-bottom:14px}
+  font-size:clamp(46px,11.5vw,180px);line-height:1;letter-spacing:.005em;
+  background:var(--dorure);-webkit-background-clip:text;background-clip:text;
+  color:transparent;
+  animation:souffle-mot 6.5s ease-in-out infinite}
 
-.seuil--a .nom::after{content:"";position:absolute;left:50%;bottom:0;
-  width:58px;height:3px;transform:translateX(-50%);
-  border-top:1px solid #9C7629;border-bottom:1px solid rgba(156,118,41,.45)}
+@supports not ((-webkit-background-clip:text) or (background-clip:text)){
+  .seuil--a .le-mot{background:none;color:var(--or-clair)}
+}
 
-.seuil--a .complet{margin:12px 0 0;
-  font-family:var(--corps);font-weight:400;font-size:10px;
-  letter-spacing:.28em;text-transform:uppercase;color:#9C7629}
-
-.seuil--a .dates{margin:8px 0 0;font-family:var(--titre);font-style:italic;
-  font-size:16px;color:#6E6353}
-
-.seuil--a .mots{margin:clamp(14px,2vh,20px) clamp(24px,6vw,52px) 0;max-width:42ch}
-.seuil--a .mots p{margin:0 0 8px;font-family:var(--titre);font-weight:400;
-  font-size:clamp(16px,1.25vw,18px);line-height:1.6;color:#3A3128}
-.seuil--a .mots p:last-child{margin-bottom:0}
-
-.seuil--a .pied{width:100%;display:flex;flex-direction:column;align-items:center;
-  gap:11px;margin-top:clamp(16px,2.4vh,24px);padding-inline:clamp(24px,6vw,52px)}
-
-/* Le bouton doré de la charte ne tient pas sur du papier : on le reprend en
-   encre, cerné d'or. */
+.seuil--a .pied{display:flex;flex-direction:column;align-items:center;gap:13px;
+  margin-top:clamp(40px,7vh,80px)}
 .seuil--a .entrer{width:100%;max-width:330px;
-  display:inline-flex;align-items:center;justify-content:center;gap:11px;
-  background:#17130E;border:1px solid #17130E;color:#F7F0E0;cursor:pointer;
-  transition:background .35s var(--ease),color .35s var(--ease)}
-.seuil--a .entrer:hover{background:#2A2218;border-color:#9C7629;color:#FBF3DD}
+  display:inline-flex;align-items:center;justify-content:center;gap:11px;cursor:pointer}
 .seuil--a .entrer svg{width:15px;height:15px;transition:transform .35s var(--ease)}
 .seuil--a .entrer:hover svg{transform:translateX(3px)}
 
-.seuil--a .menus{display:flex;align-items:center;gap:11px;flex-wrap:wrap;
+.seuil--a .menus{display:flex;align-items:center;gap:12px;flex-wrap:wrap;
   justify-content:center;
-  font-family:var(--corps);font-weight:300;font-size:12px;color:#6E6353}
-.seuil--a .menus .sep{color:#B9A87E}
-.seuil--a .lire{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
-  color:#9C7629;padding-bottom:2px;border-bottom:1px solid rgba(156,118,41,.34)}
-.seuil--a .lire:hover{color:#6E5215;border-color:#9C7629}
+  font-family:var(--corps);font-weight:300;font-size:12px;color:var(--ivoire-dim)}
+.seuil--a .menus .sep{color:var(--or-ombre)}
+.seuil--a .lire{font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--or-tendre);padding-bottom:2px;
+  border-bottom:1px solid rgba(217,178,106,.22)}
+.seuil--a .lire:hover{color:var(--or-clair);border-color:var(--or-mat)}
 .seuil--a .plus{display:inline-flex;align-items:center;gap:8px;cursor:pointer}
-.seuil--a .plus input{width:14px;height:14px;accent-color:#9C7629}
+.seuil--a .plus input{width:14px;height:14px;accent-color:var(--or-mat)}
 
-@media (max-width:700px){
-  .seuil--a{padding:clamp(10px,3vw,18px)}
-  .seuil--a .feuille{width:100%;height:auto;max-height:100%;
-    border-radius:2px;border:1px solid rgba(120,90,36,.3)}
-  .seuil--a .photo{aspect-ratio:5/4}
-}
-
-@media (max-width:880px) and (max-height:780px){
-  .seuil--a .photo{aspect-ratio:16/10}
-  .seuil--a .rubrique{margin-top:16px}
-  .seuil--a .nom{font-size:clamp(34px,8.6vw,44px)}
-  .seuil--a .mots{margin-top:12px}
-  .seuil--a .mots p{font-size:15.5px;line-height:1.56;margin-bottom:7px}
-  .seuil--a .pied{margin-top:16px;gap:10px}
+@media (prefers-reduced-motion:reduce){
+  .seuil--a .le-mot{animation:none;opacity:1;transform:none}
 }
 
 /* ══ B — le plein cadre ══════════════════════════════════════════════ */

@@ -1,23 +1,27 @@
 {{--
     Le seuil : Olimpia, avant d'entrer.
 
-    Un voile plein écran posé par-dessus le site à l'arrivée. On la regarde, on
-    lit deux phrases, et on entre.
+    TROIS PISTES, le temps de choisir. Elles ne se ressemblent pas : les trois
+    premières versions étaient la même idée retouchée, et c'est sans doute pour
+    ça qu'aucune n'allait.
 
-    TROIS FORMES, le temps de choisir :
+        ?seuil=a   LE MOT        — presque tout noir. « le poulette » en or,
+                                   énorme, et rien d'autre. Elle n'apparaît
+                                   qu'en filigrane, très sombre.
+        ?seuil=b   LE PLEIN CADRE — celui d'aujourd'hui : sa photo prend tout
+                                   l'écran, le texte tient la moitié gauche.
+        ?seuil=c   PAS DE VOILE   — rien ne s'ouvre par-dessus le site. Elle
+                                   devient le premier écran de l'accueil, et
+                                   on descend dans le site normalement.
 
-        ?seuil=a   le faire-part   — une carte d'ivoire posée sur la nuit
-        ?seuil=b   le plein cadre  — sa photo prend tout l'écran, rien autour
-        ?seuil=c   le médaillon    — le panneau sombre, ovale doré (en place)
+    La troisième n'est pas une variante de mise en page : c'est la question de
+    savoir si ce qui gêne n'est pas le fait même qu'une fenêtre s'ouvre.
 
-    Le jour du choix, les deux perdantes disparaissent avec ce commutateur : il
-    n'y a aucune raison de garder trois chemins pour un seul seuil.
+    Trois façons de sortir des deux premières : la croix, le bouton « Entrer
+    sur le site », et la touche Échap. Aucune n'est cachée.
 
-    Trois façons d'en sortir dans tous les cas, et c'est voulu : la croix, le
-    bouton « Entrer sur le site », et la touche Échap. Aucune n'est cachée.
-
-    Elle ne paraît ni sur la page d'Olimpia — on n'annonce pas à quelqu'un ce
-    qu'il est déjà en train de lire — ni sur les pages de réservation : une
+    Le seuil ne paraît ni sur la page d'Olimpia — on n'annonce pas à quelqu'un
+    ce qu'il est déjà en train de lire — ni sur les pages de réservation : une
     famille en train de verser un acompte n'a pas à voir surgir autre chose.
 --}}
 @php
@@ -26,57 +30,40 @@
 
     $seuilTexte = Setting::get('hommage.seuil');
     $seuilDates = Setting::get('hommage.dates');
+    $seuilMot   = Setting::get('hommage.mot');
 
-    // Toutes passent au seuil, y compris les deux plus petites : c'est un
-    // choix assumé. Étalées, elles sont moins nettes que les autres — le
-    // grain et le voile en rattrapent une bonne part.
     $photos     = PhotosOlimpia::toutes();
     $principale = PhotosOlimpia::principale();
 
     $forme = in_array(request('seuil'), ['a', 'b', 'c'], true) ? request('seuil') : 'b';
 @endphp
 
-@unless(! $principale || request()->routeIs('hommage') || request()->routeIs('reservation.*'))
+{{-- La forme « c » ne pose rien par-dessus le site : elle vit dans la page
+     d'accueil, pas ici. --}}
+@unless($forme === 'c' || ! $principale
+        || request()->routeIs('hommage') || request()->routeIs('reservation.*'))
+
     <div class="seuil-olimpia seuil--{{ $forme }}" id="seuil-olimpia" hidden
          role="dialog" aria-modal="true" aria-labelledby="seuil-olimpia-nom">
 
         @if($forme === 'b')
-            {{-- ═══ B — le plein cadre ═══
-                 Sa photo occupe tout l'écran. Pas de carte, pas de cadre : on
-                 ne pose pas un objet par-dessus le site, on le remplace le
-                 temps d'un regard. --}}
-            {{-- Toutes ses photos, l'une après l'autre, en fondu très lent.
-                 La principale ouvre et reste la plus vue ; les autres passent
-                 derrière le texte sans qu'on les attende. Rien ne clignote :
-                 six secondes de pose, deux secondes et demie de fondu. --}}
             <div class="fonds" aria-hidden="true">
                 @foreach($photos as $i => $photo)
-                    {{-- La classe se calcule en PHP : une directive Blade dans
-                         l'attribut d'un composant n'est pas compilée. --}}
-                    {{-- Seule la première part avec la page : les cinq d'un
-                         coup faisaient un mégaoctet avant le premier écran.
-                         Les autres sont différées, et le script va chercher la
-                         suivante pendant qu'on regarde la courante — elle est
-                         donc toujours prête quand son tour vient, sans jamais
-                         peser sur l'arrivée. --}}
                     <x-img :class="$i === 0 ? 'fond vue' : 'fond'" :src="$photo" alt=""
                            sizes="100vw" :urgent="$i === 0" :differe="$i > 0" />
                 @endforeach
             </div>
             <span class="fondu" aria-hidden="true"></span>
-            {{-- Le grain de la maison, posé sur elle. Il donne à la photo la
-                 matière qu'elle a perdue en passant par la messagerie, et il
-                 la raccorde au reste du site. --}}
             <span class="grain" aria-hidden="true"></span>
         @else
-            <div class="voile" aria-hidden="true"></div>
+            {{-- ═══ A — le mot ═══
+                 Elle est là, mais à peine : le noir a presque tout mangé. Ce
+                 qu'on voit, c'est le mot. --}}
+            <x-img class="ombre" :src="$principale" alt="" sizes="100vw" :urgent="true" />
+            <span class="fondu" aria-hidden="true"></span>
         @endif
 
         <div class="feuille">
-
-            @if($forme === 'c')
-                <span class="lueur" aria-hidden="true"></span>
-            @endif
 
             <span class="maison">
                 @if(file_exists(public_path('images/blason-192.png')))
@@ -95,38 +82,29 @@
             <div class="dedans">
 
                 @if($forme === 'a')
-                    {{-- ═══ A — le faire-part ═══
-                         Une carte d'ivoire, encre sombre, un filet d'or : ce
-                         qu'on garde dans un tiroir. Le site est nuit partout —
-                         une carte claire posée dessus se lit comme un objet,
-                         pas comme une fenêtre de plus. --}}
-                    <span class="photo">
-                        <x-img :src="$principale"
-                               alt="Olimpia Maryliss Country, femelle Maine Coon blanche"
-                               sizes="(max-width:700px) 92vw, 460px" :urgent="true" />
-                    </span>
-                @elseif($forme === 'c')
-                    <span class="medaillon">
-                        <x-img :src="$principale"
-                               alt="Olimpia Maryliss Country, femelle Maine Coon blanche"
-                               sizes="240px" :urgent="true" />
-                    </span>
-                @endif
+                    <span class="rubrique">En mémoire d’Olimpia</span>
 
-                <span class="rubrique">En mémoire</span>
+                    <p class="avant">Il suffisait d’un mot.</p>
 
-                <h2 class="nom" id="seuil-olimpia-nom">
-                    <span class="sous-pinceau">Olimpia<x-pinceau /></span>
-                </h2>
+                    <p class="le-mot" id="seuil-olimpia-nom">«&nbsp;{{ $seuilMot }}&nbsp;»</p>
 
-                <p class="complet">Olimpia Maryliss&nbsp;Country</p>
+                    <p class="apres">Et elle arrivait en courant.</p>
+                @else
+                    <span class="rubrique">En mémoire</span>
 
-                @if($seuilDates)
-                    <p class="dates">{{ $seuilDates }}</p>
-                @endif
+                    <h2 class="nom" id="seuil-olimpia-nom">
+                        <span class="sous-pinceau">Olimpia<x-pinceau /></span>
+                    </h2>
 
-                @if(filled($seuilTexte))
-                    <x-texte-riche class="mots" :texte="$seuilTexte" />
+                    <p class="complet">Olimpia Maryliss&nbsp;Country</p>
+
+                    @if($seuilDates)
+                        <p class="dates">{{ $seuilDates }}</p>
+                    @endif
+
+                    @if(filled($seuilTexte))
+                        <x-texte-riche class="mots" :texte="$seuilTexte" />
+                    @endif
                 @endif
 
                 <div class="pied">
