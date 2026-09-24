@@ -1028,6 +1028,21 @@ footer{view-transition-name:pied}
 .filtres a[aria-current="true"]{background:var(--or);border-color:var(--or);color:#14100A}
 @media (pointer:coarse){.filtres a{min-height:44px}}
 
+/* Un element ecarte par le filtre doit disparaitre, point.
+
+   Le display:none que le navigateur pose sur [hidden] vient de SA feuille a
+   lui, et n'importe quelle regle d'auteur l'emporte, si faible soit-elle :
+   .fiche{display:flex} suffisait. Le tri posait donc bien l'attribut sur dix
+   cartes sur onze, et les onze restaient a l'ecran — le filtre avait l'air
+   de ne rien faire.
+
+   C'est la deuxieme fois que ce piege se referme ici, apres la vue plein
+   ecran qui ne se fermait jamais. D'ou le !important : ce n'est pas une
+   rustine de specificite, c'est l'invariant qu'on ecrit une fois pour
+   toutes. Une carte ecartee ne se reaffiche pas, quelle que soit la regle
+   qu'on ajoutera demain sur .fiche, .cliche ou .billet. */
+[data-filtre] > [hidden]{display:none !important}
+
 /* ── arbre de pedigree ───────────────────────────────────────────── */
 .arbre{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:clamp(16px,2.2vw,22px)}
 @media(max-width:560px){.arbre{grid-template-columns:1fr}}

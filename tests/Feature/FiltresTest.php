@@ -128,4 +128,31 @@ class FiltresTest extends TestCase
             ->assertSee('data-filtre="statut"', false)
             ->assertSee('data-statut="'.$chaton->statut->value.'"', false);
     }
+    /**
+     * La regle qui fait vraiment disparaitre une carte ecartee.
+     *
+     * Le tri pose hidden sur les elements qui ne correspondent pas. Mais le
+     * display:none qu'un navigateur applique a [hidden] vient de SA feuille a
+     * lui, et n'importe quelle regle d'auteur l'emporte, si faible soit-elle :
+     * .fiche{display:flex} suffisait. L'attribut etait donc bien pose sur dix
+     * cartes sur onze, et les onze restaient a l'ecran. Le filtre avait l'air
+     * de ne rien faire du tout.
+     *
+     * C'est la deuxieme fois que ce piege se referme dans ce projet, apres la
+     * vue plein ecran qui ne se refermait jamais. Une ligne de CSS qu'on ne
+     * remarque pas en relecture, et une fonctionnalite entiere ne fait plus
+     * rien sans qu'aucune erreur n'apparaisse : elle merite un test, meme
+     * grossier.
+     */
+    public function test_une_carte_ecartee_par_le_filtre_disparait_vraiment(): void
+    {
+        $charte = file_get_contents(resource_path('css/app.css'));
+
+        $this->assertMatchesRegularExpression(
+            '/\[data-filtre\]\s*>\s*\[hidden\]\s*\{[^}]*display\s*:\s*none/',
+            $charte,
+            "Sans cette regle, le tri pose l'attribut hidden mais les cartes "
+            ."restent affichees : le filtre semble ne rien faire.",
+        );
+    }
 }
