@@ -2421,6 +2421,25 @@ html.seuil-ouvert,html.seuil-ouvert body{overflow:hidden}
   .seuil--b .entrer{max-width:none}
 }
 
+/* Au doigt, sur la bannière. Les trois sorties secondaires étaient dessinées
+   pour une souris : la croix à quarante, le lien à vingt-deux de haut, et la
+   case à cocher à quatorze. On ne vise pas quatorze pixels avec un pouce —
+   quarante-quatre est le minimum tenable, et on l'obtient en agrandissant la
+   zone sensible sans toucher à ce qui se voit. */
+@media (pointer:coarse){
+  .seuil-olimpia .fermer{width:44px;height:44px}
+  .seuil-olimpia .plus input{width:18px;height:18px}
+
+  /* La zone sensible s'étend par un pseudo-élément, pas par du padding : le
+     padding aurait poussé le soulignement du lien à douze pixels sous les
+     mots, ce qui se voit tout de suite. Là, rien ne bouge à l'œil et le doigt
+     a ses quarante-quatre pixels. */
+  .seuil-olimpia .lire,
+  .seuil-olimpia .plus{position:relative}
+  .seuil-olimpia .lire::before,
+  .seuil-olimpia .plus::before{content:"";position:absolute;inset:-13px -8px}
+}
+
 /* Le bloc de texte doit laisser sa tête respirer : il descend sous la moitié
    de l'écran, donc il se resserre. */
 @media (max-width:880px){
@@ -2518,7 +2537,13 @@ html.seuil-ouvert,html.seuil-ouvert body{overflow:hidden}
 @media (max-width:640px){
   .olimpia-ouverture{padding-bottom:clamp(86px,14vh,120px)}
   .olimpia-ouverture .dit{max-width:none}
+  /* Le libellé disparaît, la cible ne doit pas disparaître avec : réduite à
+     sa flèche seule, elle faisait dix-sept pixels de côté — introuvable au
+     doigt. Quarante-huit est confortable. */
   .olimpia-ouverture .descendre .mot{display:none}
+  .olimpia-ouverture .descendre{width:48px;height:48px;justify-content:center;
+    border:1px solid var(--filet-2);border-radius:50%}
+  .olimpia-ouverture .descendre svg{width:19px;height:19px}
 }
 
 @media (prefers-reduced-motion:reduce){
@@ -2751,8 +2776,10 @@ html.seuil-ouvert,html.seuil-ouvert body{overflow:hidden}
   letter-spacing:.2em;text-transform:uppercase;color:var(--ivoire-dim)}
 
 @media (max-width:900px){
+  /* Deux par rangée, et calculés pour : à largeur libre ils tombaient à cent
+     dix-sept pixels, où l'on ne reconnaît plus un chat. */
   .planche-olimpia{gap:14px}
-  .planche-olimpia figure{width:clamp(112px,27vw,150px);border-width:3px}
+  .planche-olimpia figure{width:calc(50% - 7px);max-width:190px;border-width:3px}
 }
 
 @media (prefers-reduced-motion:reduce){
