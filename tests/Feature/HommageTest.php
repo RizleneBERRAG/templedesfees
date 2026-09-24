@@ -165,6 +165,43 @@ class HommageTest extends TestCase
             ->assertDontSee('seuil-olimpia', escape: false);
     }
 
+    /* ── la vue plein ecran ──────────────────────────────────────── */
+
+    /**
+     * La regle qui la referme.
+     *
+     * Le display:none qu'un navigateur pose sur un element [hidden] vient de
+     * sa propre feuille de style, et le display:flex de #lb, declare sur un
+     * selecteur d'id, l'emporte. Sans #lb[hidden]{display:none}, la vue plein
+     * ecran ne se refermait jamais : elle restait par-dessus le site, et plus
+     * rien n'etait cliquable nulle part.
+     *
+     * Ca s'est produit. Une ligne de CSS qu'on ne remarque pas en relecture, et
+     * tout le site devient inutilisable des le premier clic sur une image :
+     * elle merite d'etre tenue par un test, meme grossier.
+     */
+    public function test_la_vue_plein_ecran_sait_se_refermer(): void
+    {
+        $charte = file_get_contents(resource_path('css/app.css'));
+
+        $this->assertStringContainsString('#lb[hidden]', $charte,
+            'Sans cette règle, la vue plein écran reste ouverte par-dessus le site.');
+    }
+
+    /**
+     * Et celle qui la garde en place : #lb ne doit pas figurer dans la liste de
+     * ce qui « reste au-dessus du grain », qui repose position:relative. Elle
+     * s'y trouvait, ce qui couchait la vue plein ecran dans le flux, en bas de
+     * page, au lieu de couvrir l'ecran.
+     */
+    public function test_la_vue_plein_ecran_reste_fixe(): void
+    {
+        $charte = file_get_contents(resource_path('css/app.css'));
+
+        $this->assertStringNotContainsString('.bande-photo,#lb,', $charte,
+            '#lb est revenu dans la liste des éléments en position:relative.');
+    }
+
     /** Elle a une entree depuis la page des chats, et une seule. */
     public function test_la_page_des_chats_y_mene(): void
     {

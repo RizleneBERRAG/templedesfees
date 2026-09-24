@@ -569,6 +569,13 @@ em{font-style:italic}
 /* ── vue plein écran ─────────────────────────────────────────────── */
 #lb{position:fixed;inset:0;z-index:90;background:rgba(5,7,6,.97);display:flex;
   align-items:center;justify-content:center;flex-direction:column;gap:18px;padding:28px 20px}
+
+/* Indispensable, et pas décoratif : le display:none que le navigateur pose sur
+   un élément [hidden] vient de sa feuille à lui, et le display:flex ci-dessus,
+   déclaré sur un sélecteur d'id, l'emporte. Sans cette ligne, la vue plein
+   écran ne se referme jamais — elle reste par-dessus le site, et plus rien
+   n'est cliquable. */
+#lb[hidden]{display:none}
 #lb img{max-width:min(94vw,1060px);max-height:78vh;object-fit:contain;
   border:1px solid var(--filet)}
 #lb .cap{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ivoire-dim);
@@ -1139,8 +1146,13 @@ a.case:hover{border-color:var(--or-ombre);background:var(--emeraude)}
   opacity:.5;mix-blend-mode:overlay}
 @media(prefers-reduced-motion:reduce){#grain{opacity:.32}}
 
-/* Tout ce qui doit rester au-dessus du grain. */
-footer,.hero,.bande,.vivant,.bande-photo,#lb,.barre-chaton{position:relative;z-index:2}
+/* Tout ce qui doit rester au-dessus du grain.
+
+   #lb n'y figure plus : cette règle lui reposait position:relative, ce qui
+   annulait le position:fixed déclaré plus haut — même spécificité, et elle
+   vient après. La vue plein écran se retrouvait couchée dans le flux, en bas
+   de page, au lieu de couvrir l'écran. */
+footer,.hero,.bande,.vivant,.bande-photo,.barre-chaton{position:relative;z-index:2}
 /* Le bandeau garde son position:sticky declare plus haut : on ne lui donne
    ici que son etage. Le remettre en relative le decollerait du haut. */
 .bandeau{z-index:60}
