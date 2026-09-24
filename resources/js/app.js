@@ -142,10 +142,44 @@ const ouvrir = (items, index) => {
             '<div class="nav"><button type="button" data-d="-1">← Précédente</button>' +
             '<button type="button" data-d="1">Suivante →</button></div>';
         document.body.appendChild(lb);
+
+        /* Le glissement du doigt, et la raison du drapeau.
+
+           Un glissement horizontal sur le fond produit aussi un clic sur le
+           fond, et le clic sur le fond ferme la vue. Sans ce drapeau, chaque
+           passage a la photo suivante refermait la visionneuse.
+
+           Meme geste et meme seuil que le livre : 44 px, et il faut que
+           l'horizontale l'emporte nettement, sinon un defilement du pouce
+           un peu de travers ferait tourner la photo. */
+        let depart = null;
+        let glisse = false;
+
         lb.addEventListener('click', (ev) => {
+            if (glisse) {
+                glisse = false;
+                return;
+            }
             if (ev.target === lb || ev.target.classList.contains('x')) return fermer();
             const b = ev.target.closest('[data-d]');
             if (b) deplacer(Number(b.dataset.d));
+        });
+
+        lb.addEventListener('pointerdown', (ev) => {
+            if (ev.target.closest('button')) return;
+            depart = { x: ev.clientX, y: ev.clientY };
+        });
+
+        lb.addEventListener('pointerup', (ev) => {
+            if (!depart) return;
+            const dx = ev.clientX - depart.x;
+            const dy = ev.clientY - depart.y;
+            depart = null;
+
+            if (Math.abs(dx) > 44 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+                glisse = true;
+                deplacer(dx < 0 ? 1 : -1);
+            }
         });
         document.addEventListener('keydown', (ev) => {
             if (!lb || lb.hidden) return;

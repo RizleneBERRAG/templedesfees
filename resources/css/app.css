@@ -619,9 +619,43 @@ em{font-style:italic}
   .planche-photos > :nth-child(2n){margin-top:clamp(22px,5vw,46px)}
 }
 @media(max-width:560px){
-  .planche-photos{grid-template-columns:1fr;gap:clamp(24px,6vw,34px)}
-  .planche-photos > *{margin-top:0 !important}
+  /* ── la planche, sur un téléphone ─────────────────────────────── */
+  /* Une seule colonne donnait onze photos plein cadre et 7 684 px de page :
+     neuf écrans. À ce format on ne compare rien, on défile — et une galerie
+     qu'on ne compare pas ne sert à rien.
+
+     La page s'appelle « la planche de portraits ». On lui en donne enfin
+     l'allure : deux colonnes serrées, les numéros gravés dans l'angle, et le
+     décalage d'une colonne sur l'autre pour que ça reste composé plutôt que
+     quadrillé.
+
+     La première garde le plein cadre. Une planche s'ouvre sur son cliché
+     d'honneur, et c'est ce qui donne le rythme qu'une grille régulière n'a
+     pas : on entre par une image, puis on parcourt la feuille. */
+
+  .planche-photos{grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:clamp(14px,4vw,22px)}
+
+  /* On repart de zéro : les décalages des paliers plus larges ne tombent pas
+     sur les mêmes rangs ici. Le sélecteur vaut celui d'en haut, sinon il
+     faudrait un !important pour s'en défaire. */
+  .planche-photos > :nth-child(n){margin-top:0}
+  .planche-photos > :nth-child(2n+1){margin-top:clamp(16px,5vw,30px)}
+  .planche-photos > :first-child{grid-column:1/-1;margin-top:0}
+
+  /* À 155 px de large, la légende d'origine tenait sur trois lignes. */
+  .cliche{gap:9px}
+  .cliche figcaption{padding-top:9px;gap:3px}
+  .cliche figcaption b{font-size:10px;letter-spacing:.12em}
+  .cliche figcaption span{font-size:13px}
+  .planche-numero{min-width:30px;padding:5px 7px;font-size:9px}
+
+  /* Le cliché d'honneur garde la légende pleine taille : c'est lui qui donne
+     le ton de la feuille. */
+  .planche-photos > :first-child figcaption b{font-size:11.5px;letter-spacing:.16em}
+  .planche-photos > :first-child figcaption span{font-size:15px}
 }
+
 /* ── vue plein écran ─────────────────────────────────────────────── */
 #lb{position:fixed;inset:0;z-index:90;background:rgba(5,7,6,.97);display:flex;
   align-items:center;justify-content:center;flex-direction:column;gap:18px;padding:28px 20px}
@@ -643,6 +677,22 @@ em{font-style:italic}
 #lb .nav button{border:1px solid var(--filet);padding:10px 19px;font-family:var(--pierre);
   font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ivoire);transition:.25s}
 #lb .nav button:hover{border-color:var(--or);color:var(--or-clair)}
+
+/* Au doigt, on fait glisser d'une photo à l'autre. Les deux boutons restent
+   — pour la souris, pour le clavier, et parce qu'ils disent qu'il y a une
+   suite — mais ils cessent d'être le seul moyen d'avancer : viser « Suivante »
+   sur un téléphone, c'est viser dix pixels de haut au bas de l'écran.
+
+   L'image prend alors la place qu'elle mérite, et la barre du bas respecte
+   l'encoche des téléphones récents. */
+@media(max-width:700px){
+  #lb{gap:14px;
+    padding:20px 12px calc(20px + env(safe-area-inset-bottom,0px))}
+  #lb img{max-width:96vw;max-height:70vh}
+  #lb .nav button{padding:13px 18px}
+  #lb .x{padding:12px 15px}
+}
+
 
 /* ── formulaires ─────────────────────────────────────────────────── */
 .champ{display:flex;flex-direction:column;gap:8px}
