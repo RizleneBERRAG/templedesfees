@@ -1586,9 +1586,6 @@ footer > *{position:relative}
 .livre-bloc{display:flex;flex-direction:column;gap:clamp(16px,2.4vw,24px);
   max-width:1020px;margin-inline:auto}
 
-/* Le format respire avec la largeur : deux pages etroites et basses ne
-   tiennent pas leur texte, et une page coupee ne se rattrape pas, le
-   debordement etant masque. Plus le livre est etroit, plus il est haut. */
 /* Les proportions.
 
    En 16/9, chaque page etait presque carree — un livre ouvert n'a pas cette
@@ -1823,11 +1820,33 @@ footer > *{position:relative}
   text-transform:uppercase;color:var(--ivoire-dim);min-width:11ch;text-align:center}
 
 /* ── une page à la fois ── */
-.livre[data-simple]{aspect-ratio:3/4.2}
-.livre[data-simple] .pages{perspective:1150px;perspective-origin:0% 50%}
-.livre[data-simple] .feuillet{position:static;width:auto;transform:none;
-  transform-style:flat;transition:none}
-.livre[data-simple] .face{backface-visibility:visible;transform:none;
+/* La hauteur de la page ne vient plus d'un rapport impose. Elle venait de
+   lui, et le texte n'y avait pas voix : sous 345 px, trois des six pages
+   debordaient d'une ligne que l'overflow:hidden mangeait proprement. Rien
+   ne signalait qu'il manquait quelque chose — c'est ce qui rend ce defaut
+   vicieux, il ne se voit pas, il se mesure.
+
+   Les six pages sont donc empilees dans une seule case de grille : la case
+   prend la hauteur de la plus chargee, et toutes l'adoptent — ce qui est
+   exactement la regle d'un livre relie, ou aucune page n'est plus haute
+   qu'une autre. Le ::before ne sert qu'a poser un plancher : 140 % de la
+   largeur, soit le format 3/4.2 d'avant, pour qu'un livre au texte court
+   reste un livre et ne devienne pas un carton.
+
+   La consequence qui compte : le jour ou l'eleveur rallonge un de ses six
+   textes depuis son administration, le livre s'allonge avec lui. Il n'y a
+   plus de longueur a ne pas depasser.
+
+   Le mode deux pages garde ses hauteurs absolues : son tour de page en
+   trois dimensions repose dessus, et il dispose de onze lignes de marge.
+   C'est le diagnostic qui le surveille. */
+.livre[data-simple]{aspect-ratio:auto}
+.livre[data-simple] .pages{position:relative;inset:auto;display:grid;
+  perspective:1150px;perspective-origin:0% 50%}
+.livre[data-simple] .pages::before{content:"";grid-area:1/1;padding-top:140%}
+.livre[data-simple] .feuillet{display:contents}
+.livre[data-simple] .face{position:relative;grid-area:1/1;
+  backface-visibility:visible;transform:none;
   opacity:0;visibility:hidden;transform-origin:left center;
   box-shadow:inset 22px 0 40px -26px rgba(0,0,0,.9)}
 .livre[data-simple] .face[data-active]{opacity:1;visibility:visible;z-index:2}
@@ -1841,26 +1860,6 @@ footer > *{position:relative}
   58% {transform:rotateY(-72deg) translateZ(26px);opacity:.9;
        animation-timing-function:cubic-bezier(.4,.5,.6,1)}
   100%{transform:rotateY(-118deg) translateZ(6px);opacity:0}
-}
-
-/* ── le livre sur un écran très étroit ───────────────────────────── */
-/* La page tire sa hauteur d'un rapport fixe, et son texte n'en tire aucune :
-   sous 345 px, trois des six pages débordaient de vingt-sept pixels — une
-   ligne — qu'un overflow:hidden mangeait proprement. Rien ne signalait qu'il
-   manquait quelque chose, et c'est ce qui rend le défaut vicieux.
-
-   La page s'allonge donc, et respire un peu moins large. Le seuil est posé à
-   345 et non à 360 pour laisser intacts les 360 px des Android courants : là
-   où rien n'est cassé, on ne touche à rien.
-
-   Marge restante sous le texte de la page la plus chargée, après coup :
-   320 px → 62, 330 → 79, 340 → 120. Au-delà du seuil, inchangé. */
-
-@media(max-width:345px){
-  .livre[data-simple]{aspect-ratio:3/4.9}
-  .livre[data-simple] .face{padding:18px}
-  .livre[data-simple] .face p{line-height:1.7}
-  .livre[data-simple] .face .corps{gap:12px}
 }
 
 @media(prefers-reduced-motion:reduce){
