@@ -34,16 +34,17 @@
     ])->filter()->keys();
 
     /*
-        Le retour. Les documents de réservation ramènent à leur page ; les
-        autres disent où ils veulent. On ne suppose plus qu'il existe une
-        réservation : le souvenir d'Olimpia n'en a pas.
+        Le retour. Les documents de réservation ramènent à leur page ; un
+        autre document dirait où il veut. On ne suppose pas qu'il existe
+        toujours une réservation.
     */
     $retour = $retour ?? [
         'url'     => isset($reservation) ? route('reservation.montrer', ['jeton' => $reservation->jeton]) : url('/'),
         'libelle' => isset($reservation) ? 'Revenir à la réservation' : 'Revenir au site',
     ];
 
-    // Une facture porte les mentions obligatoires. Un souvenir, non.
+    // Une facture porte les mentions obligatoires ; tout document n'y est
+    // pas tenu.
     $mentions = $mentions ?? true;
 @endphp
 <!doctype html>

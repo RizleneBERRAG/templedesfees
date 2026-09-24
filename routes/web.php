@@ -30,15 +30,6 @@ Route::get('/le-maine-coon',               [PageController::class, 'breed'])->na
  */
 Route::get('/olimpia',                 [PageController::class, 'hommage'])->name('hommage');
 
-/*
- * Le souvenir : une feuille a imprimer, pour lui.
- *
- * Tout le reste du site s'adresse a des visiteurs. Celle-ci s'adresse a une
- * seule personne, et elle n'est pas faite pour etre regardee a l'ecran : elle
- * est faite pour sortir d'une imprimante et entrer dans un cadre.
- */
-Route::get('/olimpia/souvenir',        [PageController::class, 'souvenir'])->name('hommage.souvenir');
-
 Route::get('/articles',                [ArticleController::class, 'index'])->name('articles.index');
 Route::get('/articles/{article}',      [ArticleController::class, 'show'])->name('articles.show');
 Route::get('/galerie',                 [PageController::class, 'gallery'])->name('gallery');

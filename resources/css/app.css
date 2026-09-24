@@ -2709,42 +2709,55 @@ html.seuil-ouvert,html.seuil-ouvert body{overflow:hidden}
   .moment-fille .elle:hover{transform:none}
 }
 
-/* Le lien vers la feuille à imprimer. Discret, et le seul de toute la page
-   qui ne mène pas à une autre page : c'est un objet qu'on emporte, pas une
-   destination. */
-.emporter{display:inline-flex;align-items:center;gap:10px;
-  margin-top:clamp(30px,4.4vh,46px);padding:12px 22px;
-  border:1px solid var(--filet-2);border-radius:2px;
-  font-family:var(--corps);font-weight:300;font-size:11px;
-  letter-spacing:.2em;text-transform:uppercase;color:var(--ivoire-dim);
-  transition:border-color .4s var(--ease),color .4s var(--ease),
-    background .4s var(--ease)}
-.emporter:hover{border-color:var(--filet);color:var(--or-tendre);
-  background:var(--voile-beige)}
-.emporter svg{width:15px;height:15px}
-
 /* ── la planche de ses tirages ───────────────────────────────────── */
-/* Ses autres photos, après le récit. Petites, alignées, légèrement inégales :
-   une planche de tirages posée sur une table, pas une grille de galerie. On
-   la lit d'abord, on la regarde ensuite. */
+/* Après la phrase signée, on la revoit. Des tirages posés sur une table :
+   centrés sous leur titre, légèrement de travers, à des hauteurs qui ne
+   s'alignent pas. C'est un album de famille, pas une grille de galerie — et
+   la différence tient à trois degrés d'inclinaison.
 
-.planche-olimpia{display:flex;flex-wrap:wrap;gap:12px;
-  margin-top:clamp(26px,3.2vw,38px)}
+   Ils étaient collés à gauche sous un titre centré, en vignettes de cent
+   pixels, avec la moitié droite de l'écran vide. */
 
-.planche-olimpia figure{margin:0;cursor:pointer;flex:none;
-  width:clamp(88px,10vw,124px);aspect-ratio:5/7;overflow:hidden;
-  border:1px solid var(--filet-2);border-radius:2px;
+.planche-olimpia{display:flex;flex-wrap:wrap;
+  justify-content:center;align-items:center;
+  gap:clamp(16px,2.2vw,30px);
+  margin-top:clamp(30px,4vh,46px)}
+
+.planche-olimpia figure{margin:0;cursor:pointer;flex:none;position:relative;
+  width:clamp(128px,15.5vw,208px);aspect-ratio:5/7;overflow:hidden;
+  /* Un liseré d'ivoire plutôt qu'un filet d'or : c'est la marge blanche d'un
+     tirage photo, et c'est ce qui les fait lire comme des objets posés. */
+  border:4px solid rgba(247,241,227,.9);border-radius:1px;
   background:var(--nuit-3);
-  transition:border-color .4s var(--ease),transform .4s var(--ease),
-    box-shadow .4s var(--ease)}
+  box-shadow:0 20px 44px -18px rgba(0,0,0,.9);
+  transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
 
-.planche-olimpia figure:hover{border-color:var(--filet);transform:translateY(-3px);
-  box-shadow:0 18px 40px -16px rgba(0,0,0,.8)}
+/* Le désordre est réglé, pas aléatoire : deux inclinaisons et deux hauteurs
+   qui alternent. Au-delà de trois degrés ça ne fait plus négligé, ça fait
+   cassé. */
+.planche-olimpia figure:nth-child(odd) {transform:rotate(-1.8deg) translateY(12px)}
+.planche-olimpia figure:nth-child(even){transform:rotate(1.4deg) translateY(-10px)}
+
+.planche-olimpia figure:hover{
+  transform:rotate(0) translateY(-8px) scale(1.04);
+  box-shadow:0 34px 70px -20px rgba(0,0,0,.95),
+             0 0 0 1px rgba(217,178,106,.4)}
 
 .planche-olimpia img{width:100%;height:100%;object-fit:cover;object-position:50% 18%}
 
+/* Une ligne sous la planche : sans elle, rien ne dit qu'elles s'ouvrent. */
+.souffle{margin:clamp(22px,3vh,30px) 0 0;
+  font-family:var(--corps);font-weight:300;font-size:11.5px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--ivoire-dim)}
+
 @media (max-width:900px){
-  .planche-olimpia{justify-content:center}
+  .planche-olimpia{gap:14px}
+  .planche-olimpia figure{width:clamp(112px,27vw,150px);border-width:3px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .planche-olimpia figure,
+  .planche-olimpia figure:hover{transform:none;transition:none}
 }
 
 /* ── l'entrée, depuis la page des chats ──────────────────────────── */
