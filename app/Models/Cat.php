@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Str;
 
 class Cat extends Model
 {
@@ -24,6 +25,20 @@ class Cat extends Model
             'date_naissance'  => 'date',
             'est_publie'      => 'boolean',
         ];
+    }
+
+    /**
+     * Le sexe tel qu'une adresse peut le porter.
+     *
+     * La base ecrit « male » avec son accent circonflexe, et c'est ce qui
+     * s'affiche sur la fiche. Une URL ne le porte pas : le filtre s'ecrit
+     * ?sexe=male. Sans cette traduction, le controleur comparait « male » a
+     * « male accentue » — le lien Males n'etait donc jamais rendu, faute de
+     * compte, et l'adresse ?sexe=male vidait la page.
+     */
+    public function sexeEnAdresse(): string
+    {
+        return (string) Str::of((string) $this->sexe)->lower()->ascii();
     }
 
     public function getRouteKeyName(): string

@@ -25,13 +25,13 @@ class CatController extends Controller
             : null;
 
         $filtres = $chats->filter(fn (Cat $c) => (! $role || $c->role === $role)
-            && (! $sexe || $c->sexe === $sexe));
+            && (! $sexe || $c->sexeEnAdresse() === $sexe));
 
         return view('pages.cats.index', [
             'chats'    => $filtres->values(),
             'total'    => $chats->count(),
             'parRole'  => $chats->countBy(fn (Cat $c) => $c->role->value),
-            'parSexe'  => $chats->countBy('sexe'),
+            'parSexe'  => $chats->countBy(fn (Cat $c) => $c->sexeEnAdresse()),
             'role'     => $role,
             'sexe'     => $sexe,
         ]);

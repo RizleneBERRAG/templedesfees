@@ -17,7 +17,7 @@
             lede="Des textes courts sur la race, ses soins et la vie de l’élevage. Pas de remplissage : on écrit quand on a quelque chose à dire." />
 
         @if($categories->isNotEmpty())
-            <nav class="filtres monte" aria-label="Filtrer les articles">
+            <nav class="filtres monte" aria-label="Filtrer les articles" data-filtre-barre>
                 <a href="{{ route('articles.index') }}" @if(! $categorie) aria-current="true" @endif>Tous ({{ $total }})</a>
                 @foreach($categories as $cat)
                     <a href="{{ route('articles.index', ['categorie' => $cat]) }}"
@@ -29,9 +29,10 @@
         @endif
 
         @forelse($articles as $article)
-            @if($loop->first)<div class="articles monte">@endif
+            @if($loop->first)<div class="articles monte" data-filtre="categorie"
+                 data-filtre-vide="Aucun article dans cette rubrique pour le moment.">@endif
 
-                <article class="billet">
+                <article class="billet" data-categorie="{{ $article->categorie }}">
                     <a class="arche petite" href="{{ route('articles.show', $article) }}" tabindex="-1" aria-hidden="true">
                         <i><u>
                             <x-img :src="$article->photo_principale ?: 'images/cats/uriana.webp'"

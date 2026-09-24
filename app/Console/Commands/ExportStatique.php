@@ -208,17 +208,26 @@ class ExportStatique extends Command
                  * fichier qui n'existe pas — GitHub Pages s'en tire par une
                  * redirection, mais pas un dossier ouvert depuis le disque.
                  */
+                /*
+                 * La requete et l'ancre sont mises de cote le temps du test :
+                 * les liens de filtre finissaient en « elevage?role=etalon »,
+                 * sans barre, alors que la page exportee est un dossier. GitHub
+                 * Pages s'en tirait par une redirection, mais pas un dossier
+                 * ouvert depuis le disque.
+                 */
+                [$adresse, $suite] = array_pad(
+                    preg_split('/(?=[?#])/', $cible, 2), 2, ''
+                );
+
                 $estPage = $attribut === 'href'
-                    && $cible !== ''
-                    && ! str_contains($cible, '#')
-                    && ! str_contains($cible, '?')
-                    && ! str_contains(basename($cible), '.');
+                    && $adresse !== ''
+                    && ! str_contains(basename($adresse), '.');
 
                 if ($estPage) {
-                    $cible = rtrim($cible, '/').'/';
+                    $adresse = rtrim($adresse, '/').'/';
                 }
 
-                return $attribut.'="'.$remonte.$cible.'"';
+                return $attribut.'="'.$remonte.$adresse.$suite.'"';
             },
             $html
         );

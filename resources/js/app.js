@@ -55,6 +55,69 @@ menuEtroit.addEventListener('change', accorderMenu);
 window.addEventListener('resize', accorderMenu);
 accorderMenu();
 
+/* ---------- les filtres d'une liste ----------
+
+   Chats, chatons, photos, articles : quatre listes qui passent leur filtre
+   par l'adresse, et c'est le serveur qui trie. L'apercu publie sur GitHub
+   Pages n'a pas de serveur — ?role=etalon y renvoyait la page entiere, avec
+   tous les chats et la pastille doree restee sur « Tous ». Les filtres ne
+   faisaient donc rien du tout, ni sur telephone ni sur ordinateur.
+
+   Ce bloc refait le tri dans la page. Sur le site servi par Laravel il ne
+   trouve rien a cacher, le serveur ayant deja trie, et ne change donc rien :
+   c'est le meme filtre, applique deux fois au meme resultat.
+
+   Le conteneur declare les parametres qu'il lit, chaque element porte sa
+   valeur en data-, et le message de liste vide est ecrit la ou il doit
+   l'etre : dans le gabarit, pas ici. */
+
+document.querySelectorAll('[data-filtre]').forEach((liste) => {
+    const clefs = liste.dataset.filtre.split(/\s+/).filter(Boolean);
+    const demande = new URLSearchParams(window.location.search);
+    const actifs = clefs
+        .map((c) => [c, demande.get(c)])
+        .filter(([, v]) => v !== null && v !== '');
+
+    let montres = 0;
+    [...liste.children].forEach((item) => {
+        const garde = actifs.every(([c, v]) => item.dataset[c] === v);
+        item.hidden = !garde;
+        if (garde) montres += 1;
+    });
+
+    const zone = liste.closest('.wrap') ?? document;
+
+    /* La pastille doree doit suivre : sans cela elle reste sur « Tous »
+       alors que la liste est filtree, et plus rien ne dit ou l'on est. */
+    zone.querySelectorAll('[data-filtre-barre] a').forEach((a) => {
+        const sienne = new URL(a.href, window.location.href).searchParams;
+        const pareil = clefs.every(
+            (c) => (sienne.get(c) ?? '') === (demande.get(c) ?? ''),
+        );
+        if (pareil) a.setAttribute('aria-current', 'true');
+        else a.removeAttribute('aria-current');
+    });
+
+    /* Aucun des filtres proposes ne mene a une liste vide — leurs comptes
+       sont etablis sur l'ensemble. Une adresse tapee a la main, si : une
+       page qui n'affiche alors rien du tout a l'air cassee. */
+    if (montres > 0 || !liste.dataset.filtreVide) return;
+
+    const mot = document.createElement('p');
+    mot.className = 'lede';
+    mot.style.textAlign = 'center';
+    mot.style.marginInline = 'auto';
+    mot.textContent = liste.dataset.filtreVide + ' ';
+
+    const tout = document.createElement('a');
+    tout.className = 'lien';
+    tout.href = window.location.pathname;
+    tout.textContent = 'Tout voir';
+    mot.appendChild(tout);
+
+    liste.after(mot);
+});
+
 /* ---------- bandeau ---------- */
 const bandeau = document.getElementById('bandeau');
 window.addEventListener(

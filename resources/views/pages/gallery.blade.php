@@ -26,7 +26,7 @@
              partir de deux catégories, sinon elle propose de choisir entre
              tout et tout. --}}
         @if($categories->count() > 1)
-            <nav class="filtres monte" aria-label="Filtrer les photos">
+            <nav class="filtres monte" aria-label="Filtrer les photos" data-filtre-barre>
                 <a href="{{ route('gallery') }}"
                    @if(! request('categorie')) aria-current="true" @endif>Tout ({{ $photos->count() }})</a>
                 @foreach($categories as $categorie)
@@ -53,7 +53,8 @@
             {{-- data-lightbox et data-full sont le contrat de la visionneuse :
                  elle lit la liste sur le conteneur et la source sur chaque
                  figure. Ne pas les retirer en changeant la mise en page. --}}
-            <div class="planche-photos monte" data-lightbox>
+            <div class="planche-photos monte" data-lightbox data-filtre="categorie"
+                 data-filtre-vide="Aucune photo dans cette catégorie pour le moment.">
                 @foreach($vues as $i => $photo)
                     @php
                         // La légende du seeder tient sur « Nom, robe » : on la
@@ -62,6 +63,7 @@
                     @endphp
 
                     <figure class="cliche" tabindex="0" role="button"
+                            data-categorie="{{ $photo->categorie }}"
                             aria-label="Agrandir : {{ $photo->legende ?: $photo->alt }}"
                             data-full="{{ asset($photo->chemin) }}"
                             data-legende="{{ $photo->legende }}">

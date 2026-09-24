@@ -33,7 +33,7 @@
           href="../fonts/jost-normal-300-500-latin.woff2">
     <link rel="stylesheet" href="../fonts/fonts.css">
 
-    <link rel="preload" as="style" href="../build/assets/app-BK8odlCX.css" /><link rel="modulepreload" as="script" href="../build/assets/app-CsKpI5UF.js" /><link rel="stylesheet" href="../build/assets/app-BK8odlCX.css" data-navigate-track="reload" /><script type="module" src="../build/assets/app-CsKpI5UF.js" data-navigate-track="reload"></script>        </head>
+    <link rel="preload" as="style" href="../build/assets/app-BK8odlCX.css" /><link rel="modulepreload" as="script" href="../build/assets/app-MToWFVRk.js" /><link rel="stylesheet" href="../build/assets/app-BK8odlCX.css" data-navigate-track="reload" /><script type="module" src="../build/assets/app-MToWFVRk.js" data-navigate-track="reload"></script>        </head>
 <body>
 
 
@@ -160,20 +160,22 @@
             <p class="lede">Nés le 12 juillet 2026. Départs à partir du 4 octobre 2026, identifiés, vaccinés, vermifugés et inscrits au LOOF.</p>
     </div>
 
-        <nav class="filtres monte" aria-label="Filtrer les chatons">
+        <nav class="filtres monte" aria-label="Filtrer les chatons" data-filtre-barre>
             <a href="../chatons/"  aria-current="true" >Tous (4)</a>
-                                                <a href="../chatons?statut=disponible"
+                                                <a href="../chatons/?statut=disponible"
                        >
                         Disponibles (2)
                     </a>
-                                                                <a href="../chatons?statut=reserve"
+                                                                <a href="../chatons/?statut=reserve"
                        >
                         Réservés (2)
                     </a>
                                                                 </nav>
 
-                    <div class="fiches monte">                <a class="fiche "
-   href="../chatons/baccara/">
+                    <div class="fiches monte" data-filtre="statut"
+                 data-filtre-vide="Aucun chaton dans cette catégorie pour le moment.">                <a class="fiche "
+   href="../chatons/baccara/"
+   data-statut="disponible">
     <span class="arche petite">
         <span class="pastille disponible">Disponible</span>
         <i><u>
@@ -193,7 +195,8 @@
     </span>
 </a>
                                                 <a class="fiche "
-   href="../chatons/balthazar/">
+   href="../chatons/balthazar/"
+   data-statut="disponible">
     <span class="arche petite">
         <span class="pastille disponible">Disponible</span>
         <i><u>
@@ -213,7 +216,8 @@
     </span>
 </a>
                                                 <a class="fiche "
-   href="../chatons/bergamote/">
+   href="../chatons/bergamote/"
+   data-statut="reserve">
     <span class="arche petite">
         <span class="pastille reserve">Réservé</span>
         <i><u>
@@ -233,7 +237,8 @@
     </span>
 </a>
                                                 <a class="fiche "
-   href="../chatons/brume/">
+   href="../chatons/brume/"
+   data-statut="reserve">
     <span class="arche petite">
         <span class="pastille reserve">Réservé</span>
         <i><u>
@@ -345,79 +350,13 @@
                             <a class="ruban-item" href="../galerie/"
                    >
                     <img 
-              src="../images/cats/boonie.webp"
-                      srcset="../images/cats/boonie-400.webp 400w, ../images/cats/boonie-800.webp 800w, ../images/cats/boonie.webp 1200w"
+              src="../images/cats/kora.webp"
+                      srcset="../images/cats/kora-400.webp 400w, ../images/cats/kora-800.webp 800w, ../images/cats/kora.webp 1200w"
              sizes="(max-width:560px) 46vw, 240px"
-                   alt="Boonie, black tortie silver ticked tabby"
+                   alt="Kora, noire"
                loading="lazy"
           decoding="async">
-                    <span class="ruban-cap">Boonie, black tortie silver ticked tabby</span>
-                </a>
-                            <a class="ruban-item" href="../galerie/"
-                   >
-                    <img 
-              src="../images/cats/solanna.webp"
-                      srcset="../images/cats/solanna-400.webp 400w, ../images/cats/solanna-800.webp 800w, ../images/cats/solanna.webp 1200w"
-             sizes="(max-width:560px) 46vw, 240px"
-                   alt="Solanna, bleu tortie"
-               loading="lazy"
-          decoding="async">
-                    <span class="ruban-cap">Solanna, bleu tortie</span>
-                </a>
-                            <a class="ruban-item" href="../galerie/"
-                   >
-                    <img 
-              src="../images/cats/helios.webp"
-                      srcset="../images/cats/helios-400.webp 400w, ../images/cats/helios-800.webp 800w, ../images/cats/helios.webp 1200w"
-             sizes="(max-width:560px) 46vw, 240px"
-                   alt="Helios, red"
-               loading="lazy"
-          decoding="async">
-                    <span class="ruban-cap">Helios, red</span>
-                </a>
-                            <a class="ruban-item" href="../galerie/"
-                   >
-                    <img 
-              src="../images/cats/karrington.webp"
-                      srcset="../images/cats/karrington-400.webp 400w, ../images/cats/karrington-800.webp 800w, ../images/cats/karrington.webp 1200w"
-             sizes="(max-width:560px) 46vw, 240px"
-                   alt="Karrington, red"
-               loading="lazy"
-          decoding="async">
-                    <span class="ruban-cap">Karrington, red</span>
-                </a>
-                            <a class="ruban-item" href="../galerie/"
-                   >
-                    <img 
-              src="../images/cats/uriana.webp"
-                      srcset="../images/cats/uriana-400.webp 400w, ../images/cats/uriana-800.webp 800w, ../images/cats/uriana.webp 1200w"
-             sizes="(max-width:560px) 46vw, 240px"
-                   alt="Uriana, black tortie"
-               loading="lazy"
-          decoding="async">
-                    <span class="ruban-cap">Uriana, black tortie</span>
-                </a>
-                            <a class="ruban-item" href="../galerie/"
-                   >
-                    <img 
-              src="../images/cats/halunke.webp"
-                      srcset="../images/cats/halunke-400.webp 400w, ../images/cats/halunke-800.webp 800w, ../images/cats/halunke.webp 1200w"
-             sizes="(max-width:560px) 46vw, 240px"
-                   alt="Halunke, noir"
-               loading="lazy"
-          decoding="async">
-                    <span class="ruban-cap">Halunke, noir</span>
-                </a>
-                            <a class="ruban-item" href="../galerie/"
-                   >
-                    <img 
-              src="../images/cats/delenn.webp"
-                      srcset="../images/cats/delenn-400.webp 400w, ../images/cats/delenn-800.webp 800w, ../images/cats/delenn.webp 1200w"
-             sizes="(max-width:560px) 46vw, 240px"
-                   alt="Delenn, black smoke"
-               loading="lazy"
-          decoding="async">
-                    <span class="ruban-cap">Delenn, black smoke</span>
+                    <span class="ruban-cap">Kora, noire</span>
                 </a>
                             <a class="ruban-item" href="../galerie/"
                    >
@@ -433,13 +372,57 @@
                             <a class="ruban-item" href="../galerie/"
                    >
                     <img 
-              src="../images/cats/kora.webp"
-                      srcset="../images/cats/kora-400.webp 400w, ../images/cats/kora-800.webp 800w, ../images/cats/kora.webp 1200w"
+              src="../images/cats/halunke.webp"
+                      srcset="../images/cats/halunke-400.webp 400w, ../images/cats/halunke-800.webp 800w, ../images/cats/halunke.webp 1200w"
              sizes="(max-width:560px) 46vw, 240px"
-                   alt="Kora, noire"
+                   alt="Halunke, noir"
                loading="lazy"
           decoding="async">
-                    <span class="ruban-cap">Kora, noire</span>
+                    <span class="ruban-cap">Halunke, noir</span>
+                </a>
+                            <a class="ruban-item" href="../galerie/"
+                   >
+                    <img 
+              src="../images/cats/aneora.webp"
+                      srcset="../images/cats/aneora-400.webp 400w, ../images/cats/aneora-800.webp 800w, ../images/cats/aneora.webp 1200w"
+             sizes="(max-width:560px) 46vw, 240px"
+                   alt="A’Neora, red silver ticked tabby"
+               loading="lazy"
+          decoding="async">
+                    <span class="ruban-cap">A’Neora, red silver ticked tabby</span>
+                </a>
+                            <a class="ruban-item" href="../galerie/"
+                   >
+                    <img 
+              src="../images/cats/helios.webp"
+                      srcset="../images/cats/helios-400.webp 400w, ../images/cats/helios-800.webp 800w, ../images/cats/helios.webp 1200w"
+             sizes="(max-width:560px) 46vw, 240px"
+                   alt="Helios, red"
+               loading="lazy"
+          decoding="async">
+                    <span class="ruban-cap">Helios, red</span>
+                </a>
+                            <a class="ruban-item" href="../galerie/"
+                   >
+                    <img 
+              src="../images/cats/uriana.webp"
+                      srcset="../images/cats/uriana-400.webp 400w, ../images/cats/uriana-800.webp 800w, ../images/cats/uriana.webp 1200w"
+             sizes="(max-width:560px) 46vw, 240px"
+                   alt="Uriana, black tortie"
+               loading="lazy"
+          decoding="async">
+                    <span class="ruban-cap">Uriana, black tortie</span>
+                </a>
+                            <a class="ruban-item" href="../galerie/"
+                   >
+                    <img 
+              src="../images/cats/karrington.webp"
+                      srcset="../images/cats/karrington-400.webp 400w, ../images/cats/karrington-800.webp 800w, ../images/cats/karrington.webp 1200w"
+             sizes="(max-width:560px) 46vw, 240px"
+                   alt="Karrington, red"
+               loading="lazy"
+          decoding="async">
+                    <span class="ruban-cap">Karrington, red</span>
                 </a>
                             <a class="ruban-item" href="../galerie/"
                    >
@@ -455,101 +438,35 @@
                             <a class="ruban-item" href="../galerie/"
                    >
                     <img 
-              src="../images/cats/aneora.webp"
-                      srcset="../images/cats/aneora-400.webp 400w, ../images/cats/aneora-800.webp 800w, ../images/cats/aneora.webp 1200w"
-             sizes="(max-width:560px) 46vw, 240px"
-                   alt="A’Neora, red silver ticked tabby"
-               loading="lazy"
-          decoding="async">
-                    <span class="ruban-cap">A’Neora, red silver ticked tabby</span>
-                </a>
-                            <a class="ruban-item" href="../galerie/"
-                    aria-hidden="true" tabindex="-1" >
-                    <img 
-              src="../images/cats/boonie.webp"
-                      srcset="../images/cats/boonie-400.webp 400w, ../images/cats/boonie-800.webp 800w, ../images/cats/boonie.webp 1200w"
-             sizes="(max-width:560px) 46vw, 240px"
-                   alt=""
-               loading="lazy"
-          decoding="async">
-                    <span class="ruban-cap">Boonie, black tortie silver ticked tabby</span>
-                </a>
-                            <a class="ruban-item" href="../galerie/"
-                    aria-hidden="true" tabindex="-1" >
-                    <img 
-              src="../images/cats/solanna.webp"
-                      srcset="../images/cats/solanna-400.webp 400w, ../images/cats/solanna-800.webp 800w, ../images/cats/solanna.webp 1200w"
-             sizes="(max-width:560px) 46vw, 240px"
-                   alt=""
-               loading="lazy"
-          decoding="async">
-                    <span class="ruban-cap">Solanna, bleu tortie</span>
-                </a>
-                            <a class="ruban-item" href="../galerie/"
-                    aria-hidden="true" tabindex="-1" >
-                    <img 
-              src="../images/cats/helios.webp"
-                      srcset="../images/cats/helios-400.webp 400w, ../images/cats/helios-800.webp 800w, ../images/cats/helios.webp 1200w"
-             sizes="(max-width:560px) 46vw, 240px"
-                   alt=""
-               loading="lazy"
-          decoding="async">
-                    <span class="ruban-cap">Helios, red</span>
-                </a>
-                            <a class="ruban-item" href="../galerie/"
-                    aria-hidden="true" tabindex="-1" >
-                    <img 
-              src="../images/cats/karrington.webp"
-                      srcset="../images/cats/karrington-400.webp 400w, ../images/cats/karrington-800.webp 800w, ../images/cats/karrington.webp 1200w"
-             sizes="(max-width:560px) 46vw, 240px"
-                   alt=""
-               loading="lazy"
-          decoding="async">
-                    <span class="ruban-cap">Karrington, red</span>
-                </a>
-                            <a class="ruban-item" href="../galerie/"
-                    aria-hidden="true" tabindex="-1" >
-                    <img 
-              src="../images/cats/uriana.webp"
-                      srcset="../images/cats/uriana-400.webp 400w, ../images/cats/uriana-800.webp 800w, ../images/cats/uriana.webp 1200w"
-             sizes="(max-width:560px) 46vw, 240px"
-                   alt=""
-               loading="lazy"
-          decoding="async">
-                    <span class="ruban-cap">Uriana, black tortie</span>
-                </a>
-                            <a class="ruban-item" href="../galerie/"
-                    aria-hidden="true" tabindex="-1" >
-                    <img 
-              src="../images/cats/halunke.webp"
-                      srcset="../images/cats/halunke-400.webp 400w, ../images/cats/halunke-800.webp 800w, ../images/cats/halunke.webp 1200w"
-             sizes="(max-width:560px) 46vw, 240px"
-                   alt=""
-               loading="lazy"
-          decoding="async">
-                    <span class="ruban-cap">Halunke, noir</span>
-                </a>
-                            <a class="ruban-item" href="../galerie/"
-                    aria-hidden="true" tabindex="-1" >
-                    <img 
               src="../images/cats/delenn.webp"
                       srcset="../images/cats/delenn-400.webp 400w, ../images/cats/delenn-800.webp 800w, ../images/cats/delenn.webp 1200w"
              sizes="(max-width:560px) 46vw, 240px"
-                   alt=""
+                   alt="Delenn, black smoke"
                loading="lazy"
           decoding="async">
                     <span class="ruban-cap">Delenn, black smoke</span>
                 </a>
                             <a class="ruban-item" href="../galerie/"
-                    aria-hidden="true" tabindex="-1" >
+                   >
                     <img 
-              src="../images/cats/alaska.webp"
-                      srcset="../images/cats/alaska-400.webp 400w, ../images/cats/alaska-800.webp 800w, ../images/cats/alaska.webp 1200w"
+              src="../images/cats/solanna.webp"
+                      srcset="../images/cats/solanna-400.webp 400w, ../images/cats/solanna-800.webp 800w, ../images/cats/solanna.webp 1200w"
              sizes="(max-width:560px) 46vw, 240px"
-                   alt=""
+                   alt="Solanna, bleu tortie"
                loading="lazy"
           decoding="async">
-                    <span class="ruban-cap">Alaska, blanche</span>
+                    <span class="ruban-cap">Solanna, bleu tortie</span>
+                </a>
+                            <a class="ruban-item" href="../galerie/"
+                   >
+                    <img 
+              src="../images/cats/boonie.webp"
+                      srcset="../images/cats/boonie-400.webp 400w, ../images/cats/boonie-800.webp 800w, ../images/cats/boonie.webp 1200w"
+             sizes="(max-width:560px) 46vw, 240px"
+                   alt="Boonie, black tortie silver ticked tabby"
+               loading="lazy"
+          decoding="async">
+                    <span class="ruban-cap">Boonie, black tortie silver ticked tabby</span>
                 </a>
                             <a class="ruban-item" href="../galerie/"
                     aria-hidden="true" tabindex="-1" >
@@ -565,13 +482,24 @@
                             <a class="ruban-item" href="../galerie/"
                     aria-hidden="true" tabindex="-1" >
                     <img 
-              src="../images/cats/tika.webp"
-                      srcset="../images/cats/tika-400.webp 400w, ../images/cats/tika-800.webp 800w, ../images/cats/tika.webp 1200w"
+              src="../images/cats/alaska.webp"
+                      srcset="../images/cats/alaska-400.webp 400w, ../images/cats/alaska-800.webp 800w, ../images/cats/alaska.webp 1200w"
              sizes="(max-width:560px) 46vw, 240px"
                    alt=""
                loading="lazy"
           decoding="async">
-                    <span class="ruban-cap">Tika, red</span>
+                    <span class="ruban-cap">Alaska, blanche</span>
+                </a>
+                            <a class="ruban-item" href="../galerie/"
+                    aria-hidden="true" tabindex="-1" >
+                    <img 
+              src="../images/cats/halunke.webp"
+                      srcset="../images/cats/halunke-400.webp 400w, ../images/cats/halunke-800.webp 800w, ../images/cats/halunke.webp 1200w"
+             sizes="(max-width:560px) 46vw, 240px"
+                   alt=""
+               loading="lazy"
+          decoding="async">
+                    <span class="ruban-cap">Halunke, noir</span>
                 </a>
                             <a class="ruban-item" href="../galerie/"
                     aria-hidden="true" tabindex="-1" >
@@ -583,6 +511,83 @@
                loading="lazy"
           decoding="async">
                     <span class="ruban-cap">A’Neora, red silver ticked tabby</span>
+                </a>
+                            <a class="ruban-item" href="../galerie/"
+                    aria-hidden="true" tabindex="-1" >
+                    <img 
+              src="../images/cats/helios.webp"
+                      srcset="../images/cats/helios-400.webp 400w, ../images/cats/helios-800.webp 800w, ../images/cats/helios.webp 1200w"
+             sizes="(max-width:560px) 46vw, 240px"
+                   alt=""
+               loading="lazy"
+          decoding="async">
+                    <span class="ruban-cap">Helios, red</span>
+                </a>
+                            <a class="ruban-item" href="../galerie/"
+                    aria-hidden="true" tabindex="-1" >
+                    <img 
+              src="../images/cats/uriana.webp"
+                      srcset="../images/cats/uriana-400.webp 400w, ../images/cats/uriana-800.webp 800w, ../images/cats/uriana.webp 1200w"
+             sizes="(max-width:560px) 46vw, 240px"
+                   alt=""
+               loading="lazy"
+          decoding="async">
+                    <span class="ruban-cap">Uriana, black tortie</span>
+                </a>
+                            <a class="ruban-item" href="../galerie/"
+                    aria-hidden="true" tabindex="-1" >
+                    <img 
+              src="../images/cats/karrington.webp"
+                      srcset="../images/cats/karrington-400.webp 400w, ../images/cats/karrington-800.webp 800w, ../images/cats/karrington.webp 1200w"
+             sizes="(max-width:560px) 46vw, 240px"
+                   alt=""
+               loading="lazy"
+          decoding="async">
+                    <span class="ruban-cap">Karrington, red</span>
+                </a>
+                            <a class="ruban-item" href="../galerie/"
+                    aria-hidden="true" tabindex="-1" >
+                    <img 
+              src="../images/cats/tika.webp"
+                      srcset="../images/cats/tika-400.webp 400w, ../images/cats/tika-800.webp 800w, ../images/cats/tika.webp 1200w"
+             sizes="(max-width:560px) 46vw, 240px"
+                   alt=""
+               loading="lazy"
+          decoding="async">
+                    <span class="ruban-cap">Tika, red</span>
+                </a>
+                            <a class="ruban-item" href="../galerie/"
+                    aria-hidden="true" tabindex="-1" >
+                    <img 
+              src="../images/cats/delenn.webp"
+                      srcset="../images/cats/delenn-400.webp 400w, ../images/cats/delenn-800.webp 800w, ../images/cats/delenn.webp 1200w"
+             sizes="(max-width:560px) 46vw, 240px"
+                   alt=""
+               loading="lazy"
+          decoding="async">
+                    <span class="ruban-cap">Delenn, black smoke</span>
+                </a>
+                            <a class="ruban-item" href="../galerie/"
+                    aria-hidden="true" tabindex="-1" >
+                    <img 
+              src="../images/cats/solanna.webp"
+                      srcset="../images/cats/solanna-400.webp 400w, ../images/cats/solanna-800.webp 800w, ../images/cats/solanna.webp 1200w"
+             sizes="(max-width:560px) 46vw, 240px"
+                   alt=""
+               loading="lazy"
+          decoding="async">
+                    <span class="ruban-cap">Solanna, bleu tortie</span>
+                </a>
+                            <a class="ruban-item" href="../galerie/"
+                    aria-hidden="true" tabindex="-1" >
+                    <img 
+              src="../images/cats/boonie.webp"
+                      srcset="../images/cats/boonie-400.webp 400w, ../images/cats/boonie-800.webp 800w, ../images/cats/boonie.webp 1200w"
+             sizes="(max-width:560px) 46vw, 240px"
+                   alt=""
+               loading="lazy"
+          decoding="async">
+                    <span class="ruban-cap">Boonie, black tortie silver ticked tabby</span>
                 </a>
                     </div>
     </div>
@@ -656,7 +661,7 @@
                 <h4>Adopter</h4>
                 <ul>
                     <li><a href="../adopter/">Le parcours</a></li>
-                    <li><a href="../adopter#couverture">Ce que couvre l'adoption</a></li>
+                    <li><a href="../adopter/#couverture">Ce que couvre l'adoption</a></li>
                     <li><a href="../questions/">Questions fréquentes</a></li>
                     <li><a href="../mentions-legales/">Mentions légales &amp; RGPD</a></li>
                 </ul>

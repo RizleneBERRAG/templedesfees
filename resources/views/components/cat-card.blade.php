@@ -1,6 +1,9 @@
 @props(['chat'])
 
-<a class="fiche" href="{{ route('cats.show', $chat) }}">
+{{-- Les etiquettes servent au tri dans la page, quand aucun serveur ne
+     peut le faire — voir le bloc « filtres d'une liste » du script. --}}
+<a class="fiche" href="{{ route('cats.show', $chat) }}"
+   data-role="{{ $chat->role->value }}" data-sexe="{{ $chat->sexeEnAdresse() }}">
     <span class="arche petite">
         @if($chat->role === \App\Enums\CatRole::Retraite)
             <span class="pastille adopte">Retraité</span>

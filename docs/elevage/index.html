@@ -33,7 +33,7 @@
           href="../fonts/jost-normal-300-500-latin.woff2">
     <link rel="stylesheet" href="../fonts/fonts.css">
 
-    <link rel="preload" as="style" href="../build/assets/app-BK8odlCX.css" /><link rel="modulepreload" as="script" href="../build/assets/app-CsKpI5UF.js" /><link rel="stylesheet" href="../build/assets/app-BK8odlCX.css" data-navigate-track="reload" /><script type="module" src="../build/assets/app-CsKpI5UF.js" data-navigate-track="reload"></script>        </head>
+    <link rel="preload" as="style" href="../build/assets/app-BK8odlCX.css" /><link rel="modulepreload" as="script" href="../build/assets/app-MToWFVRk.js" /><link rel="stylesheet" href="../build/assets/app-BK8odlCX.css" data-navigate-track="reload" /><script type="module" src="../build/assets/app-MToWFVRk.js" data-navigate-track="reload"></script>        </head>
 <body>
 
 
@@ -161,28 +161,34 @@
     </div>
 
         
-                <nav class="filtres monte" aria-label="Filtrer les chats">
+                <nav class="filtres monte" aria-label="Filtrer les chats" data-filtre-barre>
             <a href="../elevage/"  aria-current="true" >Tous (11)</a>
-                                                <a href="../elevage?role=etalon"
+                                                <a href="../elevage/?role=etalon"
                        >
                         Étalon (1)
                     </a>
-                                                                <a href="../elevage?role=reproductrice"
+                                                                <a href="../elevage/?role=reproductrice"
                        >
                         Reproductrice (5)
                     </a>
-                                                                <a href="../elevage?role=observation"
+                                                                <a href="../elevage/?role=observation"
                        >
                         Jeune — en observation (5)
                     </a>
-                                                                                                                                    <a href="../elevage?sexe=femelle"
+                                                                                                        <a href="../elevage/?sexe=male"
+                       >
+                        Mâles (3)
+                    </a>
+                                                                <a href="../elevage/?sexe=femelle"
                        >
                         Femelles (8)
                     </a>
                                     </nav>
 
-                    <div class="fiches monte">
-                                    <a class="fiche" href="../elevage/karrington/">
+                    <div class="fiches monte" data-filtre="role sexe"
+                 data-filtre-vide="Aucun chat ne correspond à ce filtre.">
+                                    <a class="fiche" href="../elevage/karrington/"
+   data-role="etalon" data-sexe="male">
     <span class="arche petite">
                 <i><u>
             <img 
@@ -200,7 +206,8 @@
         <span class="rubrique" style="letter-spacing:.2em">Étalon · 2021</span>
     </span>
 </a>
-                                    <a class="fiche" href="../elevage/solanna/">
+                                    <a class="fiche" href="../elevage/solanna/"
+   data-role="reproductrice" data-sexe="femelle">
     <span class="arche petite">
                 <i><u>
             <img 
@@ -218,7 +225,8 @@
         <span class="rubrique" style="letter-spacing:.2em">Reproductrice · 2021</span>
     </span>
 </a>
-                                    <a class="fiche" href="../elevage/uriana/">
+                                    <a class="fiche" href="../elevage/uriana/"
+   data-role="reproductrice" data-sexe="femelle">
     <span class="arche petite">
                 <i><u>
             <img 
@@ -236,7 +244,8 @@
         <span class="rubrique" style="letter-spacing:.2em">Reproductrice · 2023</span>
     </span>
 </a>
-                                    <a class="fiche" href="../elevage/tika/">
+                                    <a class="fiche" href="../elevage/tika/"
+   data-role="reproductrice" data-sexe="femelle">
     <span class="arche petite">
                 <i><u>
             <img 
@@ -254,7 +263,8 @@
         <span class="rubrique" style="letter-spacing:.2em">Reproductrice · 2022</span>
     </span>
 </a>
-                                    <a class="fiche" href="../elevage/delenn/">
+                                    <a class="fiche" href="../elevage/delenn/"
+   data-role="reproductrice" data-sexe="femelle">
     <span class="arche petite">
                 <i><u>
             <img 
@@ -272,7 +282,8 @@
         <span class="rubrique" style="letter-spacing:.2em">Reproductrice · 2023</span>
     </span>
 </a>
-                                    <a class="fiche" href="../elevage/boonie/">
+                                    <a class="fiche" href="../elevage/boonie/"
+   data-role="reproductrice" data-sexe="femelle">
     <span class="arche petite">
                 <i><u>
             <img 
@@ -290,7 +301,8 @@
         <span class="rubrique" style="letter-spacing:.2em">Reproductrice · 2022</span>
     </span>
 </a>
-                                    <a class="fiche" href="../elevage/halunke/">
+                                    <a class="fiche" href="../elevage/halunke/"
+   data-role="observation" data-sexe="male">
     <span class="arche petite">
                 <i><u>
             <img 
@@ -308,7 +320,8 @@
         <span class="rubrique" style="letter-spacing:.2em">Jeune — en observation · 2025</span>
     </span>
 </a>
-                                    <a class="fiche" href="../elevage/helios/">
+                                    <a class="fiche" href="../elevage/helios/"
+   data-role="observation" data-sexe="male">
     <span class="arche petite">
                 <i><u>
             <img 
@@ -326,7 +339,8 @@
         <span class="rubrique" style="letter-spacing:.2em">Jeune — en observation · 2025</span>
     </span>
 </a>
-                                    <a class="fiche" href="../elevage/kora/">
+                                    <a class="fiche" href="../elevage/kora/"
+   data-role="observation" data-sexe="femelle">
     <span class="arche petite">
                 <i><u>
             <img 
@@ -344,7 +358,8 @@
         <span class="rubrique" style="letter-spacing:.2em">Jeune — en observation · 2025</span>
     </span>
 </a>
-                                    <a class="fiche" href="../elevage/aneora/">
+                                    <a class="fiche" href="../elevage/aneora/"
+   data-role="observation" data-sexe="femelle">
     <span class="arche petite">
                 <i><u>
             <img 
@@ -362,7 +377,8 @@
         <span class="rubrique" style="letter-spacing:.2em">Jeune — en observation · 2025</span>
     </span>
 </a>
-                                    <a class="fiche" href="../elevage/alaska/">
+                                    <a class="fiche" href="../elevage/alaska/"
+   data-role="observation" data-sexe="femelle">
     <span class="arche petite">
                 <i><u>
             <img 
@@ -485,7 +501,7 @@
                 <h4>Adopter</h4>
                 <ul>
                     <li><a href="../adopter/">Le parcours</a></li>
-                    <li><a href="../adopter#couverture">Ce que couvre l'adoption</a></li>
+                    <li><a href="../adopter/#couverture">Ce que couvre l'adoption</a></li>
                     <li><a href="../questions/">Questions fréquentes</a></li>
                     <li><a href="../mentions-legales/">Mentions légales &amp; RGPD</a></li>
                 </ul>

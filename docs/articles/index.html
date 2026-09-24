@@ -33,7 +33,7 @@
           href="../fonts/jost-normal-300-500-latin.woff2">
     <link rel="stylesheet" href="../fonts/fonts.css">
 
-    <link rel="preload" as="style" href="../build/assets/app-BK8odlCX.css" /><link rel="modulepreload" as="script" href="../build/assets/app-CsKpI5UF.js" /><link rel="stylesheet" href="../build/assets/app-BK8odlCX.css" data-navigate-track="reload" /><script type="module" src="../build/assets/app-CsKpI5UF.js" data-navigate-track="reload"></script>        </head>
+    <link rel="preload" as="style" href="../build/assets/app-BK8odlCX.css" /><link rel="modulepreload" as="script" href="../build/assets/app-MToWFVRk.js" /><link rel="stylesheet" href="../build/assets/app-BK8odlCX.css" data-navigate-track="reload" /><script type="module" src="../build/assets/app-MToWFVRk.js" data-navigate-track="reload"></script>        </head>
 <body>
 
 
@@ -160,24 +160,25 @@
             <p class="lede">Des textes courts sur la race, ses soins et la vie de l’élevage. Pas de remplissage : on écrit quand on a quelque chose à dire.</p>
     </div>
 
-                    <nav class="filtres monte" aria-label="Filtrer les articles">
+                    <nav class="filtres monte" aria-label="Filtrer les articles" data-filtre-barre>
                 <a href="../articles/"  aria-current="true" >Tous (3)</a>
-                                    <a href="../articles?categorie=Conseils"
+                                    <a href="../articles/?categorie=Conseils"
                        >
                         Conseils (1)
                     </a>
-                                    <a href="../articles?categorie=Sant%C3%A9"
+                                    <a href="../articles/?categorie=Sant%C3%A9"
                        >
                         Santé (1)
                     </a>
-                                    <a href="../articles?categorie=Vie%20de%20l%E2%80%99%C3%A9levage"
+                                    <a href="../articles/?categorie=Vie%20de%20l%E2%80%99%C3%A9levage"
                        >
                         Vie de l’élevage (1)
                     </a>
                             </nav>
         
-                    <div class="articles monte">
-                <article class="billet">
+                    <div class="articles monte" data-filtre="categorie"
+                 data-filtre-vide="Aucun article dans cette rubrique pour le moment.">
+                <article class="billet" data-categorie="Santé">
                     <a class="arche petite" href="../articles/hcm-pourquoi-un-test-adn-ne-suffit-pas/" tabindex="-1" aria-hidden="true">
                         <i><u>
                             <img 
@@ -201,7 +202,7 @@
                 </article>
 
                                 
-                <article class="billet">
+                <article class="billet" data-categorie="Conseils">
                     <a class="arche petite" href="../articles/brossage-maine-coon-trois-fois-par-semaine/" tabindex="-1" aria-hidden="true">
                         <i><u>
                             <img 
@@ -225,7 +226,7 @@
                 </article>
 
                                 
-                <article class="billet">
+                <article class="billet" data-categorie="Vie de l’élevage">
                     <a class="arche petite" href="../articles/pourquoi-douze-semaines/" tabindex="-1" aria-hidden="true">
                         <i><u>
                             <img 
@@ -286,7 +287,7 @@
                 <h4>Adopter</h4>
                 <ul>
                     <li><a href="../adopter/">Le parcours</a></li>
-                    <li><a href="../adopter#couverture">Ce que couvre l'adoption</a></li>
+                    <li><a href="../adopter/#couverture">Ce que couvre l'adoption</a></li>
                     <li><a href="../questions/">Questions fréquentes</a></li>
                     <li><a href="../mentions-legales/">Mentions légales &amp; RGPD</a></li>
                 </ul>

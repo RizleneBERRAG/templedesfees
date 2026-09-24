@@ -1,7 +1,8 @@
 @props(['chaton'])
 
 <a class="fiche @if($chaton->statut === \App\Enums\KittenStatus::Adopte) partie @endif"
-   href="{{ route('kittens.show', $chaton) }}">
+   href="{{ route('kittens.show', $chaton) }}"
+   data-statut="{{ $chaton->statut->value }}">
     <span class="arche petite">
         <span class="pastille {{ $chaton->statut->value }}">{{ $chaton->statut->libelle() }}</span>
         <i><u>

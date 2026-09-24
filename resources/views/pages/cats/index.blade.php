@@ -21,7 +21,7 @@
         @php
             $lien = fn (array $p) => request()->fullUrlWithQuery($p);
         @endphp
-        <nav class="filtres monte" aria-label="Filtrer les chats">
+        <nav class="filtres monte" aria-label="Filtrer les chats" data-filtre-barre>
             <a href="{{ route('cats.index') }}" @if(! $role && ! $sexe) aria-current="true" @endif>Tous ({{ $total }})</a>
             @foreach([\App\Enums\CatRole::Etalon, \App\Enums\CatRole::Reproductrice, \App\Enums\CatRole::Observation, \App\Enums\CatRole::Retraite] as $r)
                 @if(($parRole[$r->value] ?? 0) > 0)
@@ -47,7 +47,8 @@
                 <a class="lien" href="{{ route('cats.index') }}" style="margin-left:10px">Tout voir</a>
             </p>
         @else
-            <div class="fiches monte">
+            <div class="fiches monte" data-filtre="role sexe"
+                 data-filtre-vide="Aucun chat ne correspond à ce filtre.">
                 @foreach($chats as $chat)
                     <x-cat-card :chat="$chat" />
                 @endforeach

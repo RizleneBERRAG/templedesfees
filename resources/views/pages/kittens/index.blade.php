@@ -16,7 +16,7 @@
             titre="La portée en cours"
             lede="Nés le {{ $portee->date_naissance->translatedFormat('j F Y') }}. {{ $portee->phraseDisponibilite() ? \Illuminate\Support\Str::ucfirst($portee->phraseDisponibilite()).', ' : '' }}identifiés, vaccinés, vermifugés et inscrits au LOOF." />
 
-        <nav class="filtres monte" aria-label="Filtrer les chatons">
+        <nav class="filtres monte" aria-label="Filtrer les chatons" data-filtre-barre>
             <a href="{{ route('kittens.index') }}" @if(! $statut) aria-current="true" @endif>Tous ({{ $total }})</a>
             @foreach(\App\Enums\KittenStatus::cases() as $cas)
                 @if(($filtres[$cas->value] ?? 0) > 0)
@@ -29,7 +29,8 @@
         </nav>
 
         @forelse($chatons as $chaton)
-            @if($loop->first)<div class="fiches monte">@endif
+            @if($loop->first)<div class="fiches monte" data-filtre="statut"
+                 data-filtre-vide="Aucun chaton dans cette catégorie pour le moment.">@endif
                 <x-kitten-card :chaton="$chaton" />
             @if($loop->last)</div>@endif
         @empty
