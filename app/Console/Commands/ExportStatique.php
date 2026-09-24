@@ -168,8 +168,20 @@ class ExportStatique extends Command
             '#<(?:link[^>]*rel="canonical"|meta[^>]*(?:property="og:(?:url|image)"|name="twitter:image"))[^>]*>#i',
             function (array $m) use (&$abris, $base) {
                 $cle = '@@ABRI'.count($abris).'@@';
+                /*
+                 * L'accueil est un cas a part : url()->current() n'y porte pas
+                 * de barre finale, et la mise a la racine le reduisait a une
+                 * chaine vide. Le canonique et l'og:url de la page d'accueil
+                 * sortaient donc vides — ce qui casse l'apercu du lien au
+                 * moment meme ou on le partage.
+                 */
                 $abris[$cle] = $base
-                    ? str_replace(['href="/', 'content="/'], ['href="'.$base.'/', 'content="'.$base.'/'], $m[0])
+                    ? str_replace(
+                        ['href=""', 'content=""', 'href="/', 'content="/'],
+                        ['href="'.$base.'/"', 'content="'.$base.'/"',
+                         'href="'.$base.'/', 'content="'.$base.'/'],
+                        $m[0],
+                    )
                     : $m[0];
 
                 return $cle;
