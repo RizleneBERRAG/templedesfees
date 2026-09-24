@@ -51,6 +51,8 @@ class PageController extends Controller
 
         return view('pages.hommage', [
             'texte'      => Setting::get('hommage.texte'),
+            'mot'        => Setting::get('hommage.mot'),
+            'adieu'      => Setting::get('hommage.adieu'),
             'dates'      => Setting::get('hommage.dates'),
             'fille'      => $filleSlug ? Cat::where('slug', $filleSlug)->first() : null,
             'principale' => \App\Support\PhotosOlimpia::principale(),

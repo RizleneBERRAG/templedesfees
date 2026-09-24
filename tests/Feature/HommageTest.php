@@ -32,6 +32,36 @@ class HommageTest extends TestCase
             ->assertSee('le poulette');
     }
 
+    /**
+     * La page est un parcours : un moment par ecran, dans un ordre qui compte.
+     * On aime, on sourit du mot, on est fier, on perd, et on decouvre qu'il
+     * reste quelqu'un. Un moment qui passerait devant un autre casserait la
+     * seule chose que cette page ait a faire.
+     */
+    public function test_les_moments_se_suivent_dans_l_ordre(): void
+    {
+        $this->seed();
+
+        $html = $this->get(route('hommage'))->assertOk()->getContent();
+
+        $ordre = [
+            'moment-mot',       // le mot, seul
+            'moment-elle',      // ce qu'elle etait
+            'moment-depart',    // la perte
+            'moment-adieu',     // la phrase signee
+            'moment-planche',   // ses tirages
+        ];
+
+        $positions = array_map(fn ($classe) => strpos($html, $classe), $ordre);
+
+        $this->assertNotContains(false, $positions, 'Un moment manque à la page.');
+
+        $triees = $positions;
+        sort($triees);
+
+        $this->assertSame($triees, $positions, 'Les moments ne se suivent plus dans le bon ordre.');
+    }
+
     /** Le texte est sa parole : il vit en reglage, pas dans une vue. */
     public function test_le_texte_se_modifie_depuis_les_reglages(): void
     {
@@ -57,7 +87,7 @@ class HommageTest extends TestCase
     {
         $this->seed();
 
-        $this->get(route('hommage'))->assertDontSee('Elle continue');
+        $this->get(route('hommage'))->assertDontSee('Sa fille, ici même');
 
         $fille = Cat::firstOrFail();
         Setting::where('cle', 'hommage.fille')->firstOrFail()
@@ -65,7 +95,7 @@ class HommageTest extends TestCase
 
         $this->get(route('hommage'))
             ->assertOk()
-            ->assertSee('Elle continue')
+            ->assertSee('Sa fille, ici même')
             ->assertSee($fille->nom);
     }
 

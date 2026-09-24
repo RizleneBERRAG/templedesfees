@@ -159,6 +159,18 @@ class ElevageSeeder extends Seeder
              */
             ['cle' => 'hommage.texte', 'libelle' => 'En mémoire d’Olimpia — le texte',
              'valeur' => require database_path('seeders/data/olimpia.php'), 'groupe' => 'hommage'],
+            /*
+             * Le mot. C'est le detail qui porte tout : « il suffisait d'un mot
+             * et elle arrivait en courant ». Il a sa page a lui dans le
+             * parcours, en tres grand, parce que c'est ce qui reste quand on
+             * a tout oublie du reste.
+             */
+            ['cle' => 'hommage.mot', 'libelle' => 'En mémoire d’Olimpia — le mot qui la faisait accourir',
+             'valeur' => 'le poulette', 'groupe' => 'hommage'],
+
+            ['cle' => 'hommage.adieu', 'libelle' => 'En mémoire d’Olimpia — la dernière phrase, celle qui est signée',
+             'valeur' => 'Je ne l’oublierai jamais.', 'groupe' => 'hommage'],
+
             ['cle' => 'hommage.seuil', 'libelle' => 'En mémoire d’Olimpia — les deux phrases affichées à l’arrivée sur le site',
              'valeur' => require database_path('seeders/data/olimpia-seuil.php'), 'groupe' => 'hommage'],
             ['cle' => 'hommage.dates', 'libelle' => 'En mémoire d’Olimpia — les années (par exemple « 2019 — 2024 »)',
