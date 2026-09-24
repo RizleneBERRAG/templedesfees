@@ -32,6 +32,19 @@
         'le numéro de certificat de capacité' => blank($elevage['certificat']),
         'l’adresse postale'               => blank($elevage['adresse']),
     ])->filter()->keys();
+
+    /*
+        Le retour. Les documents de réservation ramènent à leur page ; les
+        autres disent où ils veulent. On ne suppose plus qu'il existe une
+        réservation : le souvenir d'Olimpia n'en a pas.
+    */
+    $retour = $retour ?? [
+        'url'     => isset($reservation) ? route('reservation.montrer', ['jeton' => $reservation->jeton]) : url('/'),
+        'libelle' => isset($reservation) ? 'Revenir à la réservation' : 'Revenir au site',
+    ];
+
+    // Une facture porte les mentions obligatoires. Un souvenir, non.
+    $mentions = $mentions ?? true;
 @endphp
 <!doctype html>
 <html lang="fr">
@@ -50,9 +63,9 @@
 <body>
 
 <div class="barre">
-    <a href="{{ route('reservation.montrer', ['jeton' => $reservation->jeton]) }}">
+    <a href="{{ $retour['url'] }}">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m0 0 6-6m-6 6 6 6"/></svg>
-        Revenir à la réservation
+        {{ $retour['libelle'] }}
     </a>
 
     <button type="button" class="pousse" onclick="window.print()">
@@ -66,7 +79,7 @@
 
 {{-- Seule l'éleveuse voit ce rappel : elle est la seule à être connectée,
      et la seule qui puisse y faire quelque chose. --}}
-@if($manques->isNotEmpty() && auth()->check())
+@if($mentions && $manques->isNotEmpty() && auth()->check())
     <p class="manques">
         <b>Ce document n’est pas encore complet.</b>
         Il manque {{ $manques->join(', ', ' et ') }} — à renseigner dans
@@ -105,12 +118,14 @@
         {{ $elevage['nom'] }}@if($elevage['adresse']) · {{ $elevage['adresse'] }}@endif ·
         {{ $elevage['code_postal'] }} {{ $elevage['ville'] }}<br>
 
-        SIREN {!! $elevage['siren']
-            ? e($elevage['siren'])
-            : '<span class="a-completer">à compléter</span>' !!}
-        · Certificat de capacité {!! $elevage['certificat']
-            ? e($elevage['certificat'])
-            : '<span class="a-completer">à compléter</span>' !!}
+        @if($mentions)
+            SIREN {!! $elevage['siren']
+                ? e($elevage['siren'])
+                : '<span class="a-completer">à compléter</span>' !!}
+            · Certificat de capacité {!! $elevage['certificat']
+                ? e($elevage['certificat'])
+                : '<span class="a-completer">à compléter</span>' !!}
+        @endif
 
         @hasSection('pied')
             <br>@yield('pied')

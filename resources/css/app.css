@@ -2634,6 +2634,20 @@ html.seuil-ouvert,html.seuil-ouvert body{overflow:hidden}
   .moment-fille .elle:hover{transform:none}
 }
 
+/* Le lien vers la feuille à imprimer. Discret, et le seul de toute la page
+   qui ne mène pas à une autre page : c'est un objet qu'on emporte, pas une
+   destination. */
+.emporter{display:inline-flex;align-items:center;gap:10px;
+  margin-top:clamp(30px,4.4vh,46px);padding:12px 22px;
+  border:1px solid var(--filet-2);border-radius:2px;
+  font-family:var(--corps);font-weight:300;font-size:11px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--ivoire-dim);
+  transition:border-color .4s var(--ease),color .4s var(--ease),
+    background .4s var(--ease)}
+.emporter:hover{border-color:var(--filet);color:var(--or-tendre);
+  background:var(--voile-beige)}
+.emporter svg{width:15px;height:15px}
+
 /* ── la planche de ses tirages ───────────────────────────────────── */
 /* Ses autres photos, après le récit. Petites, alignées, légèrement inégales :
    une planche de tirages posée sur une table, pas une grille de galerie. On
