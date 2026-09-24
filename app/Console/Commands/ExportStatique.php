@@ -198,7 +198,7 @@ class ExportStatique extends Command
         $html = str_replace(['href=""', 'action=""'], ['href="/"', 'action="/"'], $html);
 
         $html = preg_replace_callback(
-            '#\b(href|src|action|poster)="/(?!/)([^"]*)"#',
+            '#\b(href|src|action|poster|data-full)="/(?!/)([^"]*)"#',
             function (array $m) use ($remonte) {
                 [, $attribut, $cible] = $m;
 
@@ -260,7 +260,34 @@ class ExportStatique extends Command
         $html = $this->racine($html);
 
         if ($base) {
-            $html = preg_replace('#\b(href|src|action)="/(?!/)#', '$1="'.$base.'/', $html);
+            /*
+             * Les memes attributs que pour les autres pages, srcset compris :
+             * la 404 porte le meme bandeau et les memes images qu'ailleurs, et
+             * une seule liste oubliee ici se voit tout de suite a l'ecran.
+             */
+            $html = preg_replace(
+                '#\b(href|src|action|poster|data-full|content)="/(?!/)#',
+                '$1="'.$base.'/',
+                $html
+            );
+
+            $html = preg_replace_callback(
+                '#\bsrcset="([^"]*)"#',
+                fn (array $m) => 'srcset="'
+                    .preg_replace('#(^|,\s*)/(?!/)#', '$1'.$base.'/', $m[1]).'"',
+                $html
+            );
+
+            /*
+             * Le canonique et l'og:url portaient l'adresse tiree au sort qui a
+             * servi a obtenir la page : on ne declare pas comme adresse de
+             * reference une page qui n'existe pas. Ils designent l'accueil.
+             */
+            $html = preg_replace(
+                '#(<(?:link[^>]*rel="canonical"|meta[^>]*property="og:url")[^>]*(?:href|content)=")[^"]*(")#i',
+                '${1}'.$base.'/$2',
+                $html
+            );
         }
 
         File::put("$sortie/404.html", $html);
