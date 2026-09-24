@@ -303,27 +303,122 @@ em{font-style:italic}
 .bandeau .tel{font-family:var(--corps);font-size:13.5px;letter-spacing:.05em;
   color:var(--ivoire);white-space:nowrap;flex:none}
 .bandeau .tel:hover{color:var(--or-clair)}
-.menu-tel{display:none}
+.menu-tel,.menu-titre,.menu-sceau{display:none}
 
 .cle{display:none;padding:11px 16px;border:1px solid var(--filet);
   font-family:var(--pierre);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--or-clair)}
+  color:var(--or-clair);
+  /* « Fermer » est plus long que « Menu » : sans largeur plancher, le bandeau
+     sautait d'une dizaine de pixels a chaque ouverture. */
+  min-width:88px;justify-content:center}
+.cle[aria-expanded="true"]{border-color:var(--or);color:var(--or)}
 
-/* Le menu deplie. Le seuil est haut (1180 px) : sept rubriques en capitales
-   espacees demandent de la place, et les tasser les rend illisibles bien
-   avant qu'elles ne debordent. */
+/* ── le menu déplié ──────────────────────────────────────────────── */
+/* Le seuil est haut — 1180 px : huit rubriques en capitales espacées
+   demandent de la place, et les tasser les rend illisibles bien avant
+   qu'elles ne débordent.
+
+   Ce qui n'allait pas. Le panneau tombait à 838 px sur un écran de 812 :
+   fixe, sans défilement, ses vingt-six derniers pixels — donc l'adresse
+   courriel — n'étaient atteignables par personne, et sur un écran de 667 px
+   c'étaient trois rubriques qui disparaissaient. Il passait DERRIÈRE le
+   bandeau par un z-index négatif, la page continuait de défiler dessous, et
+   le bouton disait encore « Menu » une fois ouvert.
+
+   Ce qu'il est devenu. Il prend l'écran entier, il défile s'il le faut, et
+   il s'écrit comme un sommaire : le rang de la rubrique en chiffres romains,
+   son nom en romain, un filet sous chacune. C'est le vocabulaire du reste du
+   site — les planches de la galerie et les folios du livre se numérotent
+   déjà ainsi — et ça vaut mieux qu'une pile de liens alignés à gauche.
+
+   Les numéros viennent d'un compteur : rien à écrire dans le gabarit, et
+   l'ordre reste juste le jour où une rubrique s'ajoute. */
+
 @media(max-width:1180px){
-  .bandeau nav{position:fixed;inset:0 0 auto 0;padding:92px 28px 40px;background:var(--nuit);
-    flex-direction:column;align-items:flex-start;gap:2px;border-bottom:1px solid var(--filet);
-    z-index:-1}
+  /* La marque et la clé passent devant le panneau : c'est ce qui permet de
+     refermer sans chercher, et de garder le nom de la maison à l'écran.
+     On ne donne surtout pas d'étage à .barre-droite : elle contient le
+     panneau, et lui en donner un enfermerait la clé au même étage que lui. */
+  .bandeau > .marque,
+  .bandeau .cle{position:relative;z-index:2}
+
+  /* Le bandeau porte un backdrop-filter, ce qui fait de lui le bloc
+     conteneur de ses enfants en position fixe : un inset:0 se calait donc
+     sur ses 77 pixels de haut, pas sur l'écran, et le panneau sortait à
+     126 px. Son bord haut coïncide avec celui de la fenêtre — il y est
+     collé — alors on part de là et on prend la hauteur de l'écran. */
+  .bandeau nav{position:fixed;top:0;left:0;right:0;z-index:1;
+    height:100vh;height:100dvh;
+    display:flex;flex-direction:column;align-items:stretch;gap:0;
+    padding:calc(88px + env(safe-area-inset-top,0px)) clamp(20px,4vw,60px)
+            calc(22px + env(safe-area-inset-bottom,0px));
+    background:
+      radial-gradient(120% 55% at 50% 0%, rgba(217,178,106,.08), transparent 62%),
+      var(--nuit);
+    overflow-y:auto;overscroll-behavior:contain;
+    counter-reset:rubrique}
+
   .bandeau nav[hidden]{display:none}
-  .bandeau nav a{font-family:var(--titre);font-size:1.9rem;letter-spacing:0;text-transform:none;
-    color:var(--ivoire);padding-block:9px}
+
+  .menu-titre{display:block;
+    font-family:var(--pierre);font-size:10px;letter-spacing:.24em;
+    text-transform:uppercase;color:var(--or-mat);
+    margin-bottom:12px}
+  .menu-titre ~ .menu-titre{margin-top:clamp(20px,3vh,32px)}
+
+  .bandeau nav a{display:flex;align-items:baseline;gap:14px;
+    font-family:var(--titre);font-weight:300;
+    font-size:clamp(1.4rem,5.6vw,1.78rem);line-height:1.2;
+    letter-spacing:0;text-transform:none;color:var(--ivoire);
+    padding-block:clamp(10px,1.3vh,14px);
+    border-bottom:1px solid var(--filet-2);
+    white-space:normal;transition:color .3s}
+
+  .bandeau nav a:not(.menu-tel)::before{
+    counter-increment:rubrique;
+    content:counter(rubrique, upper-roman);
+    flex:none;min-width:2.6ch;
+    font-family:var(--pierre);font-size:10px;letter-spacing:.14em;
+    color:var(--or-ombre)}
+
+  /* La page ou l'on est : le marqueur du bandeau ne vaut rien ici, c'est la
+     couleur et le numero qui le disent. */
+  .bandeau nav a[aria-current="page"]{color:var(--or-clair)}
+  .bandeau nav a[aria-current="page"]::before{color:var(--or)}
   .bandeau nav a[aria-current="page"]::after{display:none}
-  .menu-tel{display:block;margin-top:14px;font-family:var(--corps)!important;font-size:1.1rem!important;
+
+  .menu-tel{display:flex;font-family:var(--corps)!important;
+    font-size:1.02rem!important;letter-spacing:.02em;
     color:var(--or-clair)!important}
+
+  .menu-sceau{display:block;flex:none;
+    margin:clamp(16px,2.4vh,26px) auto 0;
+    width:34px;height:auto;color:var(--or-ombre);opacity:.7}
+
   .bandeau .tel{display:none}
   .cle{display:inline-flex}
+}
+
+/* L'entree du sommaire. Chaque ligne vient a son tour, a quarante
+   millisecondes d'intervalle : le meme lever que le seuil d'Olimpia, dont on
+   reprend l'animation plutot que d'en ecrire une seconde identique. */
+@media(max-width:1180px) and (prefers-reduced-motion:no-preference){
+  .bandeau nav:not([hidden]) > *{
+    animation:seuil-monte .5s cubic-bezier(.22,.7,.28,1) both}
+  .bandeau nav:not([hidden]) > :nth-child(1) {animation-delay:.02s}
+  .bandeau nav:not([hidden]) > :nth-child(2) {animation-delay:.06s}
+  .bandeau nav:not([hidden]) > :nth-child(3) {animation-delay:.10s}
+  .bandeau nav:not([hidden]) > :nth-child(4) {animation-delay:.14s}
+  .bandeau nav:not([hidden]) > :nth-child(5) {animation-delay:.18s}
+  .bandeau nav:not([hidden]) > :nth-child(6) {animation-delay:.22s}
+  .bandeau nav:not([hidden]) > :nth-child(7) {animation-delay:.26s}
+  .bandeau nav:not([hidden]) > :nth-child(8) {animation-delay:.30s}
+  .bandeau nav:not([hidden]) > :nth-child(9) {animation-delay:.34s}
+  .bandeau nav:not([hidden]) > :nth-child(10){animation-delay:.38s}
+  .bandeau nav:not([hidden]) > :nth-child(11){animation-delay:.42s}
+  .bandeau nav:not([hidden]) > :nth-child(12){animation-delay:.46s}
+  .bandeau nav:not([hidden]) > :nth-child(13){animation-delay:.50s}
+  .bandeau nav:not([hidden]) > :nth-child(14){animation-delay:.54s}
 }
 
 /* jauge de lecture, sur le bord bas du bandeau */
@@ -1427,8 +1522,16 @@ footer > *{position:relative}
 .barre-socials{gap:8px}
 .barre-socials .social-mark{width:36px;height:36px}
 .barre-socials .social-mark svg{width:17px;height:17px}
-@media(max-width:1180px){.barre-socials{display:none}}
-@media(max-width:1320px){.barre-socials .social--mail{display:none}}
+/* Les pastilles quittent le bandeau bien avant de le gener : elles ont
+   flex-wrap, et des qu'elles manquent de place elles s'empilent en colonne.
+   Le bandeau passait alors de 79 a 157 px sur toute la bande 1181-1450, et
+   debordait meme horizontalement de 1181 a 1235 — soit exactement la largeur
+   d'un iPad Pro 11 pouces en paysage.
+
+   Elles tiennent sur une ligne a partir de 1500 px. En dessous, le numero et
+   l'adresse restent atteignables par le menu et par le pied de page, ce qui
+   etait deja le cas sous 1180. */
+@media(max-width:1499px){.barre-socials{display:none}}
 
 
 /* ── les articles ────────────────────────────────────────────────── */

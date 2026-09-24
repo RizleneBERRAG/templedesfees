@@ -23,6 +23,10 @@
 
     <div class="barre-droite">
         <nav id="menu" aria-label="Navigation principale">
+            {{-- Les deux intitulés et le fleuron n'existent que dans le menu
+                 déplié : sur un bandeau, une rubrique ne s'annonce pas. --}}
+            <span class="menu-titre" aria-hidden="true">Le site</span>
+
             <a href="{{ route('kittens.index') }}" @if(request()->routeIs('kittens.*')) aria-current="page" @endif>Nos chatons</a>
             <a href="{{ route('cats.index') }}"    @if(request()->routeIs('cats.*'))    aria-current="page" @endif>Nos chats</a>
             <a href="{{ route('breed') }}"         @if(request()->routeIs('breed'))     aria-current="page" @endif>Le Maine Coon</a>
@@ -33,9 +37,21 @@
             <a href="{{ route('contact') }}"       @if(request()->routeIs('contact'))   aria-current="page" @endif>Contact</a>
 
             {{-- Dans le menu déplié, les icônes ne suffisent plus : on écrit le
-                 numéro et l'adresse en toutes lettres, doigt oblige. --}}
+                 numéro et l'adresse en toutes lettres, doigt oblige. Les deux
+                 réseaux suivent le même sort — une pastille de 36 px au bas
+                 d'un menu plein écran, personne ne la vise. --}}
+            <span class="menu-titre" aria-hidden="true">Nous joindre</span>
+
             <a class="menu-tel" href="tel:{{ $telLien }}">{{ $tel }}</a>
             <a class="menu-tel" href="mailto:{{ $mail }}">{{ $mail }}</a>
+            @if($insta)
+                <a class="menu-tel" href="{{ $insta }}" target="_blank" rel="noopener">Instagram</a>
+            @endif
+            @if($fb)
+                <a class="menu-tel" href="{{ $fb }}" target="_blank" rel="noopener">Facebook</a>
+            @endif
+
+            <x-fleuron taille="petit" class="menu-sceau" />
         </nav>
 
         {{-- Téléphone, courriel, Instagram, Facebook : quatre pictogrammes

@@ -8,21 +8,50 @@ const reduit = () => window.matchMedia('(prefers-reduced-motion: reduce)').match
 const cle = document.getElementById('cle');
 const menu = document.getElementById('menu');
 
+/* Le meme seuil que la charte, et pas un voisin.
+
+   Il etait ecrit 1120 ici et 1180 la-bas. Entre les deux, la charte posait
+   deja le panneau en plein ecran tandis que le script le declarait visible :
+   le menu restait donc ouvert en permanence, 838 px par-dessus le haut de
+   chaque page, sur toutes les fenetres de 1121 a 1180 px. Une media query
+   lue par le script ne peut plus diverger de celle de la feuille. */
+const menuEtroit = window.matchMedia('(max-width: 1180px)');
+
+/* Ouvrir le menu fige la page dessous : sans cela le doigt fait defiler le
+   site derriere le panneau, qui a l'air casse. */
+const poserMenu = (ouvert) => {
+    cle.setAttribute('aria-expanded', String(ouvert));
+    menu.hidden = !ouvert;
+    cle.textContent = ouvert ? 'Fermer' : 'Menu';
+    document.body.style.overflow = ouvert ? 'hidden' : '';
+};
+
 const accorderMenu = () => {
     if (!cle || !menu) return;
-    if (window.innerWidth > 1120) {
+    if (!menuEtroit.matches) {
         menu.hidden = false;
         cle.setAttribute('aria-expanded', 'false');
+        cle.textContent = 'Menu';
+        document.body.style.overflow = '';
     } else if (cle.getAttribute('aria-expanded') !== 'true') {
-        menu.hidden = true;
+        poserMenu(false);
     }
 };
 
 cle?.addEventListener('click', () => {
-    const ouvert = cle.getAttribute('aria-expanded') === 'true';
-    cle.setAttribute('aria-expanded', String(!ouvert));
-    menu.hidden = ouvert;
+    poserMenu(cle.getAttribute('aria-expanded') !== 'true');
 });
+
+/* Echap referme et rend la main au bouton : un menu plein ecran sans sortie
+   au clavier enferme celui qui n'a pas de souris. */
+document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (cle?.getAttribute('aria-expanded') !== 'true') return;
+    poserMenu(false);
+    cle.focus();
+});
+
+menuEtroit.addEventListener('change', accorderMenu);
 window.addEventListener('resize', accorderMenu);
 accorderMenu();
 
