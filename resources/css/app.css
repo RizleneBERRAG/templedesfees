@@ -2165,6 +2165,81 @@ html.seuil-ouvert,html.seuil-ouvert body{overflow:hidden}
   .seuil--a .le-mot{animation:none;opacity:1;transform:none}
 }
 
+/* ══ l'entrée en scène ═══════════════════════════════════════════════ */
+/* Six versions statiques : à chaque fois une affiche, déjà là, entièrement
+   lisible à la milliseconde où le voile s'ouvre. Il n'y avait rien à attendre,
+   donc rien à ressentir.
+
+   Elle se fait maintenant devant celui qui regarde. Le noir d'abord. Sa photo
+   monte lentement et ne s'arrête plus jamais de dériver. Puis chaque ligne
+   vient à son tour, à un quart de seconde d'intervalle : « En mémoire », son
+   nom, son nom complet, ses années, ses deux phrases, et le bouton en dernier.
+   Trois secondes en tout — le temps qu'il faut pour comprendre qu'on est
+   devant quelqu'un, pas devant une fenêtre.
+
+   Tout est en animation et non en transition : une animation se déclenche
+   quand la règle s'applique, donc quand .ouvert arrive, et se joue une fois. */
+
+@keyframes seuil-monte{
+  from{opacity:0;transform:translateY(18px)}
+  to  {opacity:1;transform:none}
+}
+
+/* La dérive. Deux pour cent d'agrandissement sur vingt-huit secondes : on ne
+   la voit pas bouger, on sent que ça vit. Alternate, pour qu'elle ne revienne
+   jamais brutalement à son point de départ. */
+@keyframes seuil-derive{
+  from{transform:scale(1.015)}
+  to  {transform:scale(1.075)}
+}
+
+.seuil--b .fond{animation:seuil-derive 28s ease-in-out infinite alternate}
+
+.seuil--b .dedans > *{opacity:0}
+
+:is(.seuil-olimpia).ouvert .dedans > *{
+  /* « both » et non « backwards » : backwards ne tient l'état de départ
+     qu'avant le délai. L'animation finie, l'élément revient à sa règle de
+     base — opacity:0 — et tout disparaissait une seconde après être apparu. */
+  animation:seuil-monte .95s cubic-bezier(.22,.7,.28,1) both}
+
+/* L'ordre d'arrivée. Il compte : le nom ne veut rien dire avant « En
+   mémoire », et le bouton n'a rien à faire là tant qu'on n'a pas lu. */
+.seuil-olimpia.ouvert .dedans > .rubrique{animation-delay:.85s}
+.seuil-olimpia.ouvert .dedans > .nom     {animation-delay:1.1s}
+.seuil-olimpia.ouvert .dedans > .complet {animation-delay:1.45s}
+.seuil-olimpia.ouvert .dedans > .dates   {animation-delay:1.6s}
+.seuil-olimpia.ouvert .dedans > .mots    {animation-delay:1.8s}
+.seuil-olimpia.ouvert .dedans > .pied    {animation-delay:2.15s}
+
+/* Le coup de pinceau se tire sous le nom une fois celui-ci arrivé, au lieu
+   d'être déjà peint. */
+.seuil--b .nom .pinceau{clip-path:inset(0 100% 0 0)}
+.seuil-olimpia.ouvert .nom .pinceau{
+  animation:seuil-pinceau 1.1s cubic-bezier(.3,.7,.3,1) 1.75s forwards}
+
+@keyframes seuil-pinceau{
+  from{clip-path:inset(0 100% 0 0)}
+  to  {clip-path:inset(0 0 0 0)}
+}
+
+/* La croix et la marque arrivent en dernier, discrètement : proposer la sortie
+   avant d'avoir rien montré, c'est dire que ça n'avait pas d'importance. */
+.seuil--b .maison,
+.seuil--b .fermer{opacity:0}
+.seuil-olimpia.ouvert .maison,
+.seuil-olimpia.ouvert .fermer{
+  animation:seuil-monte 1s ease-out 2.4s both}
+
+@media (prefers-reduced-motion:reduce){
+  /* Qui a demandé qu'on arrête de bouger voit tout, tout de suite. */
+  .seuil--b .fond{animation:none}
+  .seuil--b .dedans > *,
+  .seuil--b .maison,
+  .seuil--b .fermer{opacity:1;animation:none}
+  .seuil--b .nom .pinceau{clip-path:none}
+}
+
 /* ══ B — le plein cadre ══════════════════════════════════════════════ */
 /* Sa photo prend tout l'écran. Pas de carte, pas de cadre, rien autour : on
    ne pose pas un objet par-dessus le site, on le remplace le temps d'un
