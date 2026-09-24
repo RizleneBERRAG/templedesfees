@@ -627,9 +627,53 @@ footer h4{margin:0 0 16px;font-family:var(--pierre);font-size:10px;font-weight:5
 footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px}
 footer a{font-size:14.5px;color:var(--ivoire-dim);transition:color .3s}
 footer a:hover{color:var(--or-clair)}
+.fsignature .resume{max-width:36ch}
+.fjoindre .socials{margin-bottom:18px}
 .fbas{margin-top:44px;padding-top:22px;border-top:1px solid var(--filet-2);
   display:flex;flex-wrap:wrap;gap:12px 26px;justify-content:space-between;
   font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ivoire-dim)}
+
+/* ── le pied sur un téléphone ────────────────────────────────────── */
+/* Quatre colonnes de bureau simplement empilées donnaient un ruban d'un
+   écran et demi — 1 242 px pour 812 — aligné à gauche, où l'emblème se
+   perdait dans le noir. Ce n'est pas une mise en page, c'est un
+   effondrement : la grille tombe, et personne ne rattrape ce qu'elle
+   portait.
+
+   On en refait une. L'emblème ouvre la signature au lieu de la clore, le
+   moyen de joindre vient juste derrière — c'est ce qu'on cherche dans le
+   pied de page d'un éleveur, pas un plan du site — et les deux listes de
+   liens se rangent côte à côte. Tout est centré : une colonne unique
+   alignée à gauche a l'air d'un accident, deux colonnes centrées ont l'air
+   d'une décision.
+
+   Mesure : 920 px au lieu de 1 242, sur un écran de 812. Les deux colonnes
+   tiennent leurs libellés dès 360 px ; à 320, trois passent à la ligne, ce
+   qui reste préférable aux 1 200 px que coûterait la colonne unique. */
+
+@media(max-width:600px){
+  footer{padding-block:clamp(38px,9vw,52px) 22px}
+
+  .fgrille{grid-template-columns:1fr 1fr;gap:28px 16px;text-align:center}
+
+  /* Les deux blocs qui parlent de la maison tiennent toute la largeur et
+     passent devant ; les listes gardent leur ordre naturel derrière. */
+  .fsignature{grid-column:1/-1;order:-2;
+    display:flex;flex-direction:column;align-items:center}
+  .fjoindre{grid-column:1/-1;order:-1}
+
+  .blason-pied{order:-1;--blason:76px;margin:0 0 16px}
+
+  /* La mesure de lecture n'a plus de sens sur 335 px de large : la brider
+     à 36 caractères ajoutait deux lignes au lieu d'en retirer. */
+  .fsignature .resume{max-width:none}
+
+  .socials{justify-content:center}
+  footer ul{align-items:center}
+
+  .fbas{margin-top:30px;flex-direction:column;align-items:center;
+    text-align:center;gap:9px}
+}
 
 /* ── transitions de page ─────────────────────────────────────────── */
 /* Laravel sert une page complète à chaque clic. Cette règle demande au

@@ -10,9 +10,9 @@
 <footer>
     <div class="wrap">
         <div class="fgrille">
-            <div>
+            <div class="fsignature">
                 <h4>Chatterie du Temple des Fées</h4>
-                <p class="petit" style="max-width:36ch">
+                <p class="petit resume">
                     Élevage familial de Maine Coon à Lapeyrouse-Mornay (26210), dans la Drôme
                     des collines. Une à deux portées par an, parents dépistés, résultats publiés.
                 </p>
@@ -47,13 +47,13 @@
                 </ul>
             </div>
 
-            <div>
+            <div class="fjoindre">
                 <h4>Nous joindre</h4>
 
                 {{-- Quatre pictogrammes plutôt que quatre lignes de texte. Le
                      libellé complet reste dans l'intitulé accessible de chaque
                      lien : rien n'est perdu pour un lecteur d'écran. --}}
-                <div class="socials" style="margin-bottom:18px">
+                <div class="socials">
                     <x-social-link type="tel"  :url="'tel:'.$telLien" :handle="$tel" />
                     <x-social-link type="mail" :url="'mailto:'.$mail" :handle="$mail" />
                     @if($insta)
