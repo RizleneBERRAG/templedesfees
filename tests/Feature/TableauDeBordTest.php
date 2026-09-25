@@ -62,15 +62,50 @@ class TableauDeBordTest extends TestCase
             ->assertSee('Message sans réponse');
     }
 
+    /**
+     * Le test ne cite aucune mention en particulier.
+     *
+     * Une premiere version verifiait que le SIREN etait signale. Le jour ou on
+     * l'a renseigne — il est public, il figure au registre national des
+     * entreprises — le test a echoue alors que le tableau de bord disait
+     * exactement ce qu'il fallait. Ce qu'on veut tenir, c'est le comportement :
+     * une mention vide est signalee, et quand plus rien ne manque, la carte
+     * disparait.
+     */
     public function test_il_signale_les_mentions_legales_manquantes(): void
     {
         $eleveuse = $this->eleveuse();
 
-        $this->actingAs($eleveuse)
-            ->get('/admin')
-            ->assertOk()
-            ->assertSee('Mentions légales à compléter')
-            ->assertSee('SIREN');
+        $obligatoires = [
+            'legal.siren'      => 'SIREN',
+            'legal.certificat' => 'certificat de capacité',
+            'legal.directeur'  => 'directeur de la publication',
+            'legal.hebergeur'  => 'hébergeur',
+        ];
+
+        // Toutes vides : la carte les nomme une par une.
+        foreach (array_keys($obligatoires) as $cle) {
+            Setting::where('cle', $cle)->firstOrFail()->update(['valeur' => null]);
+        }
+
+        $reponse = $this->actingAs($eleveuse)->get('/admin')->assertOk()
+            ->assertSee('Mentions légales à compléter');
+
+        foreach ($obligatoires as $libelle) {
+            $reponse->assertSee($libelle, false);
+        }
+    }
+
+    public function test_la_carte_des_mentions_disparait_quand_tout_est_rempli(): void
+    {
+        $eleveuse = $this->eleveuse();
+
+        foreach (['legal.siren', 'legal.certificat', 'legal.directeur', 'legal.hebergeur'] as $cle) {
+            Setting::where('cle', $cle)->firstOrFail()->update(['valeur' => 'renseigné']);
+        }
+
+        $this->actingAs($eleveuse)->get('/admin')->assertOk()
+            ->assertDontSee('Mentions légales à compléter');
     }
 
     /**

@@ -132,12 +132,12 @@ class ElevageSeeder extends Seeder
             ['cle' => 'contact.itineraire_waze',   'libelle' => 'Lien d’itinéraire Waze (vide = vers la commune)',        'valeur' => null, 'groupe' => 'contact'],
             ['cle' => 'contact.avis_google',  'libelle' => 'Lien vers les avis Google', 'valeur' => null, 'groupe' => 'contact'],
             ['cle' => 'contact.email',        'libelle' => 'Email',                    'valeur' => 'letempledesfees@outlook.fr',    'groupe' => 'contact'],
-            ['cle' => 'contact.facebook',     'libelle' => 'Facebook',                 'valeur' => 'https://www.facebook.com/profile.php?id=61550725534940', 'groupe' => 'contact'],
+            ['cle' => 'contact.facebook',     'libelle' => 'Facebook',                 'valeur' => 'https://www.facebook.com/chatteriedutempledesfees', 'groupe' => 'contact'],
             ['cle' => 'contact.instagram',    'libelle' => 'Instagram',                'valeur' => 'https://www.instagram.com/chatteriedutempledesfees/', 'groupe' => 'contact'],
             // Mentions obligatoires : vides, donc signalees "À compléter" sur le site.
-            ['cle' => 'legal.siren',          'libelle' => 'SIREN / SIRET',            'valeur' => null, 'groupe' => 'legal', 'est_obligatoire' => true],
+            ['cle' => 'legal.siren',          'libelle' => 'SIREN / SIRET',            'valeur' => '819 229 394', 'groupe' => 'legal', 'est_obligatoire' => true],
             ['cle' => 'legal.certificat',     'libelle' => 'N° de certificat de capacité', 'valeur' => null, 'groupe' => 'legal', 'est_obligatoire' => true],
-            ['cle' => 'legal.directeur',      'libelle' => 'Directeur de la publication',  'valeur' => null, 'groupe' => 'legal', 'est_obligatoire' => true],
+            ['cle' => 'legal.directeur',      'libelle' => 'Directeur de la publication',  'valeur' => 'Kevin Maljournal', 'groupe' => 'legal', 'est_obligatoire' => true],
             ['cle' => 'legal.hebergeur',      'libelle' => 'Hébergeur',                'valeur' => null, 'groupe' => 'legal', 'est_obligatoire' => true],
 
             /*
@@ -191,8 +191,14 @@ class ElevageSeeder extends Seeder
              * ligne ne s'imprime pas et le tableau de bord la reclame des
              * qu'une facture est emise.
              */
+            /*
+             * L'entreprise individuelle Kevin MALJOURNAL n'a pas de numero de
+             * TVA intracommunautaire valide — c'est ce que repond le registre
+             * national des entreprises. Elle releve donc de la franchise en
+             * base, et la mention obligatoire sur ses factures est celle-ci.
+             */
             ['cle' => 'legal.tva', 'libelle' => 'Mention de TVA sur les factures (par exemple : « TVA non applicable, article 293 B du CGI »)',
-             'valeur' => null, 'groupe' => 'legal'],
+             'valeur' => 'TVA non applicable, article 293 B du CGI', 'groupe' => 'legal'],
         ];
 
         foreach ($reglages as $r) {
