@@ -49,7 +49,16 @@ class Photo extends Model
         return $query
             ->where('est_publiee', true)
             ->where(fn ($q) => $q
+                /*
+                 * Sans rattachement, la photo ne depend de personne : c'est le
+                 * cas des photos de galerie. L'identifiant a zero est
+                 * l'ancienne forme, avant la migration qui les a detachees —
+                 * on la tolere pour qu'une base restee en arriere ne vide pas
+                 * sa galerie en silence.
+                 */
                 ->whereNull('attachable_type')
+                ->orWhereNull('attachable_id')
+                ->orWhere('attachable_id', 0)
                 ->orWhereHasMorph(
                     'attachable',
                     [Cat::class, Litter::class, Kitten::class],

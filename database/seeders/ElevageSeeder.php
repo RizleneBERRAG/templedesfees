@@ -362,11 +362,35 @@ class ElevageSeeder extends Seeder
 
     private function galerie(): void
     {
+        /*
+         * Les deux photos qu'on avait d'abord prises pour Olimpia. Kevin les a
+         * reconnues : « en haut a gauche, en bas a droite c'est sa fille ».
+         * Elles appartiennent donc a la fiche d'Alaska, et leur visibilite
+         * suit la sienne.
+         */
+        $alaska = Cat::where('slug', 'alaska')->first();
+
+        if ($alaska) {
+            foreach (['alaska-2', 'alaska-3'] as $rang => $fichier) {
+                Photo::updateOrCreate(
+                    ['chemin' => "images/cats/{$fichier}.webp"],
+                    [
+                        'attachable_type' => Cat::class,
+                        'attachable_id'   => $alaska->id,
+                        'alt'             => 'Alaska du Temple des Fées, Maine Coon blanche',
+                        'legende'         => 'Alaska, blanche',
+                        'ordre'           => $rang,
+                        'est_publiee'     => true,
+                    ],
+                );
+            }
+        }
+
         $ordre = 0;
 
         foreach ($this->contenu['GALERIE'] as $g) {
             Photo::updateOrCreate(
-                ['attachable_type' => Litter::class, 'attachable_id' => 0, 'chemin' => 'images/cats/'.$g['f'].'.webp'],
+                ['attachable_type' => null, 'attachable_id' => null, 'chemin' => 'images/cats/'.$g['f'].'.webp'],
                 [
                     'alt'       => $g['c'],
                     'legende'   => $g['c'],

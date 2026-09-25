@@ -259,4 +259,61 @@ class ParcoursEleveurTest extends TestCase
 
         $this->assertFileExists(public_path($seconde));
     }
+    /**
+     * Les photos de la galerie n'appartiennent a personne, et doivent le rester.
+     *
+     * Le jour ou une photo a commence a dependre de la fiche qu'elle illustre,
+     * les onze photos de la galerie se sont evaporees : elles etaient
+     * enregistrees comme appartenant a une portee d'identifiant zero, donc a
+     * une fiche introuvable, donc jamais publiee. La galerie et le ruban de
+     * l'accueil se sont vides d'un coup, sans qu'aucun test ne bronche.
+     */
+    public function test_les_photos_sans_rattachement_restent_visibles(): void
+    {
+        $detachees = Photo::whereNull('attachable_type')->get();
+
+        $this->assertNotEmpty($detachees,
+            "Le seed ne fournit aucune photo de galerie : le test ne prouverait rien.");
+
+        $this->assertSame(
+            $detachees->count(),
+            Photo::publiees()->whereNull('attachable_type')->count(),
+            "Une photo qui n'illustre aucune fiche ne depend de personne : elle "
+            .'doit rester visible.'
+        );
+
+        $reponse = $this->get('/galerie')->assertOk();
+
+        foreach ($detachees->take(3) as $photo) {
+            $reponse->assertSee($photo->chemin, false);
+        }
+    }
+
+    /**
+     * Et l'inverse : depublier un reproducteur emporte ses photos.
+     */
+    public function test_depublier_un_reproducteur_retire_ses_photos_du_site(): void
+    {
+        $chat = \App\Models\Cat::where('est_publie', true)->firstOrFail();
+
+        $photo = Photo::create([
+            'attachable_type' => \App\Models\Cat::class,
+            'attachable_id'   => $chat->getKey(),
+            /*
+             * Un chemin qui n'appartient qu'a ce test : les photos de galerie
+             * du seed reprennent les fichiers des fiches, et le meme chemin
+             * serait alors visible par une autre ligne que celle qu'on teste.
+             */
+            'chemin'          => 'images/cats/visibilite-'.$chat->slug.'.webp',
+            'alt'             => $chat->nom,
+            'ordre'           => 99,
+            'est_publiee'     => true,
+        ]);
+
+        $this->get('/galerie')->assertOk()->assertSee($photo->chemin, false);
+
+        $chat->forceFill(['est_publie' => false])->save();
+
+        $this->get('/galerie')->assertOk()->assertDontSee($photo->chemin, false);
+    }
 }
