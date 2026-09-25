@@ -53,7 +53,7 @@
                 <x-record titre="Identité" meta="{{ $chaton->reference }}"
                           note="Les numéros LOOF et ICAD se saisissent depuis l’espace de gestion. Tant qu’ils sont vides, la fiche reste en brouillon et n’est pas publiée — c’est la règle imposée par la réglementation sur les annonces de cession.">
                     <table>
-                        <tr><th>Sexe</th><td>{{ \Illuminate\Support\Str::ucfirst($chaton->sexe) }}</td></tr>
+                        <tr><th>Sexe</th><td>{{ $chaton->sexeLibelle() }}</td></tr>
                         <tr><th>Date de naissance</th><td>{{ $portee->date_naissance->translatedFormat('j F Y') }}</td></tr>
                         <tr><th>Âge</th><td>{{ $chaton->ageEnSemaines() }} semaines</td></tr>
                         <tr><th>Robe</th><td>{{ $chaton->robe }}</td></tr>
@@ -150,7 +150,7 @@
     <div class="wrap in">
         <span class="nm">{{ $chaton->nom }}</span>
         <x-chip :statut="$chaton->statut" />
-        <span class="petit">{{ \Illuminate\Support\Str::ucfirst($chaton->sexe) }} · {{ $chaton->robe }}</span>
+        <span class="petit">{{ $chaton->sexeLibelle() }} · {{ $chaton->robe }}</span>
         <a class="btn" href="{{ route('adoption.create', ['chaton' => $chaton->id]) }}">Pré-réserver {{ $chaton->nom }}</a>
     </div>
 </div>

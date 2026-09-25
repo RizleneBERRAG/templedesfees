@@ -224,7 +224,7 @@ class ElevageSeeder extends Seeder
         foreach ($this->contenu['REPROS'] as $slug => $d) {
             $chat = Cat::updateOrCreate(['slug' => $slug], [
                 'nom'              => $d['nom'],
-                'sexe'             => Str::lower($d['sexe']),
+                'sexe'             => (string) Str::of($d['sexe'])->lower()->ascii(),
                 'role'             => self::ROLES[$d['role']] ?? CatRole::Observation,
                 'annee_naissance'  => (int) $d['naissance'],
                 'robe'             => $d['robe'],
@@ -283,7 +283,7 @@ class ElevageSeeder extends Seeder
                 'litter_id'        => $portee->id,
                 'nom'              => $d['nom'],
                 'reference'        => $d['ref'],
-                'sexe'             => Str::lower($d['sexe']),
+                'sexe'             => (string) Str::of($d['sexe'])->lower()->ascii(),
                 'robe'             => $d['robe'],
                 'statut'           => self::STATUTS[$d['statut']] ?? 'disponible',
                 'poids_g'          => (int) preg_replace('/\D/', '', $d['poids'] ?? ''),

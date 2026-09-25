@@ -74,7 +74,7 @@
         </tr>
         <tr>
             <th>Sexe</th>
-            <td>{{ \Illuminate\Support\Str::ucfirst($chaton?->sexe ?? '—') }}</td>
+            <td>{{ $chaton?->sexeLibelle() ?: '—' }}</td>
         </tr>
         <tr>
             <th>Né le</th>

@@ -33,7 +33,7 @@
                 <x-liasse>
                 <x-record titre="Identité" meta="{{ $chat->role->libelle() }}">
                     <table>
-                        <tr><th>Sexe</th><td>{{ \Illuminate\Support\Str::ucfirst($chat->sexe) }}</td></tr>
+                        <tr><th>Sexe</th><td>{{ $chat->sexeLibelle() }}</td></tr>
                         <tr><th>Année de naissance</th><td>{{ $chat->annee_naissance }}</td></tr>
                         <tr><th>Robe</th><td>{{ $chat->robe }}</td></tr>
                         <tr>

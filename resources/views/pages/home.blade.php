@@ -275,7 +275,7 @@
                     </div>
                     <span class="bd">
                         <b>{{ $chaton->nom }}</b>
-                        <small>{{ $chaton->robe }} · {{ \Illuminate\Support\Str::lower($chaton->sexe) }}</small>
+                        <small>{{ $chaton->robe }} · {{ \Illuminate\Support\Str::lower($chaton->sexeLibelle()) }}</small>
                     </span>
                 </a>
             @endforeach

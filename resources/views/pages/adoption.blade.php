@@ -113,7 +113,7 @@
                         @foreach($disponibles as $chaton)
                             <option value="{{ $chaton->id }}"
                                 @selected(old('kitten_id', request('chaton')) == $chaton->id)>
-                                {{ $chaton->nom }} — {{ \Illuminate\Support\Str::ucfirst($chaton->sexe) }} — {{ $chaton->robe }}
+                                {{ $chaton->nom }} — {{ $chaton->sexeLibelle() }} — {{ $chaton->robe }}
                             </option>
                         @endforeach
                     </select>

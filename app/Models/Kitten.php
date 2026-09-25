@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\KittenStatus;
+use App\Models\Concerns\ASexe;
 use App\Models\Concerns\AUneGalerie;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -28,6 +29,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  */
 class Kitten extends Model
 {
+    use ASexe;
     use AUneGalerie;
     use HasFactory;
 
@@ -58,6 +60,29 @@ class Kitten extends Model
     public function prixFormate(): string
     {
         return \App\Support\Monnaie::euros($this->prix_centimes);
+    }
+
+    /**
+     * Une facture emise interdit la suppression de la fiche.
+     *
+     * Les cles etrangeres sont posees en cascade : effacer un chaton efface
+     * ses reservations, et effacer une portee efface ses chatons — donc leurs
+     * reservations aussi. C'est le bon comportement pour une fiche saisie par
+     * erreur. C'en est un tres mauvais pour un acompte encaisse : la ligne
+     * porte un numero de facture, une somme recue et un contrat.
+     *
+     * Le critere est le numero de facture et non le statut : c'est lui qui
+     * engage la comptabilite, et il n'est emis qu'a l'encaissement. Une
+     * reservation en attente, elle, ne protege rien et part avec la fiche.
+     */
+    public function aUneReservationEncaissee(): bool
+    {
+        return $this->reservations()->whereNotNull('facture_numero')->exists();
+    }
+
+    public function peutEtreSupprime(): bool
+    {
+        return ! $this->aUneReservationEncaissee();
     }
 
     /** Les reservations portant sur ce chaton, payees ou non. */

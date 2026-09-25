@@ -26,6 +26,34 @@ class Litter extends Model
         ];
     }
 
+    /**
+     * Une portee dont un chaton a ete encaisse ne s'efface pas non plus.
+     *
+     * Ses chatons partiraient en cascade, et leurs reservations avec eux. Le
+     * refus est pose sur le modele, pas sur l'ecran, pour qu'aucun chemin
+     * d'ecriture n'y echappe.
+     */
+    public function peutEtreSupprimee(): bool
+    {
+        return ! $this->kittens()
+            ->whereHas('reservations', fn ($q) => $q->whereNotNull('facture_numero'))
+            ->exists();
+    }
+
+    protected static function booted(): void
+    {
+        static::deleting(function (self $portee) {
+            if ($portee->peutEtreSupprimee()) {
+                return;
+            }
+
+            throw new \App\Exceptions\FactureEmise(
+                "La portée « {$portee->code} » compte un chaton dont l’acompte a "
+                .'été encaissé : sa facture serait effacée avec la portée.'
+            );
+        });
+    }
+
     public function getRouteKeyName(): string
     {
         return 'slug';

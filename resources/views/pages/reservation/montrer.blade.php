@@ -88,7 +88,7 @@
                 <x-record titre="Le chaton" meta="{{ $chaton?->reference }}">
                     <table>
                         <tr><th>Nom</th><td>{{ $chaton?->nom }}</td></tr>
-                        <tr><th>Sexe</th><td>{{ \Illuminate\Support\Str::ucfirst($chaton?->sexe ?? '—') }}</td></tr>
+                        <tr><th>Sexe</th><td>{{ $chaton?->sexeLibelle() ?: '—' }}</td></tr>
                         <tr><th>Robe</th><td>{{ $chaton?->robe }}</td></tr>
                         @if($chaton?->litter?->date_disponibilite)
                             <tr>

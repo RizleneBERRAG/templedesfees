@@ -15,7 +15,7 @@
         <b>{{ $chaton->nom }}</b>
         <small>{{ $chaton->robe }}</small>
         <span class="rubrique" style="letter-spacing:.2em">
-            {{ \Illuminate\Support\Str::ucfirst($chaton->sexe) }} · {{ $chaton->reference }}
+            {{ $chaton->sexeLibelle() }} · {{ $chaton->reference }}
         </span>
     </span>
 </a>
