@@ -29,8 +29,35 @@ class Photo extends Model
      * hasard disparaitrait. Les appelants trient donc eux-memes, et ils le font
      * tous.
      */
+    /**
+     * Les photos reellement montrables.
+     *
+     * Le drapeau de la photo ne suffit pas : une photo appartient a une fiche,
+     * et une fiche depubliee emporte ses images avec elle. Sans cette
+     * condition, l'eleveur retirait un chaton du site et ses photos
+     * continuaient de tourner dans le ruban de l'accueil et dans la galerie —
+     * ce qu'il n'avait aucun moyen de deviner, puisqu'il avait bien depublie
+     * la fiche.
+     *
+     * Le chaton est le cas le plus sensible : sa condition n'est pas un
+     * drapeau mais la regle legale, celle qui exige le numero d'identification
+     * et le numero de portee LOOF. On la revalide ici plutot que de s'en
+     * remettre au drapeau. Cf. Kitten::scopePublies().
+     */
     public function scopePubliees($query)
     {
-        return $query->where('est_publiee', true);
+        return $query
+            ->where('est_publiee', true)
+            ->where(fn ($q) => $q
+                ->whereNull('attachable_type')
+                ->orWhereHasMorph(
+                    'attachable',
+                    [Cat::class, Litter::class, Kitten::class],
+                    fn ($fiche, string $type) => match ($type) {
+                        Cat::class    => $fiche->where('est_publie', true),
+                        Litter::class => $fiche->where('est_publiee', true),
+                        Kitten::class => $fiche->publiables()->where('est_publie', true),
+                    },
+                ));
     }
 }

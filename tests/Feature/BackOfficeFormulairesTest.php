@@ -337,15 +337,23 @@ class BackOfficeFormulairesTest extends TestCase
      * seul dont l'echec serait silencieux : une fiche enregistree avec un
      * chemin qui ne mene a rien affiche un cadre vide sur le site public.
      */
-    public function test_une_photo_se_depose_et_arrive_bien_sur_le_disque(): void
+    /**
+     * Le depot d'une photo, du fichier jusqu'au disque.
+     *
+     * On ne simule pas le disque : la photo passe par le Photographe, qui
+     * ecrit dans public/ pour de bon, redresse l'image, efface ses
+     * metadonnees, la plafonne et fabrique ses deux reductions. C'est
+     * precisement cette chaine qu'on veut prouver — la rubrique Photos la
+     * contournait, et gardait donc les coordonnees GPS des photos de
+     * telephone. Le menage est fait a la fin.
+     */
+    public function test_une_photo_se_depose_et_passe_par_le_photographe(): void
     {
-        Storage::fake('site');
-
         $chat = Cat::firstOrFail();
 
         Livewire::test(CreatePhoto::class)
             ->fillForm([
-                'chemin'          => [UploadedFile::fake()->image('ondine.jpg', 900, 1200)],
+                'chemin'          => [UploadedFile::fake()->image('ondine.jpg', 1600, 2000)],
                 'alt'             => 'Ondine, Maine Coon blanche',
                 'ordre'           => 0,
                 'attachable_type' => Cat::class,
@@ -356,14 +364,29 @@ class BackOfficeFormulairesTest extends TestCase
 
         $photo = Photo::latest('id')->firstOrFail();
 
-        $this->assertNotEmpty($photo->chemin);
-        Storage::disk('site')->assertExists($photo->chemin);
+        $this->assertStringEndsWith('.webp', $photo->chemin,
+            'La rubrique Photos doit convertir comme les fiches, pas garder le JPEG brut.');
+
+        $racine = public_path(preg_replace('/\.webp$/', '', $photo->chemin));
+
+        try {
+            $this->assertFileExists("$racine.webp");
+            $this->assertFileExists("$racine-800.webp", 'La reduction 800 px manque.');
+            $this->assertFileExists("$racine-400.webp", 'La reduction 400 px manque.');
+
+            [$largeur] = getimagesize("$racine.webp");
+            $this->assertLessThanOrEqual(1200, $largeur);
+        } finally {
+            foreach (['', '-400', '-800'] as $suffixe) {
+                if (is_file("$racine$suffixe.webp")) {
+                    unlink("$racine$suffixe.webp");
+                }
+            }
+        }
     }
 
     public function test_une_photo_sans_fichier_est_refusee(): void
     {
-        Storage::fake('site');
-
         Livewire::test(CreatePhoto::class)
             ->fillForm(['chemin' => null, 'alt' => '', 'ordre' => 0])
             ->call('create')

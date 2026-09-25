@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Photos\Schemas;
 use App\Models\Cat;
 use App\Models\Kitten;
 use App\Models\Litter;
+use App\Filament\Champs\ChampPhoto;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MorphToSelect;
 use Filament\Forms\Components\Select;
@@ -30,16 +31,19 @@ class PhotoForm
                          * "images/cats/<fichier>", que les vues rendent avec asset().
                          * Plus besoin de passer par php artisan photos:sync.
                          */
-                        FileUpload::make('chemin')
-                            ->label('Photo')
-                            ->disk('site')
-                            ->directory('images/cats')
-                            ->visibility('public')
-                            ->image()
-                            ->imageEditor()
-                            ->maxSize(6144)
-                            ->acceptedFileTypes(['image/webp', 'image/jpeg', 'image/png'])
-                            ->helperText('WebP de préférence, 6 Mo maximum. Le fichier est déposé dans public/images/cats.')
+                        /*
+                         * Le meme champ que les fiches, et pour la meme
+                         * raison. Il etait pose ici en FileUpload nu : la
+                         * photo arrivait telle quelle, dans son format
+                         * d'origine, sans reduction — et surtout sans que ses
+                         * metadonnees soient effacees. Une photo de telephone
+                         * porte les coordonnees GPS de l'endroit ou elle a ete
+                         * prise : l'elevage ne publie pas son adresse, et la
+                         * publiait pourtant dans chaque image ajoutee par
+                         * cette rubrique.
+                         */
+                        ChampPhoto::make('chemin', 'Photo',
+                            'Photo prise au téléphone acceptée : elle est redressée, allégée et ses données de localisation sont effacées avant publication.')
                             ->required(),
 
                         // Obligatoire a dessein : l'absence de texte alternatif etait
