@@ -83,9 +83,19 @@ class HommageTest extends TestCase
      * bloc n'existe pas. On ne devine pas une filiation, et on n'affiche pas
      * un encadre vide pour faire joli.
      */
+    /**
+     * Le test vide le reglage lui-meme avant de conclure a l'absence.
+     *
+     * Il partait du principe que le seed le laissait vide. Le jour ou Kevin a
+     * donne le nom d'Alaska et qu'on l'a inscrit, le test a echoue alors que
+     * la page faisait exactement ce qu'il fallait. Ce qu'on tient, c'est la
+     * regle : pas de nom, pas de section — on n'affiche pas un trou.
+     */
     public function test_la_filiation_ne_s_affiche_que_si_elle_est_renseignee(): void
     {
         $this->seed();
+
+        Setting::where('cle', 'hommage.fille')->firstOrFail()->update(['valeur' => null]);
 
         $this->get(route('hommage'))->assertDontSee('Sa fille, ici même');
 
@@ -97,6 +107,27 @@ class HommageTest extends TestCase
             ->assertOk()
             ->assertSee('Sa fille, ici même')
             ->assertSee($fille->nom);
+    }
+
+    /**
+     * Et le cas reel : le slug inscrit au seed doit designer une vraie fiche.
+     * Un slug qui ne mene nulle part ferait disparaitre la section sans que
+     * personne ne comprenne pourquoi.
+     */
+    public function test_la_fille_inscrite_au_seed_existe_bien(): void
+    {
+        $this->seed();
+
+        $slug = Setting::get('hommage.fille');
+
+        if (blank($slug)) {
+            $this->markTestSkipped('Aucune fille renseignée : rien à vérifier.');
+        }
+
+        $this->assertNotNull(Cat::where('slug', $slug)->first(),
+            "Le réglage hommage.fille désigne « {$slug} », qui ne correspond à aucune fiche.");
+
+        $this->get(route('hommage'))->assertOk()->assertSee('Sa fille, ici même');
     }
 
     /* ── le seuil ────────────────────────────────────────────────── */

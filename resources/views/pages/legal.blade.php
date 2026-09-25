@@ -21,7 +21,7 @@
                     <tr><th>Dénomination</th><td>{{ \App\Models\Setting::get('elevage.nom') }}</td></tr>
                     <tr><th>Adresse</th><td>{{ \App\Models\Setting::get('elevage.ville') }} ({{ \App\Models\Setting::get('elevage.code_postal') }}), {{ \App\Models\Setting::get('elevage.departement') }}</td></tr>
                     <tr><th>SIREN / SIRET</th><td><x-legal-value cle="legal.siren" /></td></tr>
-                    <tr><th>Certificat de capacité</th><td><x-legal-value cle="legal.certificat" /></td></tr>
+                    <tr><th>ACACED / certificat de capacité</th><td><x-legal-value cle="legal.certificat" /></td></tr>
                     <tr><th>Enregistrement</th><td>Chambre d'agriculture</td></tr>
                     <tr><th>Directeur de la publication</th><td><x-legal-value cle="legal.directeur" /></td></tr>
                     <tr><th>Hébergeur</th><td><x-legal-value cle="legal.hebergeur" /></td></tr>

@@ -29,7 +29,7 @@
     // mentions absentes se signalent déjà toutes seules, en or, à leur place.
     $manques = collect([
         'le numéro SIREN'                 => blank($elevage['siren']),
-        'le numéro de certificat de capacité' => blank($elevage['certificat']),
+        'le numéro d’ACACED' => blank($elevage['certificat']),
         'l’adresse postale'               => blank($elevage['adresse']),
     ])->filter()->keys();
 
@@ -123,7 +123,7 @@
             SIREN {!! $elevage['siren']
                 ? e($elevage['siren'])
                 : '<span class="a-completer">à compléter</span>' !!}
-            · Certificat de capacité {!! $elevage['certificat']
+            · ACACED {!! $elevage['certificat']
                 ? e($elevage['certificat'])
                 : '<span class="a-completer">à compléter</span>' !!}
         @endif

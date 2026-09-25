@@ -136,7 +136,7 @@ class ElevageSeeder extends Seeder
             ['cle' => 'contact.instagram',    'libelle' => 'Instagram',                'valeur' => 'https://www.instagram.com/chatteriedutempledesfees/', 'groupe' => 'contact'],
             // Mentions obligatoires : vides, donc signalees "À compléter" sur le site.
             ['cle' => 'legal.siren',          'libelle' => 'SIREN / SIRET',            'valeur' => '819 229 394', 'groupe' => 'legal', 'est_obligatoire' => true],
-            ['cle' => 'legal.certificat',     'libelle' => 'N° de certificat de capacité', 'valeur' => null, 'groupe' => 'legal', 'est_obligatoire' => true],
+            ['cle' => 'legal.certificat',     'libelle' => 'Numéro ACACED (attestation de connaissances)', 'valeur' => '2018/08b9-fc7e', 'groupe' => 'legal', 'est_obligatoire' => true],
             ['cle' => 'legal.directeur',      'libelle' => 'Directeur de la publication',  'valeur' => 'Kevin Maljournal', 'groupe' => 'legal', 'est_obligatoire' => true],
             ['cle' => 'legal.hebergeur',      'libelle' => 'Hébergeur',                'valeur' => null, 'groupe' => 'legal', 'est_obligatoire' => true],
 
@@ -173,10 +173,10 @@ class ElevageSeeder extends Seeder
 
             ['cle' => 'hommage.seuil', 'libelle' => 'En mémoire d’Olimpia — les deux phrases affichées à l’arrivée sur le site',
              'valeur' => require database_path('seeders/data/olimpia-seuil.php'), 'groupe' => 'hommage'],
-            ['cle' => 'hommage.dates', 'libelle' => 'En mémoire d’Olimpia — les années (par exemple « 2019 — 2024 »)',
-             'valeur' => null, 'groupe' => 'hommage'],
+            ['cle' => 'hommage.dates', 'libelle' => 'En mémoire d’Olimpia — les dates (par exemple « 5 mars 2024 — 22 septembre 2025 »)',
+             'valeur' => '5 mars 2024 — 22 septembre 2025', 'groupe' => 'hommage'],
             ['cle' => 'hommage.fille', 'libelle' => 'En mémoire d’Olimpia — l’identifiant de sa fille sur le site (son « slug »)',
-             'valeur' => null, 'groupe' => 'hommage'],
+             'valeur' => 'alaska', 'groupe' => 'hommage'],
 
             /*
              * Les clauses du contrat de reservation, meme principe. Le

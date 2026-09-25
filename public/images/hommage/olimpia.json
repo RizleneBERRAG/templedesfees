@@ -5,11 +5,6 @@
         "hauteur": 2048
     },
     {
-        "fichier": "olimpia-2.webp",
-        "largeur": 1400,
-        "hauteur": 1867
-    },
-    {
         "fichier": "olimpia-3.webp",
         "largeur": 1080,
         "hauteur": 1920
@@ -18,10 +13,5 @@
         "fichier": "olimpia-4.webp",
         "largeur": 737,
         "hauteur": 996
-    },
-    {
-        "fichier": "olimpia-5.webp",
-        "largeur": 960,
-        "hauteur": 958
     }
 ]
