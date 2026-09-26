@@ -9,6 +9,7 @@ use App\Filament\Resources\Cats\Schemas\CatForm;
 use App\Filament\Resources\Cats\Tables\CatsTable;
 use App\Models\Cat;
 use BackedEnum;
+use App\Filament\Resources\Cats\RelationManagers\HealthTestsRelationManager;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -45,7 +46,7 @@ class CatResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            HealthTestsRelationManager::class,
         ];
     }
 

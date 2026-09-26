@@ -9,6 +9,7 @@ use App\Filament\Resources\Litters\Schemas\LitterForm;
 use App\Filament\Resources\Litters\Tables\LittersTable;
 use App\Models\Litter;
 use BackedEnum;
+use App\Filament\Resources\Litters\RelationManagers\EventsRelationManager;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -45,7 +46,7 @@ class LitterResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            EventsRelationManager::class,
         ];
     }
 
