@@ -79,6 +79,16 @@ class PhotoForm
                             ->default(0)
                             ->required(),
 
+                        /*
+                         * Volontairement facultatif. Une photo de galerie n'est
+                         * rattachee a rien — c'est ce qui la definit : elle
+                         * illustre l'elevage, pas une fiche. Le champ etait
+                         * obligatoire, et le seul effet etait qu'aucune photo de
+                         * galerie ne pouvait plus etre enregistree : ouvrir
+                         * l'une des onze, changer sa legende, enregistrer, et le
+                         * formulaire refusait tant qu'on ne lui avait pas
+                         * attribue un chat ou une portee au hasard.
+                         */
                         MorphToSelect::make('attachable')
                             ->label('Rattachée à')
                             ->types([
@@ -87,7 +97,6 @@ class PhotoForm
                                 MorphToSelect\Type::make(Kitten::class)->titleAttribute('nom')->label('Chaton'),
                             ])
                             ->searchable()
-                            ->required()
                             ->columnSpanFull(),
 
                         Toggle::make('est_couverture')

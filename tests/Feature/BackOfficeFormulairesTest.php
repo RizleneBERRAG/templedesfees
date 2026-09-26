@@ -393,6 +393,46 @@ class BackOfficeFormulairesTest extends TestCase
             ->assertHasFormErrors(['chemin', 'alt']);
     }
 
+    /**
+     * Une photo de galerie n'est rattachee a rien, et doit pouvoir l'etre.
+     *
+     * Le champ « Rattachee a » etait obligatoire. Onze des photos du site sont
+     * des photos de galerie — elles illustrent l'elevage, pas une fiche — et
+     * aucune ne pouvait plus etre enregistree : ouvrir l'une d'elles, corriger
+     * sa legende, enregistrer, et le formulaire refusait tant qu'on ne lui
+     * avait pas attribue un chat ou une portee au hasard. Le test precedent ne
+     * le voyait pas parce qu'il rattachait toujours la photo a un chat.
+     */
+    public function test_une_photo_de_galerie_s_enregistre_sans_etre_rattachee(): void
+    {
+        Livewire::test(CreatePhoto::class)
+            ->fillForm([
+                'chemin'    => [UploadedFile::fake()->image('la-maison.jpg', 1400, 900)],
+                'alt'       => 'La maison vue du jardin',
+                'categorie' => 'maison',
+                'ordre'     => 0,
+            ])
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        $photo = Photo::latest('id')->firstOrFail();
+
+        $this->assertNull($photo->attachable_type,
+            'Une photo de galerie ne doit pas se voir attribuer une fiche.');
+
+        $racine = public_path(preg_replace('/\.webp$/', '', $photo->chemin));
+
+        try {
+            $this->get('/galerie')->assertOk()->assertSee($photo->chemin, false);
+        } finally {
+            foreach (['', '-400', '-800'] as $suffixe) {
+                if (is_file("$racine$suffixe.webp")) {
+                    unlink("$racine$suffixe.webp");
+                }
+            }
+        }
+    }
+
     /* ═══ reservations ════════════════════════════════════════════════ */
 
     public function test_une_reservation_se_cree_depuis_le_back_office(): void
