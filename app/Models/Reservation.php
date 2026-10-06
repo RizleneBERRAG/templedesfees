@@ -4,7 +4,10 @@ namespace App\Models;
 
 use App\Enums\KittenStatus;
 use App\Enums\ReservationStatus;
+use App\Filament\Resources\Reservations\ReservationResource;
+use App\Mail\Lettre;
 use App\Services\Caisse;
+use App\Support\Facteur;
 use App\Support\Monnaie;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -179,6 +182,43 @@ class Reservation extends Model
 
         $this->bloquerLeChaton();
         $this->emettreLaFacture();
+        $this->annoncerLAcompte();
+    }
+
+    /**
+     * Les deux courriels de l'acompte : le recu a la famille, l'avis a l'elevage.
+     *
+     * Ils partent d'ici et non du bouton de l'espace de gestion, parce qu'un
+     * acompte arrive de deux facons — enregistre a la main apres un virement,
+     * ou annonce par Stripe — et qu'une famille ne doit pas recevoir son recu
+     * selon le chemin qu'a pris son argent.
+     *
+     * payer() etant sans effet la deuxieme fois, le recu ne part qu'une fois,
+     * meme si Stripe rejoue sa notification.
+     */
+    private function annoncerLAcompte(): void
+    {
+        $this->loadMissing('kitten');
+
+        Facteur::porter($this->email, new Lettre(
+            vue:     'famille.acompte-recu',
+            objet:   'Votre acompte est bien arrivé',
+            donnees: [
+                'reservation' => $this,
+                'facture'     => route('reservation.facture', ['jeton' => $this->jeton]),
+            ],
+        ));
+
+        Facteur::porter(Facteur::elevage(), new Lettre(
+            vue:          'elevage.acompte-recu',
+            objet:        "Acompte reçu — {$this->nomComplet()}",
+            donnees:      [
+                'reservation' => $this,
+                'lien'        => ReservationResource::getUrl('edit', ['record' => $this], panel: 'admin'),
+            ],
+            repondreA:    $this->email,
+            repondreANom: $this->nomComplet(),
+        ));
     }
 
     /**

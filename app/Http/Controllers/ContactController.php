@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Filament\Resources\ContactMessages\ContactMessageResource;
 use App\Http\Requests\StoreContactMessage;
+use App\Mail\Lettre;
 use App\Models\ContactMessage;
 use App\Models\Review;
 use App\Models\Setting;
+use App\Support\Facteur;
 
 class ContactController extends Controller
 {
@@ -47,11 +50,37 @@ class ContactController extends Controller
     {
         $message = ContactMessage::create($request->safe()->except('rgpd', 'site'));
 
-        // TODO brancher la notification a l'elevage une fois le SMTP configure.
+        $this->prevenir($message);
 
         return redirect()
             ->route('contact')
             ->with('succes', "Merci {$message->prenom}, votre message est bien arrivé. Nous vous répondons sous 48 heures.")
             ->withFragment('formulaire');
+    }
+
+    /**
+     * Prevenir l'elevage, puis accuser reception a la famille.
+     *
+     * Le courriel de l'elevage porte l'adresse du visiteur en Â« Repondre a Â» :
+     * un clic sur Â« Repondre Â» lui ecrit directement.
+     */
+    private function prevenir(ContactMessage $message): void
+    {
+        Facteur::porter(Facteur::elevage(), new Lettre(
+            vue:          'elevage.message-contact',
+            objet:        "Message du site — {$message->objetLibelle()}",
+            donnees:      [
+                'contact' => $message,
+                'lien'    => ContactMessageResource::getUrl('edit', ['record' => $message], panel: 'admin'),
+            ],
+            repondreA:    $message->email,
+            repondreANom: trim("{$message->prenom} {$message->nom}"),
+        ));
+
+        Facteur::porter($message->email, new Lettre(
+            vue:     'famille.message-contact',
+            objet:   'Votre message est bien arrivé',
+            donnees: ['contact' => $message],
+        ));
     }
 }
