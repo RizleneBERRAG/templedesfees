@@ -82,8 +82,8 @@
                     qu'un salon.
                 </p>
                 <p class="lede">
-                    Les retraitées restent ici jusqu'au bout. Un chat né à la chatterie qui ne
-                    peut plus rester dans sa famille y revient aussi, à n'importe quel âge.
+                    Un chat né à la chatterie qui ne peut plus rester dans sa famille y
+                    revient, à n'importe quel âge.
                 </p>
             </div>
 

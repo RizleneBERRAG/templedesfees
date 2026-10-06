@@ -169,7 +169,7 @@
             <h2>Ceux qui vivent ici</h2>
             <p class="lede">
                 Onze Maine Coon, tous à la maison — pas en cage, pas en box. Les reproductrices
-                mettent bas dans le salon, et les retraitées restent jusqu'au bout.
+                mettent bas dans le salon, au milieu de la vie de la famille.
             </p>
         </div>
 
