@@ -69,6 +69,19 @@ class Cat extends Model
     }
 
     /**
+     * Peut-on effacer cette fiche sans abimer une lignee ?
+     *
+     * Non des que le chat est pere ou mere d'une portee : les clefs etrangeres
+     * sont en nullOnDelete, la suppression passerait donc sans erreur en vidant
+     * la ligne « Parents » des chatons concernes, et en cassant le calcul de
+     * leur fratrie. Voir App\Exceptions\LigneeRattachee.
+     */
+    public function peutEtreSupprime(): bool
+    {
+        return $this->portees()->doesntExist();
+    }
+
+    /**
      * Le bilan sante est complet quand chaque depistage requis a un resultat.
      * Tant qu'il ne l'est pas, le chat ne devrait pas etre mis a la reproduction.
      */
