@@ -150,7 +150,7 @@ class ParcoursEleveurTest extends TestCase
         $this->get("/chatons/{$chaton->slug}")
             ->assertOk()
             ->assertSee('Identification en cours')
-            ->assertSee('À compléter');
+            ->assertSee('—');
 
         /* ── 4. Il saisit le numero, et publie ──────────────────────── */
 

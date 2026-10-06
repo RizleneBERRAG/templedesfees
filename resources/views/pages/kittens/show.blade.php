@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', $chaton->nom.' — chaton Maine Coon '.$chaton->statut->libelle())
-@section('description', \Illuminate\Support\Str::limit(strip_tags($chaton->description), 150))
+@section('description', $chaton->resumePourLesMoteurs())
 @section('og_image', asset($chaton->photo_principale))
 
 @push('schema')
@@ -10,6 +10,60 @@
         ['nom' => 'Nos chatons', 'url' => route('kittens.index')],
         ['nom' => $chaton->nom,  'url' => route('kittens.show', $chaton)],
     ]" />
+
+{{-- Le tableau se construit dans un bloc php, et non dans l'expression
+     d'affichage : Blade compile la directive de contexte jusqu'au milieu d'un
+     tableau PHP, et la cle arobase-context sortirait remplacee par du code. --}}
+@php
+    $offre = [
+    '@context'    => 'https://schema.org',
+    '@type'       => 'Product',
+    'name'        => $chaton->nom,
+    'description' => $chaton->resumePourLesMoteurs(),
+    'image'       => array_values(array_filter([
+        $chaton->photo_principale ? asset($chaton->photo_principale) : null,
+    ])),
+    'category' => 'Chaton Maine Coon',
+    'brand'    => [
+        '@type' => 'Brand',
+        'name'  => \App\Models\Setting::get('elevage.nom', 'La Chatterie du Temple des Fées'),
+    ],
+    'additionalProperty' => array_values(array_filter([
+        ['@type' => 'PropertyValue', 'name' => 'Sexe', 'value' => $chaton->sexeLibelle()],
+        $chaton->robe ? ['@type' => 'PropertyValue', 'name' => 'Robe', 'value' => $chaton->robe] : null,
+        $portee->pere?->nom ? ['@type' => 'PropertyValue', 'name' => 'Père', 'value' => $portee->pere->nom] : null,
+        $portee->mere?->nom ? ['@type' => 'PropertyValue', 'name' => 'Mère', 'value' => $portee->mere->nom] : null,
+    ])),
+    ];
+
+    /*
+     * L'offre n'est declaree QUE si le prix existe.
+     *
+     * Un bloc « offers » sans prix, ou avec un prix a zero, est signale en
+     * erreur par Google et peut faire retirer la fiche de ses resultats
+     * enrichis. Mieux vaut un produit sans offre qu'une offre vide.
+     */
+    if ($chaton->prix_centimes) {
+        $offre['offers'] = [
+            '@type'         => 'Offer',
+            'url'           => route('kittens.show', $chaton),
+            'price'         => number_format($chaton->prix_centimes / 100, 2, '.', ''),
+            'priceCurrency' => 'EUR',
+            'availability'  => match ($chaton->statut) {
+                \App\Enums\KittenStatus::Disponible => 'https://schema.org/InStock',
+                \App\Enums\KittenStatus::Reserve    => 'https://schema.org/OutOfStock',
+                \App\Enums\KittenStatus::Adopte     => 'https://schema.org/SoldOut',
+            },
+            // Le vendeur renvoie a l'elevage decrit sur l'accueil, plutot que
+            // de le redecrire ici : une seule entite, deux pages qui la citent.
+            'seller' => ['@id' => route('home').'#elevage'],
+        ];
+    }
+@endphp
+
+<script type="application/ld+json">
+{!! json_encode($offre, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+</script>
 @endpush
 
 @section('content')
@@ -56,8 +110,8 @@
                                     : 'Identification en cours. Un chaton n’est pucé qu’à quelques semaines, et le numéro de portée revient du LOOF ensuite : les deux apparaissent ici dès qu’ils arrivent. Aucun départ ne se fait avant.' }}">
                     <table>
                         <tr><th>Sexe</th><td>{{ $chaton->sexeLibelle() }}</td></tr>
-                        <tr><th>Date de naissance</th><td>{{ $portee->date_naissance?->translatedFormat('j F Y') ?? 'à compléter' }}</td></tr>
-                        <tr><th>Âge</th><td>{{ $chaton->ageEnSemaines() ? $chaton->ageEnSemaines().' semaines' : 'à compléter' }}</td></tr>
+                        <tr><th>Date de naissance</th><td>{{ $portee->date_naissance?->translatedFormat('j F Y') ?? '—' }}</td></tr>
+                        <tr><th>Âge</th><td>{{ $chaton->ageEnSemaines() ? $chaton->ageEnSemaines().' semaines' : '—' }}</td></tr>
                         <tr><th>Robe</th><td>{{ $chaton->robe }}</td></tr>
                         @if($chaton->poidsFormate())
                             <tr>
@@ -65,18 +119,26 @@
                                 <td style="font-variant-numeric:tabular-nums">{{ $chaton->poidsFormate() }}</td>
                             </tr>
                         @endif
-                        <tr><th>Parents</th><td>{{ $portee->pere?->nom }} × {{ $portee->mere?->nom }}</td></tr>
+                        @php($parents = array_filter([$portee->pere?->nom, $portee->mere?->nom]))
+                        <tr><th>Parents</th><td>{{ $parents ? implode(' × ', $parents) : '—' }}</td></tr>
                         <tr>
                             <th>N° de portée LOOF</th>
-                            <td><span @class(['verdict', 'attente' => blank($portee->loof_portee_numero)])>{{ $portee->loof_portee_numero ?: 'À compléter' }}</span></td>
+                            <td><span @class(['verdict', 'vide' => blank($portee->loof_portee_numero)])>{{ $portee->loof_portee_numero ?: '—' }}</span></td>
                         </tr>
                         <tr>
                             <th>Identification ICAD</th>
-                            <td><span @class(['verdict', 'attente' => blank($chaton->icad_numero)])>{{ $chaton->icad_numero ?: 'À compléter' }}</span></td>
+                            <td><span @class(['verdict', 'vide' => blank($chaton->icad_numero)])>{{ $chaton->icad_numero ?: '—' }}</span></td>
+                        </tr>
+                        {{-- Le prix fait partie des mentions d'une offre de cession.
+                             Tant qu'il n'est pas saisi, on l'annonce comme manquant
+                             plutôt que de laisser croire à une case oubliée. --}}
+                        <tr>
+                            <th>Prix</th>
+                            <td><span @class(['verdict', 'vide' => blank($chaton->prix_centimes)])>{{ $chaton->prix_centimes ? $chaton->prixFormate() : '—' }}</span></td>
                         </tr>
                         <tr>
                             <th>Disponible à partir du</th>
-                            <td>{{ $portee->date_disponibilite?->translatedFormat('j F Y') }}</td>
+                            <td>{{ $portee->date_disponibilite?->translatedFormat('j F Y') ?? '—' }}</td>
                         </tr>
                     </table>
                 </x-record>
@@ -87,22 +149,32 @@
                         @foreach([['Père', $portee->pere], ['Mère', $portee->mere]] as [$role, $parent])
                             <div class="gen">
                                 @if($parent)
-                                    <a class="case" href="{{ route('cats.show', $parent) }}">
-                                        <em>{{ $role }}</em>
-                                        <strong>{{ $parent->nom }}</strong>
-                                        <span>{{ $parent->robe }}</span>
+                                    {{-- Le portrait quand il existe : un parent qu'on voit
+                                         rassure plus que son nom en toutes lettres. --}}
+                                    <a class="case @if($parent->photo_principale) portrait @endif"
+                                       href="{{ route('cats.show', $parent) }}">
+                                        @if($parent->photo_principale)
+                                            <img src="{{ asset($parent->photo_principale) }}"
+                                                 alt="{{ $parent->nom }}, {{ \Illuminate\Support\Str::lower($role) }} de {{ $chaton->nom }}"
+                                                 loading="lazy">
+                                        @endif
+                                        <span class="txt">
+                                            <em>{{ $role }}</em>
+                                            <strong>{{ $parent->nom }}</strong>
+                                            <span>{{ $parent->robe }}</span>
+                                        </span>
                                     </a>
                                 @else
-                                    <div class="case vide"><em>{{ $role }}</em><strong>À compléter</strong></div>
+                                    <div class="case vide"><em>{{ $role }}</em><strong>—</strong></div>
                                 @endif
                                 <div class="sous">
                                     <div class="case vide">
                                         <em>Grand-père {{ $role === 'Père' ? 'paternel' : 'maternel' }}</em>
-                                        <strong>À compléter</strong>
+                                        <strong>—</strong>
                                     </div>
                                     <div class="case vide">
                                         <em>Grand-mère {{ $role === 'Père' ? 'paternelle' : 'maternelle' }}</em>
-                                        <strong>À compléter</strong>
+                                        <strong>—</strong>
                                     </div>
                                 </div>
                             </div>

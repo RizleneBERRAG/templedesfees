@@ -1,7 +1,7 @@
 @props(['chat', 'jalon' => 'Dépistages'])
 
 <x-record titre="Dépistages — {{ $chat->nom }}" jalon="{{ $jalon }}"
-          meta="{{ $chat->loof_numero ? 'Pedigree LOOF '.$chat->loof_numero : 'Pedigree LOOF à compléter' }}"
+          meta="{{ $chat->loof_numero ? 'Pedigree LOOF '.$chat->loof_numero : 'Pedigree LOOF —' }}"
           note="Un test ADN se fait une fois pour la vie : le génome ne change pas. Une échocardiographie ne vaut que pour le jour où elle a été faite, et se renouvelle tant que le chat reproduit. Une ligne encore vide s’affiche telle quelle, en or — nous ne masquons pas ce qui manque.">
     <table>
         @forelse($chat->healthTests as $test)

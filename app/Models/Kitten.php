@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Str;
 
 /**
  * Un chaton de l'elevage.
@@ -33,6 +34,9 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  */
 class Kitten extends Model
 {
+    /** La longueur au-dela de laquelle Google tronque le resume affiche. */
+    private const LONGUEUR_RESUME = 155;
+
     use ASexe;
     use AUneGalerie;
     use HasFactory;
@@ -226,6 +230,72 @@ class Kitten extends Model
             ->whereHas('litter', fn ($q) => $q
                 ->whereNotNull('loof_portee_numero')
                 ->where('loof_portee_numero', '<>', ''));
+    }
+
+    /**
+     * Le resume qui part dans la balise description et dans les partages.
+     *
+     * La fiche porte un champ Description, mais il reste vide tant que
+     * l'eleveur ne l'a pas ecrit — et il l'etait pour les dix chatons mis en
+     * ligne le 5 octobre 2026. Une page sans description laisse Google
+     * composer le sien avec des bouts de la page, et un partage sur Facebook
+     * arrive sans une ligne de texte.
+     *
+     * On compose donc un resume avec ce que la fiche sait deja. Rien n'y est
+     * affirme qui ne soit en base : ni le LOOF ni l'identification n'y
+     * figurent, puisqu'ils peuvent manquer. Les parents sont ecrits
+     * « X × Y » plutot que « ne de » : cela evite d'accorder un participe
+     * au sexe du chaton, et c'est la forme deja employee sur la fiche.
+     */
+    public function resumePourLesMoteurs(): string
+    {
+        $ecrit = trim(strip_tags((string) $this->description));
+
+        if ($ecrit !== '') {
+            return Str::limit($ecrit, self::LONGUEUR_RESUME);
+        }
+
+        /*
+         * Les phrases sont rangees par ce qu'elles rapportent, et ajoutees
+         * seulement si elles tiennent EN ENTIER : une description coupee au
+         * milieu d'un nom de lieu dessert la page qu'elle devait servir.
+         *
+         * Le lieu passe donc avant les parents. Une famille cherche « chaton
+         * maine coon drome » bien plus souvent que le nom d'un etalon, et les
+         * noms d'elevage allemands mangent a eux seuls la moitie du budget.
+         */
+        $phrases = array_filter([
+            rtrim(sprintf(
+                '%s, chaton Maine Coon %s %s',
+                $this->nom,
+                mb_strtolower($this->sexeLibelle()),
+                mb_strtolower((string) $this->robe),
+            )).'.',
+
+            sprintf(
+                'Élevage familial à %s, départ à %d semaines au plus tôt.',
+                Setting::get('elevage.ville', 'Lapeyrouse-Mornay'),
+                Litter::SEMAINES_AVANT_CESSION,
+            ),
+
+            ($parents = array_filter([$this->litter?->pere?->nom, $this->litter?->mere?->nom]))
+                ? 'Parents : '.implode(' × ', $parents).'.'
+                : null,
+        ]);
+
+        $resume = '';
+
+        foreach ($phrases as $phrase) {
+            $essai = $resume === '' ? $phrase : $resume.' '.$phrase;
+
+            if (mb_strlen($essai) > self::LONGUEUR_RESUME) {
+                break;
+            }
+
+            $resume = $essai;
+        }
+
+        return $resume;
     }
 
     public function scopeDisponibles($query)

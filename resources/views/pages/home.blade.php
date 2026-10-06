@@ -222,7 +222,7 @@
                 <div style="flex:1 1 420px;min-width:0">
                     <div class="entete">
                         <b>{{ $vitrine->nom }}</b>
-                        <span>{{ $vitrine->loof_numero ? 'Pedigree LOOF '.$vitrine->loof_numero : 'Pedigree LOOF à compléter' }}</span>
+                        <span>{{ $vitrine->loof_numero ? 'Pedigree LOOF '.$vitrine->loof_numero : 'Pedigree LOOF —' }}</span>
                     </div>
                     <table>
                         @foreach($vitrine->healthTests as $test)

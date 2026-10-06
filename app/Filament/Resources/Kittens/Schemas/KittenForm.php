@@ -99,11 +99,14 @@ class KittenForm
                             ->helperText('Porte sur le chaton, jamais sur la famille : aucun nom d’adoptant n’est publié.'),
 
                         /*
-                         * Le prix ne parait sur aucune page du site : la
-                         * chatterie n'affiche pas ses tarifs en vitrine, et ce
-                         * n'est pas a une refonte d'en decider. Il sert au
-                         * contrat de reservation et a la facture, qui ont
-                         * besoin du prix pour ecrire le solde restant du.
+                         * Le prix parait sur la fiche publique du chaton depuis
+                         * le 6 octobre 2026, a la demande de l'elevage. Il sert
+                         * aussi au contrat de reservation et a la facture, qui
+                         * en ont besoin pour ecrire le solde restant du.
+                         *
+                         * Tant qu'il est vide, la fiche affiche « A completer »
+                         * plutot que rien : une offre de cession sans prix est
+                         * une offre incomplete, et mieux vaut que cela se voie.
                          */
                         TextInput::make('prix_centimes')
                             ->label('Prix')
@@ -111,7 +114,7 @@ class KittenForm
                             ->suffix('€')
                             ->formatStateUsing(fn (?int $state) => $state === null ? null : $state / 100)
                             ->dehydrateStateUsing(fn ($state) => filled($state) ? Monnaie::centimes($state) : null)
-                            ->helperText('Jamais affiché sur le site. Repris au contrat de réservation.'),
+                            ->helperText('Affiché sur la fiche publique du chaton, et repris au contrat de réservation.'),
 
                         TextInput::make('poids_g')
                             ->label('Poids')

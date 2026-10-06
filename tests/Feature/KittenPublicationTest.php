@@ -84,7 +84,9 @@ class KittenPublicationTest extends TestCase
         $this->get('/chatons/'.$chaton->slug)
             ->assertOk()
             ->assertSee('Identification en cours')
-            ->assertSee('À compléter');
+            // Le champ vide porte un trait sobre : c'est le bandeau qui alerte,
+            // pas une mention orange sur chaque ligne.
+            ->assertSee('—');
     }
 
     /** Vider le numero de portee ne fait plus disparaitre ses chatons. */

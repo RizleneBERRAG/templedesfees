@@ -39,7 +39,7 @@
                         <tr>
                             <th>Pedigree LOOF</th>
                             <td>
-                                <span @class(['verdict', 'attente' => blank($chat->loof_numero)])>{{ $chat->loof_numero ?: 'À compléter' }}</span>
+                                <span @class(['verdict', 'vide' => blank($chat->loof_numero)])>{{ $chat->loof_numero ?: '—' }}</span>
                             </td>
                         </tr>
                         <tr>
