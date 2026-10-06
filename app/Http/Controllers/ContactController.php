@@ -25,24 +25,34 @@ class ContactController extends Controller
     /**
      * Les liens d'itineraire, un par application de navigation.
      *
-     * Tous visent la COMMUNE et non l'adresse exacte : la page annonce que
-     * l'adresse est communiquee au rendez-vous, et un itineraire porte-a-porte
-     * la publierait d'un clic. Chaque lien peut etre remplace par un reglage,
-     * par exemple par la fiche Google de l'elevage.
+     * Ils visaient la commune et non le numero, pour ne pas publier l'adresse
+     * d'un clic. C'etait un faux scrupule : l'adresse complete figure deja au
+     * pied de chaque page, dans les courriels et dans les donnees structurees
+     * livrees a Google. La demi-mesure ne protegeait rien et obligeait les
+     * familles a chercher la fin du chemin toutes seules.
+     *
+     * Depuis le 6 octobre 2026, l'elevage assume son adresse partout.
+     *
+     * Chaque lien reste remplacable par un reglage, par exemple par celui de
+     * la fiche Google une fois qu'elle sera validee.
      *
      * @return array<string,string>
      */
     private static function itineraires(): array
     {
-        $commune = trim(Setting::get('elevage.ville', 'Lapeyrouse-Mornay').' '
-            .Setting::get('elevage.code_postal', '26210').' France');
+        $adresse = trim(implode(' ', array_filter([
+            Setting::get('elevage.adresse', '24 chemin Saint-Charles'),
+            Setting::get('elevage.code_postal', '26210'),
+            Setting::get('elevage.ville', 'Lapeyrouse-Mornay'),
+            'France',
+        ])));
 
         return [
-            'commune' => $commune,
+            'commune' => $adresse,
             'google'  => Setting::get('contact.itineraire_google')
-                ?: 'https://www.google.com/maps/dir/?api=1&destination='.urlencode($commune),
+                ?: 'https://www.google.com/maps/dir/?api=1&destination='.urlencode($adresse),
             'waze'    => Setting::get('contact.itineraire_waze')
-                ?: 'https://www.waze.com/ul?navigate=yes&q='.urlencode($commune),
+                ?: 'https://www.waze.com/ul?navigate=yes&q='.urlencode($adresse),
         ];
     }
 
