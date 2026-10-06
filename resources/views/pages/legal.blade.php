@@ -58,7 +58,10 @@
                     <tr><th>Données collectées</th><td>Identité, coordonnées et informations sur le foyer, uniquement via le formulaire de pré-réservation</td></tr>
                     <tr><th>Finalité</th><td>Traiter la demande d'adoption et assurer le suivi du chaton</td></tr>
                     <tr><th>Base légale</th><td>Consentement, recueilli explicitement au dépôt de la demande</td></tr>
-                    <tr><th>Durée de conservation</th><td>{{ \App\Models\AdoptionRequest::MOIS_CONSERVATION }} mois après le dépôt de la demande, puis suppression automatique</td></tr>
+                    {{-- « Sur demande » et non « automatique » : l'hébergement n'a pas de tâche
+                         planifiée, la purge ne peut donc pas s'exécuter seule. Annoncer une
+                         suppression automatique serait promettre ce qu'on ne tient pas. --}}
+                    <tr><th>Durée de conservation</th><td>{{ \App\Models\AdoptionRequest::MOIS_CONSERVATION }} mois après le dépôt de la demande. Au-delà, les données sont supprimées sur simple demande de votre part, et lors des purges périodiques de l'élevage.</td></tr>
                     <tr><th>Destinataires</th><td>La Chatterie du Temple des Fées uniquement — aucune transmission à un tiers, aucune revente</td></tr>
                     <tr><th>Vos droits</th><td>Accès, rectification, effacement et opposition sur simple demande à {{ \App\Models\Setting::get('contact.email') }}</td></tr>
                     <tr><th>Publication des noms</th><td>Aucun nom ni prénom d'adoptant n'est publié sur ce site</td></tr>
