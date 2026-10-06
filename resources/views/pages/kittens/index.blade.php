@@ -5,6 +5,14 @@
 
 @section('content')
 
+{{--
+    Une section par portee en cours.
+
+    L'elevage peut avoir plusieurs portees la meme saison : n'en montrer qu'une
+    rangeait les autres parmi les portees passees, alors que leurs chatons
+    attendaient une famille. Le titre, les parents et le calendrier
+    appartiennent a chaque portee, la barre de filtres reste commune.
+--}}
 <section class="bande">
     <div class="wrap">
         <div class="frise" style="margin-bottom:clamp(30px,4vw,50px)"><x-fleuron taille="grand" /></div>
@@ -12,9 +20,9 @@
         <x-section-head
             class="monte"
             niveau="1"
-            eyebrow="{{ $portee->code }} · {{ $portee->pere?->nom }} × {{ $portee->mere?->nom }}"
-            titre="La portée en cours"
-            lede="{{ $portee->date_naissance ? 'Nés le '.$portee->date_naissance->translatedFormat('j F Y').'. ' : '' }}{{ $portee->phraseDisponibilite() ? \Illuminate\Support\Str::ucfirst($portee->phraseDisponibilite()).', ' : '' }}identifiés, vaccinés, vermifugés et inscrits au LOOF." />
+            eyebrow="{{ $portees->count() > 1 ? $portees->count().' portées' : $portees->first()->code }}"
+            titre="{{ $portees->count() > 1 ? 'Les portées en cours' : 'La portée en cours' }}"
+            lede="Identifiés, vaccinés, vermifugés et inscrits au LOOF. Aucun chaton ne part avant douze semaines." />
 
         <nav class="filtres monte" aria-label="Filtrer les chatons" data-filtre-barre>
             <a href="{{ route('kittens.index') }}" @if(! $statut) aria-current="true" @endif>Tous ({{ $total }})</a>
@@ -27,47 +35,54 @@
                 @endif
             @endforeach
         </nav>
+    </div>
+</section>
+
+@foreach($portees as $portee)
+<section class="bande @if(! $loop->first) creuse @endif">
+    <div class="wrap">
+        <x-section-head
+            class="monte"
+            niveau="2"
+            eyebrow="{{ $portee->code }}"
+            titre="{{ $portee->pere?->nom }} × {{ $portee->mere?->nom }}"
+            lede="{{ $portee->date_naissance ? 'Nés le '.$portee->date_naissance->translatedFormat('j F Y').'. ' : '' }}{{ $portee->phraseDisponibilite() ? \Illuminate\Support\Str::ucfirst($portee->phraseDisponibilite()).'.' : '' }}" />
+
+        @php($chatons = $visibles($portee))
 
         @forelse($chatons as $chaton)
             @if($loop->first)<div class="fiches monte" data-filtre="statut"
-                 data-filtre-vide="Aucun chaton dans cette catégorie pour le moment.">@endif
+                 data-filtre-vide="Aucun chaton de cette portée dans cette catégorie.">@endif
                 <x-kitten-card :chaton="$chaton" />
             @if($loop->last)</div>@endif
         @empty
             <p class="lede monte" style="text-align:center;margin-inline:auto">
-                Aucun chaton dans cette catégorie pour le moment.
-                <a class="lien" href="{{ route('adoption.create') }}" style="margin-left:10px">Être prévenu de la prochaine portée</a>
+                Aucun chaton de cette portée dans cette catégorie.
             </p>
         @endforelse
-    </div>
-</section>
 
-@if($portee->events->isNotEmpty())
-<section class="bande creuse">
-    <div class="wrap">
-        <div class="duo-texte haut monte">
-            <div class="pile">
-                <span class="rubrique">Suivi de la portée</span>
-                <h2>Où en sont-ils<br>aujourd’hui</h2>
-                <p class="lede lettrine">
-                    Le même calendrier pour les {{ $portee->nb_chatons }} chatons. Il se remplit au
-                    fil des actes vétérinaires saisis dans l’espace de gestion — ce n’est pas un
-                    texte écrit une fois pour toutes, c’est l’état réel de la portée.
-                </p>
-                <p class="lede">
-                    Le jalon vert est l’âge légal de cession : douze semaines. Aucun chaton ne part
-                    avant, quelles que soient les circonstances.
-                </p>
+        @if($portee->events->isNotEmpty())
+            <div class="duo-texte haut monte" style="margin-top:clamp(34px,4vw,52px)">
+                <div class="pile">
+                    <span class="rubrique">Suivi de la portée</span>
+                    <h3>Où en sont-ils aujourd’hui</h3>
+                    <p class="lede">
+                        Le même calendrier pour les {{ $portee->nb_chatons }} chatons. Il se remplit
+                        au fil des actes vétérinaires saisis dans l’espace de gestion — ce n’est pas
+                        un texte écrit une fois pour toutes, c’est l’état réel de la portée.
+                        Le jalon vert est l’âge légal de cession : douze semaines.
+                    </p>
+                </div>
+
+                <x-record titre="Calendrier de la {{ \Illuminate\Support\Str::lower($portee->code) }}"
+                          meta="{{ $portee->date_naissance?->translatedFormat('j F Y') ?? '' }}">
+                    <div style="padding-top:18px"><x-timeline :events="$portee->events" /></div>
+                </x-record>
             </div>
-
-            <x-record titre="Calendrier de la {{ \Illuminate\Support\Str::lower($portee->code) }}"
-                      meta="{{ $portee->date_naissance?->translatedFormat('j F Y') ?? '' }}">
-                <div style="padding-top:18px"><x-timeline :events="$portee->events" /></div>
-            </x-record>
-        </div>
+        @endif
     </div>
 </section>
-@endif
+@endforeach
 
 <div class="bande serree">
     <x-photo-strip titre="Les chatons au fil des semaines" />

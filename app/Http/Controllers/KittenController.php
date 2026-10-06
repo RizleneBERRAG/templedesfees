@@ -11,32 +11,50 @@ class KittenController extends Controller
 {
     public function index(Request $request)
     {
-        $portee = Litter::publiees()
-            ->with(['pere', 'mere', 'events'])
+        /*
+         * Toutes les portees en cours, et non la derniere seulement.
+         *
+         * L'elevage a eu trois portees la meme saison, toutes nees a quelques
+         * jours d'intervalle. N'en montrer qu'une rangeait sept chatons parmi
+         * les portees passees, alors qu'ils attendaient une famille : une
+         * portee n'est « passee » que lorsque tous ses chatons sont partis.
+         */
+        $portees = Litter::publiees()
+            ->enCours()
+            ->with(['pere', 'mere', 'events', 'kittens' => fn ($q) => $q->publies()])
             ->orderByDesc('date_naissance')
-            ->firstOrFail();
+            ->orderBy('code')
+            ->get();
 
-        $chatons = $portee->kittens()->publies()->get();
+        abort_if($portees->isEmpty(), 404);
+
+        $chatons = $portees->flatMap->kittens;
 
         $statut = $request->query('statut');
         $filtres = $chatons->countBy(fn (Kitten $k) => $k->statut->value);
 
         return view('pages.kittens.index', [
-            'portee'    => $portee,
-            'chatons'   => $statut
-                ? $chatons->filter(fn (Kitten $k) => $k->statut->value === $statut)
-                : $chatons,
-            'total'     => $chatons->count(),
-            'filtres'   => $filtres,
-            'statut'    => $statut,
+            'portees' => $portees,
+            'statut'  => $statut,
+            'total'   => $chatons->count(),
+            'filtres' => $filtres,
+
             /*
-             * Deux comptes distincts : le nombre de chatons de la portee, et
-             * combien sont effectivement partis. Les afficher tous deux avec
-             * le meme chiffre revenait a annoncer « tous adoptes » sans
-             * jamais le verifier.
+             * Le filtre s'applique a l'interieur de chaque portee : filtrer la
+             * collection globale aurait vide les portees sans effacer leur
+             * titre, laissant des sections qui annoncent des chatons absents.
              */
-            'archives'  => Litter::publiees()
-                ->whereKeyNot($portee->id)
+            'visibles' => fn (Litter $portee) => $statut
+                ? $portee->kittens->filter(fn (Kitten $k) => $k->statut->value === $statut)
+                : $portee->kittens,
+
+            /*
+             * Les archives : celles dont tous les chatons sont partis. Elles
+             * restent en ligne, c'est la meilleure preuve du serieux d'un
+             * elevage.
+             */
+            'archives' => Litter::publiees()
+                ->whereKeyNot($portees->modelKeys())
                 ->withCount([
                     'kittens',
                     'kittens as adoptes_count' => fn ($q) => $q->where('statut', KittenStatus::Adopte),
