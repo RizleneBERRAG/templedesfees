@@ -5,6 +5,23 @@
 
     RewriteEngine On
 
+    # Tout le site en HTTPS.
+    #
+    # Le certificat existe, mais une adresse tapee sans « https:// » arrivait en
+    # clair et y restait : Chrome affichait « Non securise », et le formulaire
+    # d'adoption transmettait le nom, le telephone et l'adresse des familles sans
+    # chiffrement.
+    #
+    # Les deux conditions ne font qu'une chose, de deux facons : OVH pose
+    # HTTPS=on quand il sert lui-meme en TLS, et X-Forwarded-Proto quand la
+    # requete passe par un relais. En verifier une seule laisserait un trou.
+    #
+    # La redirection est permanente (301) : les navigateurs et les moteurs la
+    # retiennent, et cessent de demander la version en clair.
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
